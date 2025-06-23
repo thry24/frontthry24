@@ -1,0 +1,7 @@
+{
+  "name": "ai24",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

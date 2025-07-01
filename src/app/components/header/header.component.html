@@ -1,0 +1,226 @@
+<div class="header-wrapper" *ngIf="!isLoginPage">
+  <ion-header>
+    <ion-toolbar class="ai24-toolbar">
+      <div class="ai24-container">
+        <div class="logo" routerLink="/">
+          <img src="assets/logo-ai24.jpeg" alt="Logo AI24" />
+          <span>AI24</span>
+        </div>
+
+        <div class="nav nav-centrado">
+          <a
+            class="dropdown-trigger"
+            #triggerInicio
+            (mouseenter)="handleHover('inicio', triggerInicio)"
+            (click)="toggleDropdown('inicio', triggerInicio)"
+            (mouseleave)="startHideMenuTimer()"
+            >Inicio</a
+          >
+
+          <a
+            class="dropdown-trigger"
+            #triggerPropiedades
+            (mouseenter)="handleHover('propiedades', triggerPropiedades)"
+            (click)="toggleDropdown('propiedades', triggerPropiedades)"
+            (mouseleave)="startHideMenuTimer()"
+            >Propiedades</a
+          >
+
+          <!-- Agente -->
+          <ng-container
+            *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
+          >
+            <a
+              class="dropdown-trigger"
+              #triggerAgente
+              (mouseenter)="handleHover('agente', triggerAgente)"
+              (click)="toggleDropdown('agente', triggerAgente)"
+              (mouseleave)="startHideMenuTimer()"
+              >Agente</a
+            >
+          </ng-container>
+          <ng-container *ngIf="isLogged && rol === 'agente'">
+            <a
+              class="dropdown-trigger"
+              #triggerAgente
+              (mouseenter)="handleHover('agente', triggerAgente)"
+              (click)="toggleDropdown('agente', triggerAgente)"
+              (mouseleave)="startHideMenuTimer()"
+              >Agente</a
+            >
+          </ng-container>
+
+          <!-- Inmobiliaria -->
+          <ng-container
+            *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
+          >
+            <a
+              class="dropdown-trigger"
+              #triggerInmobiliaria
+              (mouseenter)="handleHover('inmobiliaria', triggerInmobiliaria)"
+              (click)="toggleDropdown('inmobiliaria', triggerInmobiliaria)"
+              (mouseleave)="startHideMenuTimer()"
+              >Inmobiliaria</a
+            >
+          </ng-container>
+          <ng-container *ngIf="isLogged && rol === 'inmobiliaria'">
+            <a
+              class="dropdown-trigger"
+              #triggerInmobiliaria
+              (mouseenter)="handleHover('inmobiliaria', triggerInmobiliaria)"
+              (click)="toggleDropdown('inmobiliaria', triggerInmobiliaria)"
+              (mouseleave)="startHideMenuTimer()"
+              >Inmobiliaria</a
+            >
+          </ng-container>
+        </div>
+
+        <div class="nav nav-derecha" *ngIf="mostrarSesion">
+  <ng-container *ngIf="isLogged; else noSesion">
+    <div class="user-session">
+      <img
+        class="avatar"
+        [src]="user?.fotoPerfil || user?.logo || 'assets/img/user.jpg'"
+        alt="Usuario"
+      />
+      <button class="btn-logout" (click)="logout()">
+        Cerrar sesión
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-template #noSesion>
+    <button class="btn-login" routerLink="/login">
+      Iniciar sesión
+    </button>
+  </ng-template>
+</div>
+
+      </div>
+    </ion-toolbar>
+  </ion-header>
+
+  <div
+    class="dropdown-bridge"
+    *ngIf="showMenu"
+    [style.top.px]="bridgeTop"
+    [style.left.px]="dropdownLeft"
+    [style.width.px]="bridgeWidth"
+    (mouseenter)="cancelHideMenu()"
+    (mouseleave)="startHideMenuTimer()"
+  ></div>
+
+  <div
+    class="dropdown-float-outside"
+    *ngIf="showMenu"
+    [style.top.px]="dropdownTop"
+    [style.left.px]="dropdownLeft"
+    (mouseenter)="cancelHideMenu()"
+    (mouseleave)="startHideMenuTimer()"
+  >
+    <ng-container [ngSwitch]="activeMenu">
+      <!-- Inicio -->
+      <ng-container *ngSwitchCase="'inicio'">
+        <a routerLink="/quienes-somos">¿Quiénes somos?</a>
+        <a routerLink="/que-es-ai24">¿Qué es Ai24?</a>
+        <a routerLink="/servicios">Nuestros Servicios</a>
+        <a routerLink="/faqs">FAQs</a>
+        <a routerLink="/blog">Blog</a>
+        <a routerLink="/#">Private Policy</a>
+      </ng-container>
+
+      <!-- Propiedades -->
+      <ng-container *ngSwitchCase="'propiedades'">
+        <div class="submenu-group">
+          <div
+            class="menu-section-title"
+            (click)="toggleSubmenu('habitacional')"
+          >
+            <span>ÁREA HABITACIONAL</span>
+            <span class="arrow-icon" [class.rotate]="areaHabitacionalOpen"
+              >›</span
+            >
+          </div>
+          <div *ngIf="areaHabitacionalOpen" class="submenu">
+            <a routerLink="/propiedades/habitacional/casa">Casa</a>
+            <a routerLink="/propiedades/habitacional/departamento"
+              >Departamento</a
+            >
+            <a routerLink="/propiedades/habitacional/amueblados">Amueblados</a>
+          </div>
+        </div>
+        <div class="submenu-group">
+          <div class="menu-section-title" (click)="toggleSubmenu('comercial')">
+            <span>ÁREA COMERCIAL</span>
+            <span class="arrow-icon" [class.rotate]="areaComercialOpen">›</span>
+          </div>
+          <div *ngIf="areaComercialOpen" class="submenu">
+            <a routerLink="/propiedades/comercial/locales"
+              >Locales Comerciales</a
+            >
+            <a routerLink="/propiedades/comercial/edificios">Edificios</a>
+            <a routerLink="/propiedades/comercial/oficinas">Oficinas</a>
+            <a routerLink="/propiedades/comercial/bodegas"
+              >Bodegas y Naves Industriales</a
+            >
+            <a routerLink="/propiedades/comercial/macrolotes">Macro Lotes</a>
+            <a routerLink="/propiedades/comercial/terrenos"
+              >Terrenos Comerciales</a
+            >
+            <a routerLink="/propiedades/comercial/industriales"
+              >Terrenos Industriales</a
+            >
+          </div>
+        </div>
+        <a routerLink="/propiedades/busqueda-rentas">Búsqueda de Rentas</a>
+        <a routerLink="/propiedades/busqueda-mapas">Búsqueda con Mapas</a>
+        <a (click)="navegarProtegido('/propiedades/comparar')"
+          >Comparar Propiedades</a
+        >
+        <a (click)="navegarProtegido('/contacto/agente')"
+          >Contacta a un Agente Inmobiliario</a
+        >
+        <a (click)="navegarProtegido('/favoritos')">Mis Favoritas</a>
+      </ng-container>
+
+      <!-- Agente -->
+      <ng-container *ngSwitchCase="'agente'">
+        <ng-container
+          *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
+        >
+          <a routerLink="/agentes">Agentes</a>
+        </ng-container>
+        <ng-container *ngIf="isLogged && rol === 'agente'">
+          <a routerLink="/agente/agregar">Agregar Propiedad</a>
+          <a routerLink="/requerimientos/publicar">Publicar Requerimiento</a>
+        </ng-container>
+      </ng-container>
+
+      <!-- Inmobiliaria -->
+      <ng-container *ngSwitchCase="'inmobiliaria'">
+        <ng-container
+          *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
+        >
+          <a routerLink="/directorio/inmobiliarias">Directorio Inmobiliarias</a>
+        </ng-container>
+        <ng-container *ngIf="isLogged && rol === 'inmobiliaria'">
+          <a routerLink="/requerimientos/publicar">Publicar Requerimiento</a>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<!-- Si es login page solo se muestra el logo -->
+<div class="header-wrapper" *ngIf="isLoginPage">
+  <ion-header>
+    <ion-toolbar class="ai24-toolbar">
+      <div class="ai24-container">
+        <div class="logo" routerLink="/">
+          <img src="assets/logo-ai24.jpeg" alt="Logo AI24" />
+          <span>AI24</span>
+        </div>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+</div>

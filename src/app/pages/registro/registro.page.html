@@ -1,0 +1,137 @@
+<app-header></app-header>
+<ion-content class="ai24-login-content" fullscreen>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-left">
+        <h2>Crear cuenta</h2>
+        <p>Completa tus datos para registrarte en AI24.</p>
+
+        <form (ngSubmit)="enviarRegistro()" enctype="multipart/form-data">
+          <ion-item lines="none">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input
+              placeholder="Nombre"
+              [(ngModel)]="nombre"
+              name="nombre"
+              required
+            ></ion-input>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-input
+              type="email"
+              placeholder="Correo"
+              [(ngModel)]="correo"
+              name="correo"
+              required
+            ></ion-input>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon name="call-outline" slot="start"></ion-icon>
+            <ion-input
+              type="tel"
+              placeholder="Teléfono"
+              [(ngModel)]="telefono"
+              name="telefono"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input
+              [type]="verPassword ? 'text' : 'password'"
+              placeholder="Contraseña"
+              [(ngModel)]="password"
+              name="password"
+              required
+            ></ion-input>
+            <ion-icon
+              [name]="verPassword ? 'eye-off-outline' : 'eye-outline'"
+              slot="end"
+              class="toggle-password"
+              (click)="togglePassword()"
+            ></ion-icon>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-label>Rol</ion-label>
+            <ion-select
+              [(ngModel)]="rol"
+              name="rol"
+              (ionChange)="rolCambiado()"
+              required
+            >
+              <ion-select-option value="cliente">Cliente</ion-select-option>
+              <ion-select-option value="agente">Agente</ion-select-option>
+              <ion-select-option value="inmobiliaria"
+                >Inmobiliaria</ion-select-option
+              >
+              <ion-select-option value="propietario"
+                >Propietario</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+
+          <ng-container *ngIf="rol === 'agente'">
+            <ion-item lines="none">
+              <ion-label>Inmobiliaria</ion-label>
+              <ion-text color="medium" class="ion-padding-start">
+                Agente independiente
+              </ion-text>
+            </ion-item>
+          </ng-container>
+
+          <ng-container *ngIf="rol === 'agente' || rol === 'inmobiliaria'">
+            <div class="preview-container" *ngIf="imagenSeleccionadaURL">
+              <div class="preview-wrapper">
+                <img
+                  [src]="imagenSeleccionadaURL"
+                  alt="Vista previa"
+                  class="preview-img"
+                />
+                <button
+                  type="button"
+                  class="btn-remove-img"
+                  (click)="quitarImagen()"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <ion-item lines="none">
+              <ion-label position="stacked">
+                {{ rol === 'agente' ? 'Foto de perfil' : 'Logo de lainmobiliaria' }}
+              </ion-label>
+              <input
+                type="file"
+                (change)="seleccionarImagen($event)"
+                accept="image/*"
+              />
+            </ion-item>
+          </ng-container>
+
+          <ion-button expand="block" type="submit" class="btn-login-ai24">
+            Continuar
+          </ion-button>
+
+          <div class="registro-link">
+            ¿Ya tienes cuenta?
+            <a routerLink="/login">Inicia sesión</a>
+          </div>
+        </form>
+      </div>
+
+      <div class="login-right">
+        <div class="carrusel">
+          <img
+            [src]="imagenesCarrusel[slideActual]"
+            alt="Imagen de propiedad"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,128 @@
+<app-header [title]="'Blog'"></app-header>
+<ion-content class="blog-ai24" fullscreen>
+  <div class="blog-wrapper">
+    <div class="blog-search">
+      <input type="text" placeholder="Buscar artículos, temas o autores..." />
+      <button><ion-icon name="search-outline"></ion-icon></button>
+    </div>
+
+    <section class="blog-hero">
+      <video autoplay muted loop>
+        <source src="assets/video/blog-hero.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-overlay">
+        <h1>
+          Tu Fuente de Inspiración en Bienes Raíces, Construcción y Diseño
+        </h1>
+        <p>
+          Encuentra ideas, tendencias y consejos prácticos para transformar
+          espacios, construir con inteligencia y tomar decisiones inmobiliarias
+          acertadas.
+        </p>
+        <button class="ai24-btn-outline">
+          Suscríbete para recibir nuestros mejores consejos
+        </button>
+      </div>
+    </section>
+
+    <section class="blog-categorias">
+      <h2>Categorías Destacadas</h2>
+      <div class="categorias-grid">
+        <div class="categoria-card">
+          <ion-icon name="briefcase-outline"></ion-icon>
+          <h3>Para Agentes</h3>
+          <p>
+            Herramientas, consejos y estrategias para agentes inmobiliarios
+            modernos.
+          </p>
+          <button>Explorar contenido</button>
+        </div>
+        <div class="categoria-card">
+          <ion-icon name="home-outline"></ion-icon>
+          <h3>Para Propietarios</h3>
+          <p>Todo lo que necesitas saber para vender o rentar con éxito.</p>
+          <button>Explorar contenido</button>
+        </div>
+        <div class="categoria-card">
+          <ion-icon name="people-outline"></ion-icon>
+          <h3>Para Compradores</h3>
+          <p>
+            Guías y recomendaciones para comprar con seguridad y estrategia.
+          </p>
+          <button>Explorar contenido</button>
+        </div>
+        <div class="categoria-card">
+          <ion-icon name="hammer-outline"></ion-icon>
+          <h3>Guías Tecnológicas</h3>
+          <p>Explora cómo la IA y la tecnología están cambiando el sector.</p>
+          <button>Explorar contenido</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="blog-destacados">
+      <h2>Artículos Populares</h2>
+      <div class="destacados-grid">
+        <div class="destacado-card">
+          <img src="assets/img/blog1.jpg" alt="Artículo 1" />
+          <h3>¿Cómo usar IA en tu gestión inmobiliaria?</h3>
+          <p>Publicado el 20 de junio de 2025</p>
+          <p>
+            Conoce cómo automatizar tareas y mejorar la experiencia del cliente.
+          </p>
+        </div>
+        <div class="destacado-card">
+          <img src="assets/img/blog2.jpg" alt="Artículo 2" />
+          <h3>5 errores que debes evitar al vender una propiedad</h3>
+          <p>Publicado el 12 de junio de 2025</p>
+          <p>Errores comunes que afectan tus oportunidades de venta.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="blog-recientes-layout">
+      <div class="blog-recientes">
+        <h2>Artículos Recientes</h2>
+        <div class="recientes-lista">
+          <div class="reciente-card">
+            <img src="assets/img/blog3.jpg" alt="Miniatura" />
+            <div class="contenido">
+              <h3>Cómo elegir la propiedad perfecta</h3>
+              <p>
+                Descubre los factores clave para tomar una decisión inteligente.
+              </p>
+              <span class="categoria">Para Compradores</span>
+              <a href="#">Leer más</a>
+            </div>
+          </div>
+          <div class="reciente-card">
+            <img src="assets/img/blog4.jpg" alt="Miniatura" />
+            <div class="contenido">
+              <h3>Optimiza tus publicaciones en portales inmobiliarios</h3>
+              <p>
+                Convierte más visitas en clientes aplicando buenas prácticas de
+                publicación.
+              </p>
+              <span class="categoria">Para Agentes</span>
+              <a href="#">Leer más</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="blog-sidebar">
+        <div class="widget-suscripcion">
+          <h3>Suscríbete al blog</h3>
+          <p>
+            ¡No te pierdas las últimas tendencias y estrategias inmobiliarias!
+          </p>
+          <input type="text" placeholder="Nombre" />
+          <input type="email" placeholder="Correo electrónico" />
+          <button>Suscribirme ahora</button>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+<app-footer></app-footer>
+</ion-content>

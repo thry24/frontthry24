@@ -1,0 +1,10 @@
+<div *ngIf="alerta" class="alerta-overlay">
+  <div class="alerta-box" [ngClass]="alerta.tipo">
+    <div class="alerta-icon">
+      <ion-icon [name]="getIcono(alerta.tipo)"></ion-icon>
+    </div>
+    <div class="alerta-contenido">
+      <p>{{ alerta.mensaje }}</p>
+    </div>
+  </div>
+</div>

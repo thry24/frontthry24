@@ -1,0 +1,194 @@
+.servicios-ai24 {
+  --background: #ffffff;
+  color: #0a2b4a;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 2rem 1rem;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  section {
+    margin-bottom: 4rem;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #0a2b4a;
+    }
+
+    p {
+      color: #555;
+      font-size: 1.1rem;
+      max-width: 720px;
+      margin: 0.5rem auto 0;
+    }
+  }
+
+  .servicio-bloque {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 3rem;
+
+    &.reverse {
+      flex-direction: row-reverse;
+    }
+
+    .servicio-texto {
+      flex: 1;
+      min-width: 280px;
+
+      h3 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        color: #0a2b4a;
+        ion-icon {
+          color: #ed7538;
+          margin-right: 0.5rem;
+        }
+      }
+
+      p.intro {
+        font-size: 1rem;
+        margin-bottom: 1.2rem;
+        color: #444;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+
+        li {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 0.75rem;
+          ion-icon {
+            color: #ed7538;
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+          }
+        }
+      }
+
+      .cta-line {
+        margin-top: 1rem;
+        font-weight: bold;
+      }
+    }
+
+    .servicio-imagen {
+      flex: 1;
+      min-width: 280px;
+
+      img, video {
+        width: 100%;
+        border-radius: 16px;
+        box-shadow: 0 6px 24px rgba(10, 43, 74, 0.08);
+        object-fit: cover;
+      }
+    }
+  }
+
+  .tabla-comparacion {
+    background: #f8f9fc;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(10, 43, 74, 0.08);
+    overflow-x: auto;
+    margin-top: 2rem;
+
+    h4 {
+      font-size: 1.4rem;
+      color: #0a2b4a;
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+
+      thead {
+        background: #0a2b4a;
+        color: white;
+
+        th {
+          padding: 0.8rem;
+          text-align: center;
+        }
+      }
+
+      tbody {
+        tr {
+          &:nth-child(even) {
+            background: #f0f0f0;
+          }
+
+          &:hover {
+            background: #eef3f7;
+          }
+
+          td {
+            text-align: center;
+            padding: 0.75rem;
+          }
+        }
+      }
+    }
+  }
+
+  .servicio-dual {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    margin-top: 2rem;
+
+    .servicio-texto {
+      flex: 1;
+      min-width: 280px;
+
+      h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        color: #0a2b4a;
+        display: flex;
+        align-items: center;
+
+        ion-icon {
+          margin-right: 0.5rem;
+          color: #ed7538;
+        }
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+
+        li {
+          position: relative;
+          padding-left: 1.4rem;
+          margin-bottom: 0.6rem;
+
+          &::before {
+            content: '✔';
+            position: absolute;
+            left: 0;
+            color: #ed7538;
+          }
+        }
+      }
+    }
+  }
+}

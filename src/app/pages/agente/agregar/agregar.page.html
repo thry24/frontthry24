@@ -1,0 +1,922 @@
+<app-header></app-header>
+<app-loading></app-loading>
+
+<ion-content class="agregar-propiedad-content" [fullscreen]="true">
+  <div class="container">
+    <h1>Agregar Propiedad</h1>
+
+    <form (ngSubmit)="guardarPropiedad()">
+      <div class="row">
+        <!-- Columna 1 -->
+        <div class="col">
+          <ion-item>
+            <ion-label position="floating">Tipo de Operación</ion-label>
+            <ion-select
+              [(ngModel)]="tipoOperacion"
+              name="tipoOperacion"
+              required
+            >
+              <ion-select-option value="venta">Venta</ion-select-option>
+              <ion-select-option value="renta">Renta</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Tipo de Propiedad</ion-label>
+            <ion-select
+              [(ngModel)]="tipoPropiedad"
+              name="tipoPropiedad"
+              required
+            >
+              <ion-select-option
+                *ngFor="let tipo of tiposPropiedad"
+                [value]="tipo"
+              >
+                {{ tipo }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Estado de la Propiedad</ion-label>
+            <ion-select [(ngModel)]="estadoPropiedad" name="estadoPropiedad">
+              <ion-select-option *ngFor="let estado of estados" [value]="estado"
+                >{{ estado }}</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Precio</ion-label>
+            <ion-input
+              type="text"
+              min="0"
+              [value]="formatearMoneda(precio)"
+              (ionInput)="precio = limpiarNumero($event)"
+              inputmode="decimal"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Descripción</ion-label>
+            <ion-textarea
+              autoGrow
+              rows="4"
+              [(ngModel)]="descripcion"
+              name="descripcion"
+            ></ion-textarea>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>¿Comparte Comisión?</ion-label>
+            <ion-toggle
+              [(ngModel)]="comisionComparte"
+              name="comisionComparte"
+            ></ion-toggle>
+          </ion-item>
+
+          <ion-item *ngIf="comisionComparte">
+            <ion-label position="floating">Porcentaje Comisión</ion-label>
+            <ion-input
+              type="text"
+              min="0"
+              [value]="formatearPorcentaje(comisionPorcentaje)"
+              (ionInput)="comisionPorcentaje = limpiarNumero($event)"
+              inputmode="decimal"
+            ></ion-input>
+          </ion-item>
+        </div>
+        <div
+          class="col"
+          *ngIf="tipoPropiedad === 'casa' || tipoPropiedad === 'departamento'"
+        >
+          <ion-item>
+            <ion-label position="floating">Habitaciones</ion-label>
+            <ion-input
+              type="number"
+              [(ngModel)]="caracteristicas.casaDepto.habitaciones"
+              name="habitaciones"
+              inputmode="numeric"
+              min="0"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Baños Completos</ion-label>
+            <ion-input
+              type="number"
+              [(ngModel)]="caracteristicas.casaDepto.banosCompletos"
+              name="banosCompletos"
+              inputmode="numeric"
+              min="0"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Medios Baños</ion-label>
+            <ion-input
+              type="number"
+              [(ngModel)]="caracteristicas.casaDepto.mediosBanos"
+              name="mediosBanos"
+              inputmode="numeric"
+              min="0"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Estacionamiento</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.casaDepto.estacionamiento"
+              name="estacionamiento"
+            >
+              <ion-select-option value="ninguno">Ninguno</ion-select-option>
+              <ion-select-option value="1 auto">1 Auto</ion-select-option>
+              <ion-select-option value="2 autos">2 Autos</ion-select-option>
+              <ion-select-option value="3 o más">3 o más</ion-select-option>
+              <ion-select-option value="techado">Techado</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Superficie</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.casaDepto.superficie"
+              name="superficie"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">m²</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Construcción</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.casaDepto.construccion"
+              name="construccion"
+              inputmode="decimal"
+            >
+            </ion-input>
+            <div class="suffix-label">m²</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Pisos</ion-label>
+            <ion-input
+              type="number"
+              [(ngModel)]="caracteristicas.casaDepto.pisos"
+              name="pisos"
+              inputmode="numeric"
+              min="0"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Tipo de Cocina</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.casaDepto.cocina"
+              name="cocina"
+            >
+              <ion-select-option value="integral">Integral</ion-select-option>
+              <ion-select-option value="básica">Básica</ion-select-option>
+              <ion-select-option value="americana">Americana</ion-select-option>
+              <ion-select-option value="sin cocina"
+                >Sin cocina</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>¿Recámara en PB?</ion-label>
+            <ion-checkbox
+              slot="start"
+              [(ngModel)]="caracteristicas.casaDepto.recamaraPB"
+              name="recamaraPB"
+            ></ion-checkbox>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Clóset / Vestidor</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.casaDepto.closetVestidor"
+              name="closetVestidor"
+            >
+              <ion-select-option value="">Ninguno</ion-select-option>
+              <ion-select-option value="closet">Clóset</ion-select-option>
+              <ion-select-option value="vestidor">Vestidor</ion-select-option>
+              <ion-select-option value="ambos">Ambos</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <div class="checkbox-grid">
+            <div class="checkbox-col" *ngFor="let col of checkboxCols">
+              <ion-item *ngFor="let field of col">
+                <ion-label>{{ field.label }}</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="caracteristicas.casaDepto[field.key]"
+                  [name]="field.key"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+
+        <div class="col" *ngIf="tipoPropiedad === 'terreno'">
+          <ion-item>
+            <ion-label position="stacked">Frente</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.terreno.m2Frente"
+              name="m2Frente"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">m</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Fondo</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.terreno.m2Fondo"
+              name="m2Fondo"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">m</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Tipo de Terreno</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.terreno.tipo"
+              name="tipo"
+              (ionChange)="otroTerreno = caracteristicas.terreno.tipo === 'otro'"
+            >
+              <ion-select-option value="habitacional"
+                >Habitacional</ion-select-option
+              >
+              <ion-select-option value="comercial">Comercial</ion-select-option>
+              <ion-select-option value="industrial"
+                >Industrial</ion-select-option
+              >
+              <ion-select-option value="agrícola">Agrícola</ion-select-option>
+              <ion-select-option value="otro">Otro</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item *ngIf="otroTerreno">
+            <ion-label position="stacked">Especifique el tipo</ion-label>
+            <ion-input
+              [(ngModel)]="caracteristicas.terreno.tipoOtro"
+              name="tipoOtro"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Costo por m²</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.terreno.costoXM2"
+              name="costoXM2"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">$/m²</div>
+          </ion-item>
+
+          <div class="checkbox-grid">
+            <div class="checkbox-col">
+              <ion-item>
+                <ion-label>KMZ disponible</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="caracteristicas.terreno.kmz"
+                  name="kmz"
+                ></ion-checkbox>
+              </ion-item>
+              <ion-item>
+                <ion-label>Agua</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="caracteristicas.terreno.agua"
+                  name="agua"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+
+            <div class="checkbox-col">
+              <ion-item>
+                <ion-label>Luz</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="caracteristicas.terreno.luz"
+                  name="luz"
+                ></ion-checkbox>
+              </ion-item>
+              <ion-item>
+                <ion-label>Drenaje</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="caracteristicas.terreno.drenaje"
+                  name="drenaje"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+          </div>
+
+          <div *ngIf="caracteristicas.terreno.kmz" class="kmz-upload">
+            <label for="archivoKmz">Subir archivo .kmz:</label>
+            <input
+              type="file"
+              id="archivoKmz"
+              accept=".kmz"
+              (change)="onKmzFileSelected($event)"
+            />
+          </div>
+        </div>
+
+        <div class="col" *ngIf="tipoPropiedad === 'local'">
+          <ion-item>
+            <ion-label position="floating">Tipo de Centro</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.local.tipoCentro"
+              name="tipoCentro"
+              (ionChange)="otroTipoCentro = caracteristicas.local.tipoCentro === 'otro'"
+            >
+              <ion-select-option value="plaza"
+                >Plaza Comercial</ion-select-option
+              >
+              <ion-select-option value="mercado">Mercado</ion-select-option>
+              <ion-select-option value="centro historico"
+                >Centro Histórico</ion-select-option
+              >
+              <ion-select-option value="otro">Otro</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item *ngIf="otroTipoCentro">
+            <ion-label position="floating"
+              >Especificar Tipo de Centro</ion-label
+            >
+            <ion-input
+              [(ngModel)]="caracteristicas.local.tipoCentroOtro"
+              name="tipoCentroOtro"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Nombre de la Plaza</ion-label>
+            <ion-input
+              [(ngModel)]="caracteristicas.local.plaza"
+              name="plaza"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Pasillo</ion-label>
+            <ion-input
+              [(ngModel)]="caracteristicas.local.pasillo"
+              name="pasillo"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Planta</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.local.planta"
+              name="planta"
+            >
+              <ion-select-option value="baja">Planta Baja</ion-select-option>
+              <ion-select-option value="alta">Planta Alta</ion-select-option>
+              <ion-select-option value="sótano">Sótano</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Frente</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.local.m2Frente"
+              name="m2Frente"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">m</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Fondo</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.local.m2Fondo"
+              name="m2Fondo"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">m</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Restricción de Giro</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.local.restriccionGiro"
+              name="restriccionGiro"
+              (ionChange)="otraRestriccion = caracteristicas.local.restriccionGiro === 'otra'"
+            >
+              <ion-select-option value="no comida">No comida</ion-select-option>
+              <ion-select-option value="no alcohol"
+                >No alcohol</ion-select-option
+              >
+              <ion-select-option value="ninguna">Ninguna</ion-select-option>
+              <ion-select-option value="otra">Otra</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item *ngIf="otraRestriccion">
+            <ion-label position="floating">Especificar Restricción</ion-label>
+            <ion-input
+              [(ngModel)]="caracteristicas.local.restriccionGiroOtro"
+              name="restriccionGiroOtro"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Giro Actual o Permitido</ion-label>
+            <ion-input
+              [(ngModel)]="caracteristicas.local.giro"
+              name="giro"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>¿Cuenta con seguridad?</ion-label>
+            <ion-checkbox
+              slot="start"
+              [(ngModel)]="caracteristicas.local.seguridad"
+              name="seguridad"
+            ></ion-checkbox>
+          </ion-item>
+        </div>
+
+        <div class="col" *ngIf="tipoPropiedad === 'bodega'">
+          <ion-item>
+            <ion-label position="floating">Tipo de Bodega</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.bodega.tipo"
+              name="tipoBodega"
+            >
+              <ion-select-option value="industrial"
+                >Industrial</ion-select-option
+              >
+              <ion-select-option value="logística">Logística</ion-select-option>
+              <ion-select-option value="comercial">Comercial</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Terreno</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.bodega.m2Terreno"
+              name="m2Terreno"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">m²</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Construcción</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.bodega.m2Construccion"
+              name="m2Construccion"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">m²</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Oficinas</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.bodega.oficinas"
+              name="oficinas"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Baños Generales</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.bodega.banos"
+              name="banos"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Baños para Empleados</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.bodega.banosEmpleados"
+              name="banosEmpleados"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Resistencia del Piso</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.bodega.resistenciaPiso"
+              name="resistenciaPiso"
+            >
+              <ion-select-option value="1 ton/m²">1 ton/m²</ion-select-option>
+              <ion-select-option value="2 ton/m²">2 ton/m²</ion-select-option>
+              <ion-select-option value="3 ton/m²">3 ton/m²</ion-select-option>
+              <ion-select-option value="más de 3 ton/m²"
+                >Más de 3 ton/m²</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Carga Eléctrica</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.bodega.cargaElectrica"
+              name="cargaElectrica"
+            >
+              <ion-select-option value="trifásica">Trifásica</ion-select-option>
+              <ion-select-option value="bifásica">Bifásica</ion-select-option>
+              <ion-select-option value="monofásica"
+                >Monofásica</ion-select-option
+              >
+              <ion-select-option value="alta tensión"
+                >Alta Tensión</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">KVA</ion-label>
+            <ion-select [(ngModel)]="caracteristicas.bodega.kva" name="kva">
+              <ion-select-option value="30">30</ion-select-option>
+              <ion-select-option value="45">45</ion-select-option>
+              <ion-select-option value="75">75</ion-select-option>
+              <ion-select-option value="100">100</ion-select-option>
+              <ion-select-option value="más de 100"
+                >Más de 100</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+
+          <div class="checkbox-grid">
+            <div class="checkbox-col" *ngFor="let col of checkboxColsBodega">
+              <ion-item *ngFor="let field of col">
+                <ion-label>{{ field.label }}</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="caracteristicas.bodega[field.key]"
+                  [name]="field.key"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+
+        <div class="col" *ngIf="tipoPropiedad === 'rancho'">
+          <ion-item>
+            <ion-label position="stacked">Hectáreas</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.rancho.hectareas"
+              name="hectareas"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">ha</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Uso</ion-label>
+            <ion-select
+              [(ngModel)]="caracteristicas.rancho.uso"
+              name="usoRancho"
+            >
+              <ion-select-option value="agrícola">Agrícola</ion-select-option>
+              <ion-select-option value="ganadero">Ganadero</ion-select-option>
+              <ion-select-option value="mixto">Mixto</ion-select-option>
+              <ion-select-option value="otro">Otro</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item *ngIf="caracteristicas.rancho.uso === 'otro'">
+            <ion-label position="floating">Especifica el uso</ion-label>
+            <ion-input
+              [(ngModel)]="caracteristicas.rancho.usoOtro"
+              name="usoOtro"
+            ></ion-input>
+          </ion-item>
+
+          <div class="checkbox-grid">
+            <div class="checkbox-col" *ngFor="let col of checkboxColsRancho">
+              <ion-item *ngFor="let field of col">
+                <ion-label>{{ field.label }}</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="caracteristicas.rancho[field.key]"
+                  [name]="field.key"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+
+        <div class="col" *ngIf="tipoPropiedad === 'oficina'">
+          <ion-item>
+            <ion-label position="stacked">Superficie</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.oficina.superficie"
+              name="superficie"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">m²</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Privados</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.oficina.privados"
+              name="privados"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Salas de Juntas</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.oficina.salaJuntas"
+              name="salaJuntas"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Baños Privados</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.oficina.banosPrivados"
+              name="banosPrivados"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Baños Compartidos</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.oficina.banosCompartidos"
+              name="banosCompartidos"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Capacidad de Empleados</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.oficina.empleados"
+              name="empleados"
+            ></ion-input>
+          </ion-item>
+
+          <div class="checkbox-grid">
+            <div class="checkbox-col" *ngFor="let col of checkboxColsOficina">
+              <ion-item *ngFor="let field of col">
+                <ion-label>{{ field.label }}</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="caracteristicas.oficina[field.key]"
+                  [name]="field.key"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+
+        <div class="col" *ngIf="tipoPropiedad === 'edificio'">
+          <ion-item>
+            <ion-label position="stacked">Metros por Piso</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.edificio.m2xPiso"
+              name="m2xPiso"
+              inputmode="decimal"
+            ></ion-input>
+            <div class="suffix-label">m²</div>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Número de Pisos</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.edificio.pisosEdificio"
+              name="pisosEdificio"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Oficinas Totales</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.edificio.oficinas"
+              name="oficinasEdificio"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Estacionamientos</ion-label>
+            <ion-input
+              type="number"
+              min="0"
+              [(ngModel)]="caracteristicas.edificio.estacionamientos"
+              name="estacionamientos"
+            ></ion-input>
+          </ion-item>
+
+          <div class="checkbox-grid">
+            <div class="checkbox-col" *ngFor="let col of checkboxColsEdificio">
+              <ion-item *ngFor="let field of col">
+                <ion-label>{{ field.label }}</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="caracteristicas.edificio[field.key]"
+                  [name]="field.key"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <ion-item lines="full" class="autocomplete-item">
+            <ion-label position="floating">Buscar Dirección</ion-label>
+            <input #autocompleteInput type="text" class="native-google-input" />
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Estado</ion-label>
+            <ion-input [(ngModel)]="direccion.estado" name="estado"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Municipio</ion-label>
+            <ion-input
+              [(ngModel)]="direccion.municipio"
+              name="municipio"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Colonia</ion-label>
+            <ion-input
+              [(ngModel)]="direccion.colonia"
+              name="colonia"
+            ></ion-input>
+          </ion-item>
+
+          <div class="map-container">
+            <div id="map" #map></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <ion-item
+            (click)="mostrarGenerales = !mostrarGenerales"
+            class="accordion-header"
+          >
+            <ion-label>Características Generales</ion-label>
+            <ion-icon
+              [name]="mostrarGenerales ? 'chevron-up' : 'chevron-down'"
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+
+          <div *ngIf="mostrarGenerales" class="checkbox-container-generales">
+            <div class="checkbox-col" *ngFor="let col of checkboxColsGenerales">
+              <ion-item *ngFor="let field of col">
+                <ion-label>{{ field.label }}</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="generales[field.key]"
+                  [name]="field.key"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <ion-item
+            (click)="mostrarServicios = !mostrarServicios"
+            class="accordion-header"
+          >
+            <ion-label>Servicios</ion-label>
+            <ion-icon
+              [name]="mostrarServicios ? 'chevron-up' : 'chevron-down'"
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+
+          <div *ngIf="mostrarServicios" class="checkbox-container-generales">
+            <div class="checkbox-col" *ngFor="let col of checkboxColsServicios">
+              <ion-item *ngFor="let field of col">
+                <ion-label>{{ field.label }}</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="servicios[field.key]"
+                  [name]="field.key"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <ion-item
+            (click)="mostrarAmenidades = !mostrarAmenidades"
+            class="accordion-header"
+          >
+            <ion-label>Amenidades</ion-label>
+            <ion-icon
+              [name]="mostrarAmenidades ? 'chevron-up' : 'chevron-down'"
+              slot="end"
+            ></ion-icon>
+          </ion-item>
+
+          <div *ngIf="mostrarAmenidades" class="checkbox-container-generales">
+            <div
+              class="checkbox-col"
+              *ngFor="let col of checkboxColsAmenidades"
+            >
+              <ion-item *ngFor="let field of col">
+                <ion-label>{{ field.label }}</ion-label>
+                <ion-checkbox
+                  slot="start"
+                  [(ngModel)]="amenidades[field.key]"
+                  [name]="field.key"
+                ></ion-checkbox>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="propietario-section">
+        <h4>Datos del Propietario</h4>
+        <ion-item>
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input
+            [(ngModel)]="datosPropietario.nombre"
+            name="propietarioNombre"
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Teléfono</ion-label>
+          <ion-input
+            [(ngModel)]="datosPropietario.telefono"
+            name="propietarioTelefono"
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input
+            type="email"
+            [(ngModel)]="datosPropietario.email"
+            name="propietarioEmail"
+          ></ion-input>
+        </ion-item>
+      </div>
+
+      <ion-button expand="block" class="boton-guardar" type="submit">
+        Guardar Propiedad
+      </ion-button>
+    </form>
+  </div>
+
+  <app-footer></app-footer>
+</ion-content>

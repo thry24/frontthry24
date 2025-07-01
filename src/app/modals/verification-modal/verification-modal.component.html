@@ -1,0 +1,27 @@
+<div class="modal-wrapper">
+  <div class="modal-header">
+    <h2>Verifica tu cuenta</h2>
+    <button class="btn-close" (click)="cerrarModal()">✕</button>
+  </div>
+
+  <div class="modal-body">
+    <img src="assets/img/email-verification.png" class="icono-email" alt="verificar correo" />
+
+    <h3>Introduce el código</h3>
+    <p>
+      Te hemos enviado un código a: <strong>{{ correo }}</strong>
+    </p>
+
+    <div class="input-group">
+      <input
+        type="text"
+        maxlength="6"
+        placeholder="Código de verificación"
+        [(ngModel)]="code"
+        class="codigo-input"
+      />
+    </div>
+
+    <button class="btn-verificar" (click)="verificarCodigo()">Verificar</button>
+  </div>
+</div>

@@ -50,6 +50,10 @@ const routes: Routes = [
     path: 'agente/agregar',
     loadChildren: () => import('./pages/agente/agregar/agregar.module').then( m => m.AgregarPageModule)
   },
+  {
+    path: 'agente/mis-publicaciones',
+    loadChildren: () => import('./pages/agente/mis-publicaciones/mis-publicaciones.module').then( m => m.MisPublicacionesPageModule)
+  },
 ];
 
 @NgModule({

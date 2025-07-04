@@ -8,7 +8,7 @@ import { LoadingService } from '../../services/loading.service';
   selector: 'app-loading',
   imports: [CommonModule, IonicModule],
   templateUrl: './loading.component.html',
-  styleUrls: ['./loading.component.scss']
+  styleUrls: ['./loading.component.scss'],
 })
 export class LoadingComponent {
   constructor(public loadingService: LoadingService) {}

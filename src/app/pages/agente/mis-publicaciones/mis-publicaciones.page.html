@@ -1,0 +1,117 @@
+<app-header></app-header>
+
+<ion-content [fullscreen]="true">
+  <div class="tabla-contenedor">
+    <h2 class="titulo">Mis Publicaciones</h2>
+
+    <table class="tabla-propiedades">
+      <thead>
+        <tr>
+          <th>Imagen</th>
+          <th>Clave</th>
+          <th>Tipo</th>
+          <th>Operación</th>
+          <th>Precio</th>
+          <th>Comisión</th>
+          <th>Publicación</th>
+          <th>Estado</th>
+          <th>Propietario</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let propiedad of propiedadesPaginadas">
+          <td>
+            <img
+              [src]="propiedad.imagenPrincipal || 'assets/img/sin-imagen.jpg'"
+              alt="Imagen"
+              class="mini-img"
+            />
+          </td>
+          <td>
+            <div class="clave-container">
+              <span>{{ propiedad.clave }}</span>
+            </div>
+          </td>
+          <td>{{ propiedad.tipoPropiedad }}</td>
+          <td>{{ propiedad.tipoOperacion }}</td>
+          <td>${{ propiedad.precio | number: '1.0-0' }}</td>
+          <td>
+            {{ propiedad.comision?.porcentaje || 0 }}%
+            <ion-icon
+              name="checkmark-circle"
+              color="success"
+              *ngIf="propiedad.comision?.comparte"
+            ></ion-icon>
+          </td>
+          <td>
+            <span
+              [ngClass]="{
+                'badge-publicada': propiedad.estadoPublicacion === 'publicada',
+                'badge-no-publicada': propiedad.estadoPublicacion !== 'publicada'
+              }"
+            >
+              {{ propiedad.estadoPublicacion }}
+            </span>
+          </td>
+          <td>{{ propiedad.estadoPropiedad }}</td>
+          <td>
+            <div class="propietario-info">
+              <strong>{{ propiedad.datosPropietario?.nombre }}</strong><br />
+              {{ propiedad.datosPropietario?.telefono }}<br />
+              {{ propiedad.datosPropietario?.email }}
+            </div>
+          </td>
+          <td class="acciones">
+            <ion-icon
+              name="create-outline"
+              class="icono-accion editar"
+              title="Editar"
+              (click)="editarPropiedad(propiedad)"
+            ></ion-icon>
+            <ion-icon
+              name="trash-outline"
+              class="icono-accion eliminar"
+              title="Eliminar"
+              (click)="eliminarPropiedad(propiedad)"
+            ></ion-icon>
+            <ion-icon
+              [name]="
+                propiedad.estadoPublicacion === 'publicada'
+                  ? 'close-circle-outline'
+                  : 'cloud-upload-outline'
+              "
+              class="icono-accion publicar"
+              [title]="
+                propiedad.estadoPublicacion === 'publicada'
+                  ? 'Despublicar'
+                  : 'Publicar'
+              "
+              (click)="cambiarEstadoPublicacion(propiedad)"
+            ></ion-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="paginacion">
+      <ion-button
+        fill="outline"
+        [disabled]="paginaActual === 1"
+        (click)="paginaAnterior()"
+      >
+        ANTERIOR
+      </ion-button>
+      <span>Página {{ paginaActual }} / {{ totalPaginas }}</span>
+      <ion-button
+        fill="outline"
+        [disabled]="paginaActual === totalPaginas"
+        (click)="paginaSiguiente()"
+      >
+        SIGUIENTE
+      </ion-button>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</ion-content>

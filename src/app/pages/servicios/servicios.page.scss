@@ -53,6 +53,7 @@
         display: flex;
         align-items: center;
         color: #0a2b4a;
+
         ion-icon {
           color: #ed7538;
           margin-right: 0.5rem;
@@ -73,6 +74,7 @@
           display: flex;
           align-items: flex-start;
           margin-bottom: 0.75rem;
+
           ion-icon {
             color: #ed7538;
             margin-right: 0.5rem;
@@ -91,7 +93,8 @@
       flex: 1;
       min-width: 280px;
 
-      img, video {
+      img,
+      video {
         width: 100%;
         border-radius: 16px;
         box-shadow: 0 6px 24px rgba(10, 43, 74, 0.08);

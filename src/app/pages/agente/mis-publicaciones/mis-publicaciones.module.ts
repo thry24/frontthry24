@@ -4,26 +4,21 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { LoginPageRoutingModule } from './login-routing.module';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { SwiperModule } from 'swiper/types';
+import { MisPublicacionesPageRoutingModule } from './mis-publicaciones-routing.module';
 
-import { LoginPage } from './login.page';
+import { MisPublicacionesPage } from './mis-publicaciones.page';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
-import { LoadingComponent } from '../../components/loading/loading.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    LoginPageRoutingModule,
+    MisPublicacionesPageRoutingModule,
     HeaderComponent,
     FooterComponent,
-    LoadingComponent,
   ],
-  declarations: [LoginPage],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  declarations: [MisPublicacionesPage],
 })
-export class LoginPageModule {}
+export class MisPublicacionesPageModule {}

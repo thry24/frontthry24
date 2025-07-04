@@ -40,31 +40,28 @@ export class HeaderComponent implements OnInit {
 
   user: any = null;
 
-ngOnInit() {
-  this.router.events.subscribe(() => {
-    const url = this.router.url;
-    this.mostrarSesion = !url.includes('/login') && !url.includes('/registro');
-    this.isLoginPage = url.includes('/login') || url.includes('/registro');
-  });
+  ngOnInit() {
+    this.router.events.subscribe(() => {
+      const url = this.router.url;
+      this.mostrarSesion =
+        !url.includes('/login') && !url.includes('/registro');
+      this.isLoginPage = url.includes('/login') || url.includes('/registro');
+    });
 
-  // Escucha estado de login y actualiza user y rol
-  this.authService.isLogged$.subscribe((estado) => {
-    this.isLogged = estado;
-    this.rol = this.authService.obtenerRol();
-    this.user = this.authService.obtenerUsuario(); // 🔁 vuelve a obtener user actualizado
-  });
+    this.authService.isLogged$.subscribe((estado) => {
+      this.isLogged = estado;
+      this.rol = this.authService.obtenerRol();
+      this.user = this.authService.obtenerUsuario();
+    });
 
-  // Carga inicial en caso de que ya esté logueado
-  try {
-    this.user = this.authService.obtenerUsuario();
-  } catch (error) {
-    console.error('Error al obtener usuario:', error);
-    this.authService.cerrarSesion();
-    this.user = null;
+    try {
+      this.user = this.authService.obtenerUsuario();
+    } catch (error) {
+      console.error('Error al obtener usuario:', error);
+      this.authService.cerrarSesion();
+      this.user = null;
+    }
   }
-}
-
-
 
   logout() {
     this.authService.cerrarSesion();

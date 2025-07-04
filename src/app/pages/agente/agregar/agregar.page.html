@@ -5,11 +5,10 @@
   <div class="container">
     <h1>Agregar Propiedad</h1>
 
-    <form (ngSubmit)="guardarPropiedad()">
+    <form #form="ngForm" (ngSubmit)="guardarPropiedad()">
       <div class="row">
-        <!-- Columna 1 -->
         <div class="col">
-          <ion-item>
+          <ion-item [class.invalid]="form.submitted && !tipoOperacion">
             <ion-label position="floating">Tipo de Operación</ion-label>
             <ion-select
               [(ngModel)]="tipoOperacion"
@@ -21,7 +20,7 @@
             </ion-select>
           </ion-item>
 
-          <ion-item>
+          <ion-item [class.invalid]="form.submitted && !tipoPropiedad">
             <ion-label position="floating">Tipo de Propiedad</ion-label>
             <ion-select
               [(ngModel)]="tipoPropiedad"
@@ -46,7 +45,7 @@
             </ion-select>
           </ion-item>
 
-          <ion-item>
+          <ion-item [class.invalid]="form.submitted && !precio">
             <ion-label position="floating">Precio</ion-label>
             <ion-input
               type="text"
@@ -886,30 +885,90 @@
           </div>
         </div>
       </div>
-      <div class="propietario-section">
-        <h4>Datos del Propietario</h4>
-        <ion-item>
-          <ion-label position="floating">Nombre</ion-label>
-          <ion-input
-            [(ngModel)]="datosPropietario.nombre"
-            name="propietarioNombre"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Teléfono</ion-label>
-          <ion-input
-            [(ngModel)]="datosPropietario.telefono"
-            name="propietarioTelefono"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Email</ion-label>
-          <ion-input
-            type="email"
-            [(ngModel)]="datosPropietario.email"
-            name="propietarioEmail"
-          ></ion-input>
-        </ion-item>
+      <div class="row">
+        <div class="col">
+          <h4>Datos del Propietario</h4>
+          <ion-item
+            [class.invalid]="form.submitted && !datosPropietario.nombre"
+          >
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input
+              [(ngModel)]="datosPropietario.nombre"
+              name="propietarioNombre"
+            ></ion-input>
+          </ion-item>
+          <ion-item
+            [class.invalid]="form.submitted && !datosPropietario.telefono"
+          >
+            <ion-label position="floating">Teléfono</ion-label>
+            <ion-input
+              [(ngModel)]="datosPropietario.telefono"
+              name="propietarioTelefono"
+            ></ion-input>
+          </ion-item>
+          <ion-item [class.invalid]="form.submitted && !datosPropietario.email">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input
+              type="email"
+              [(ngModel)]="datosPropietario.email"
+              name="propietarioEmail"
+            ></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="col" style="flex: 2">
+          <h4>Imágenes y Archivos (Opcional)</h4>
+          <ion-item>
+            <ion-label>Imagen Principal</ion-label>
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onImagenPrincipalSeleccionada($event)"
+            />
+          </ion-item>
+          <div class="imagen-preview" *ngIf="imagenPrincipalUrl">
+            <button class="close-btn" (click)="eliminarImagenPrincipal()">
+              ×
+            </button>
+            <img [src]="imagenPrincipalUrl" alt="Imagen Principal" />
+          </div>
+          <ion-item>
+            <ion-label>Galería de Imágenes</ion-label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              (change)="onImagenesSeleccionadas($event)"
+            />
+          </ion-item>
+          <div class="galeria-preview" *ngIf="imagenesUrls.length">
+            <div
+              class="imagen-preview"
+              *ngFor="let img of imagenesUrls; let i = index"
+            >
+              <button class="close-btn" (click)="eliminarImagen(i)">×</button>
+              <img [src]="img" alt="Imagen Galería" />
+            </div>
+          </div>
+
+          <ion-item>
+            <ion-label>Archivos Adjuntos</ion-label>
+            <input
+              type="file"
+              multiple
+              accept=".pdf,.zip,.kmz"
+              (change)="onArchivosSeleccionados($event)"
+            />
+          </ion-item>
+          <ul *ngIf="archivosNombres.length">
+            <li *ngFor="let archivo of archivosNombres; let i = index">
+              {{ archivo }}
+              <button class="close-file-btn" (click)="eliminarArchivo(i)">
+                ×
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <ion-button expand="block" class="boton-guardar" type="submit">

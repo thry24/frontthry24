@@ -14,7 +14,7 @@ export class LoginPage implements OnInit, OnDestroy {
   correo: string = '';
   password: string = '';
   verPassword = false;
- constructor(
+  constructor(
     private authService: AuthService,
     private router: Router,
     private alerta: AlertaService,
@@ -27,47 +27,47 @@ export class LoginPage implements OnInit, OnDestroy {
     'assets/img/propiedades3.jpg',
   ];
 
- slideActual = 0;
-intervaloCarrusel: any;
-
- 
+  slideActual = 0;
+  intervaloCarrusel: any;
 
   ngOnInit(): void {
-     this.intervaloCarrusel = setInterval(() => {
-    this.slideActual = (this.slideActual + 1) % this.imagenesCarrusel.length;
-  }, 3000); 
+    this.intervaloCarrusel = setInterval(() => {
+      this.slideActual = (this.slideActual + 1) % this.imagenesCarrusel.length;
+    }, 3000);
   }
 
   ngOnDestroy(): void {
     clearInterval(this.intervaloCarrusel);
   }
 
-iniciarSesion() {
-  this.loading.mostrar();
-  this.authService.login(this.correo, this.password).subscribe({
-    next: (res) => {
-      const { token, user } = res; 
-      this.authService.guardarSesion(token, user); 
-      this.correo = '';
-      this.password = '';
-      this.verPassword = false;
-      this.loading.ocultar();
-      this.alerta.mostrar('¡Bienvenido!', 'success');
-      setTimeout(() => {
-        this.router.navigate(['/home']);
-      }, 2000);
-    },
-    error: (err) => {
-      console.error('Error al iniciar sesión:', err);
-      this.loading.ocultar();
-      this.alerta.mostrar(
-        err?.error?.message || err?.error?.msg || err?.message || 'Ocurrió un error inesperado.',
-        'error'
-      );
-    },
-  });
-}
-
+  iniciarSesion() {
+    this.loading.mostrar();
+    this.authService.login(this.correo, this.password).subscribe({
+      next: (res) => {
+        const { token, user } = res;
+        this.authService.guardarSesion(token, user);
+        this.correo = '';
+        this.password = '';
+        this.verPassword = false;
+        this.loading.ocultar();
+        this.alerta.mostrar('¡Bienvenido!', 'success');
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 2000);
+      },
+      error: (err) => {
+        console.error('Error al iniciar sesión:', err);
+        this.loading.ocultar();
+        this.alerta.mostrar(
+          err?.error?.message ||
+            err?.error?.msg ||
+            err?.message ||
+            'Ocurrió un error inesperado.',
+          'error'
+        );
+      },
+    });
+  }
 
   togglePassword() {
     this.verPassword = !this.verPassword;

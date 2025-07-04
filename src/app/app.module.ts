@@ -8,11 +8,18 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AlertaComponent } from './components/alerta/alerta.component';
-import { LoadingComponent } from "./components/loading/loading.component";
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, AlertaComponent, HttpClientModule, LoadingComponent],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    AlertaComponent,
+    HttpClientModule,
+    LoadingComponent,
+  ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })

@@ -1,18 +1,240 @@
 <app-header></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-      <p>Hoe</p>
-      <p>Hoe</p>
-      <p>Hoe</p>
-      <p>Hoe</p>
-      <p>Hoe</p>
-    </ion-toolbar>
-  </ion-header>
+  <div class="hero-section">
+    <div class="overlay">
+      <h1 class="title">Descubre tu Nuevo Hogar</h1>
+      <p class="subtitle">Rápido | Fácil | AI24</p>
 
+      <div class="filters">
+        <button
+          class="filter"
+          [class.selected]="filtroSeleccionado === 'TODO'"
+          (click)="seleccionarFiltro('TODO')"
+        >
+          TODO
+        </button>
+        <button
+          class="filter"
+          [class.selected]="filtroSeleccionado === 'RENTA'"
+          (click)="seleccionarFiltro('RENTA')"
+        >
+          RENTA
+        </button>
+        <button
+          class="filter"
+          [class.selected]="filtroSeleccionado === 'VENTA'"
+          (click)="seleccionarFiltro('VENTA')"
+        >
+          VENTA
+        </button>
+      </div>
 
-<app-footer></app-footer>
+      <div class="search-bar">
+        <div class="row">
+          <input
+            type="text"
+            placeholder="Describe las características que buscas"
+          />
+
+          <select>
+            <option value="" disabled selected hidden>Tipo</option>
+            <option value="">---</option>
+            <option value="casa">Casa</option>
+            <option value="departamento">Departamento</option>
+            <option value="terreno">Terreno</option>
+            <option value="local">Local</option>
+            <option value="bodega">Bodega</option>
+            <option value="rancho">Rancho</option>
+            <option value="oficina">Oficina</option>
+            <option value="edificio">Edificio</option>
+          </select>
+
+          <div class="ubicacion-wrapper">
+            <input
+              list="estados"
+              placeholder="Ubicación"
+              class="input-ubicacion"
+            />
+            <datalist id="estados">
+              <option value="">---</option>
+              <option value="Aguascalientes"></option>
+              <option value="Baja California"></option>
+              <option value="Baja California Sur"></option>
+              <option value="Campeche"></option>
+              <option value="Chiapas"></option>
+              <option value="Chihuahua"></option>
+              <option value="Ciudad de México"></option>
+              <option value="Coahuila"></option>
+              <option value="Colima"></option>
+              <option value="Durango"></option>
+              <option value="Estado de México"></option>
+              <option value="Guanajuato"></option>
+              <option value="Guerrero"></option>
+              <option value="Hidalgo"></option>
+              <option value="Jalisco"></option>
+              <option value="Michoacán"></option>
+              <option value="Morelos"></option>
+              <option value="Nayarit"></option>
+              <option value="Nuevo León"></option>
+              <option value="Oaxaca"></option>
+              <option value="Puebla"></option>
+              <option value="Querétaro"></option>
+              <option value="Quintana Roo"></option>
+              <option value="San Luis Potosí"></option>
+              <option value="Sinaloa"></option>
+              <option value="Sonora"></option>
+              <option value="Tabasco"></option>
+              <option value="Tamaulipas"></option>
+              <option value="Tlaxcala"></option>
+              <option value="Veracruz"></option>
+              <option value="Yucatán"></option>
+              <option value="Zacatecas"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <div class="row">
+          <select>
+            <option>Habitaciones</option>
+          </select>
+          <select>
+            <option>Baños</option>
+          </select>
+          <input
+            type="text"
+            class="input-precio"
+            placeholder="Presupuesto máximo"
+            [(ngModel)]="presupuestoMaximo"
+            (input)="formatearPresupuesto($event)"
+          />
+
+          <button class="btn-buscar">Buscar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="resultados-section">
+    <h2 class="titulo-seccion">Propiedades</h2>
+    <div class="propiedades-grid">
+      <div class="card-propiedad" *ngFor="let propiedad of propiedades">
+        <div class="img-wrapper">
+          <img
+            [src]="propiedad.imagenPrincipal || 'assets/img/sin-imagen.jpg'"
+            alt="imagen"
+          />
+          <div class="etiqueta">
+            {{ propiedad.estadoPropiedad | uppercase }}
+          </div>
+        </div>
+
+        <div class="card-content">
+          <div class="tipo">{{ propiedad.tipoPropiedad | uppercase }}</div>
+          <div class="precio">{{ propiedad.precio | currency: 'MXN' }}</div>
+          <div class="descripcion">
+            {{ propiedad.descripcion || 'Sin descripción' }}
+          </div>
+          <div class="ubicacion">
+            <ion-icon name="location-outline"></ion-icon>
+            {{ propiedad.direccion?.municipio }}, {{ propiedad.direccion?.estado
+            }}
+          </div>
+
+          <div class="detalles">
+            <span
+              ><ion-icon name="bed-outline"></ion-icon> {{
+              propiedad.caracteristicas?.casaDepto?.habitaciones || 0 }}</span
+            >
+            <span
+              ><ion-icon name="water-outline"></ion-icon> {{
+              propiedad.caracteristicas?.casaDepto?.banosCompletos || 0 }}</span
+            >
+            <span
+              ><ion-icon name="car-outline"></ion-icon> {{
+              propiedad.caracteristicas?.casaDepto?.estacionamiento || 0
+              }}</span
+            >
+          </div>
+
+          <div class="acciones">
+            <button><ion-icon name="call-outline"></ion-icon> Llamar</button>
+            <button><ion-icon name="mail-outline"></ion-icon> Email</button>
+            <button><ion-icon name="logo-whatsapp"></ion-icon> WhatsApp</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="formulario-agente">
+    <form class="form-contacto">
+      <h2 class="form-title">CONTACTA A UN AGENTE ES MUY FÁCIL</h2>
+
+      <select>
+        <option value="" disabled selected hidden>Tipo</option>
+        <option value="">---</option>
+        <option value="casa">Casa</option>
+        <option value="departamento">Departamento</option>
+        <option value="terreno">Terreno</option>
+        <option value="local">Local</option>
+        <option value="bodega">Bodega</option>
+        <option value="rancho">Rancho</option>
+        <option value="oficina">Oficina</option>
+        <option value="edificio">Edificio</option>
+      </select>
+
+      <select required>
+        <option value="" disabled selected>Información</option>
+        <option>Cliente comprador</option>
+        <option>Cliente arrendador</option>
+        <option>Cliente propietario</option>
+        <option>Asesor inmobiliario</option>
+      </select>
+
+      <div class="fila-doble">
+        <input type="text" placeholder="nombre" required />
+        <input type="text" placeholder="apellidos" required />
+      </div>
+
+      <div class="fila-doble">
+        <input type="tel" placeholder="teléfono" required />
+        <input type="email" placeholder="Email" required />
+      </div>
+
+      <div class="fila-doble">
+        <input type="text" placeholder="ciudad" required />
+        <input type="text" placeholder="municipio" required />
+      </div>
+
+      <input
+        type="text"
+        placeholder="escribe las características de la propiedad que buscas"
+      />
+
+      <div class="fila-doble">
+        <input type="number" placeholder="presupuesto mínimo" />
+        <input type="number" placeholder="presupuesto máximo" />
+      </div>
+
+      <select>
+        <option value="" disabled selected>Forma de Pago</option>
+        <option>Crédito</option>
+        <option>Contado</option>
+        <option>Por definir</option>
+      </select>
+
+      <select required>
+        <option value="" disabled selected>
+          ¿Por qué medio quieres que te enviemos la información?
+        </option>
+        <option>WhatsApp</option>
+        <option>Correo electrónico</option>
+      </select>
+
+      <button type="submit" class="boton-submit">Submit</button>
+    </form>
+  </section>
+
+  <app-footer></app-footer>
 </ion-content>
-

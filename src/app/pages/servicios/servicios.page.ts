@@ -4,13 +4,10 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-servicios',
   templateUrl: './servicios.page.html',
   styleUrls: ['./servicios.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class ServiciosPage implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

@@ -4,13 +4,10 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-blog',
   templateUrl: './blog.page.html',
   styleUrls: ['./blog.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class BlogPage implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

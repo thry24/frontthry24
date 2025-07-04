@@ -1,5 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { ModalController, AlertController, LoadingController } from '@ionic/angular';
+import {
+  ModalController,
+  AlertController,
+  LoadingController,
+} from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +13,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './verification-modal.component.html',
   styleUrls: ['./verification-modal.component.scss'],
   standalone: true,
-  imports: [FormsModule]
+  imports: [FormsModule],
 })
 export class VerificationModalComponent {
   @Input() correo!: string;
@@ -28,20 +32,22 @@ export class VerificationModalComponent {
   }
 
   async verificarCodigo() {
-    const loading = await this.loadingCtrl.create({ message: 'Verificando...' });
+    const loading = await this.loadingCtrl.create({
+      message: 'Verificando...',
+    });
     await loading.present();
 
     this.authService.verifyCode(this.correo, this.code).subscribe({
       next: async () => {
         this.authService.register(this.correo).subscribe({
           next: async (res) => {
-            const { token, user } = res; 
-            this.authService.guardarSesion(token, user); 
+            const { token, user } = res;
+            this.authService.guardarSesion(token, user);
             await loading.dismiss();
             const alert = await this.alertCtrl.create({
               header: 'Éxito',
               message: 'Cuenta verificada y registrada correctamente.',
-              buttons: ['OK']
+              buttons: ['OK'],
             });
             await alert.present();
             this.modalCtrl.dismiss();
@@ -52,10 +58,10 @@ export class VerificationModalComponent {
             const alert = await this.alertCtrl.create({
               header: 'Error al registrar',
               message: err.error?.msg || 'Error al completar el registro.',
-              buttons: ['OK']
+              buttons: ['OK'],
             });
             await alert.present();
-          }
+          },
         });
       },
       error: async (err) => {
@@ -63,10 +69,10 @@ export class VerificationModalComponent {
         const alert = await this.alertCtrl.create({
           header: 'Código incorrecto',
           message: err.error?.msg || 'El código ingresado no es válido.',
-          buttons: ['OK']
+          buttons: ['OK'],
         });
         await alert.present();
-      }
+      },
     });
   }
 }

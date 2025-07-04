@@ -17,8 +17,8 @@ import { FooterComponent } from 'src/app/components/footer/footer.component';
     IonicModule,
     PrivacidadPageRoutingModule,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
   ],
-  declarations: [PrivacidadPage]
+  declarations: [PrivacidadPage],
 })
 export class PrivacidadPageModule {}

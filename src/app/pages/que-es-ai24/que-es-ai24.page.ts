@@ -4,13 +4,10 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-que-es-ai24',
   templateUrl: './que-es-ai24.page.html',
   styleUrls: ['./que-es-ai24.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class QueEsAi24Page implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

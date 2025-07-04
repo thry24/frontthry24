@@ -6,6 +6,9 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { LoadingService } from '../../../services/loading.service';
+import { PropiedadService } from 'src/app/services/propiedad.service';
+import { AlertaService } from 'src/app/services/alerta.service';
+import { AlertController } from '@ionic/angular';
 
 declare const google: any;
 
@@ -22,9 +25,9 @@ export class AgregarPage implements OnInit, AfterViewInit {
 
   map: any;
   marker: any;
-mostrarGenerales = false;
-mostrarServicios = false;
-mostrarAmenidades = false;
+  mostrarGenerales = false;
+  mostrarServicios = false;
+  mostrarAmenidades = false;
 
   tipoOperacion = '';
   tipoPropiedad = '';
@@ -52,6 +55,13 @@ mostrarAmenidades = false;
     telefono: '',
     email: '',
   };
+  imagenPrincipalUrl: string | null = null;
+  imagenesUrls: string[] = [];
+  archivosNombres: string[] = [];
+
+  imagenPrincipal: File | null = null;
+  imagenes: File[] = [];
+  archivos: File[] = [];
 
   caracteristicas: {
     casaDepto: {
@@ -151,7 +161,6 @@ mostrarAmenidades = false;
       estacionamientos: number;
       [key: string]: any;
     };
-    
   } = {
     casaDepto: {
       habitaciones: 0,
@@ -257,55 +266,55 @@ mostrarAmenidades = false;
   };
 
   generales: { [key: string]: boolean } = {
-  cisterna: false,
-  hidroneumatico: false,
-  cancelesBano: false,
-  riegoAspersion: false,
-  calentadorSolar: false,
-  lamparasSolares: false,
-  aireAcondicionado: false,
-  alarma: false,
-  bodega: false,
-  calefaccion: false,
-  chimenea: false,
-  circuitoCerrado: false,
-  sistemaInteligente: false,
-  elevador: false,
-  seguridad24h: false,
-  vistaPanoramica: false,
-  vistaFloraFauna: false
-};
+    cisterna: false,
+    hidroneumatico: false,
+    cancelesBano: false,
+    riegoAspersion: false,
+    calentadorSolar: false,
+    lamparasSolares: false,
+    aireAcondicionado: false,
+    alarma: false,
+    bodega: false,
+    calefaccion: false,
+    chimenea: false,
+    circuitoCerrado: false,
+    sistemaInteligente: false,
+    elevador: false,
+    seguridad24h: false,
+    vistaPanoramica: false,
+    vistaFloraFauna: false,
+  };
 
-servicios: { [key: string]: boolean } = {
-  tipoGas: false,
-  internet: false,
-  telefonia: false,
-  tv: false,
-  enchufeCarros: false,
-};
-amenidades: {
-  [key: string]: boolean | string;
-} = {
-  juegosInfantiles: false,
-  campoGolf: false,
-  gimnasio: false,
-  ludoteca: false,
-  salonEvento: false,
-  asadores: false,
-  lagos: false,
-  petFriendly: false,
-  piscina: false,
-  jacuzzi: false,
-  jogging: false,
-  futbol: false,
-  tenis: false,
-  squash: false,
-  paddle: false,
-  basket: false,
-  volley: false,
-  vistaGolf: false,
-  otros: '',
-};
+  servicios: { [key: string]: boolean } = {
+    tipoGas: false,
+    internet: false,
+    telefonia: false,
+    tv: false,
+    enchufeCarros: false,
+  };
+  amenidades: {
+    [key: string]: boolean | string;
+  } = {
+    juegosInfantiles: false,
+    campoGolf: false,
+    gimnasio: false,
+    ludoteca: false,
+    salonEvento: false,
+    asadores: false,
+    lagos: false,
+    petFriendly: false,
+    piscina: false,
+    jacuzzi: false,
+    jogging: false,
+    futbol: false,
+    tenis: false,
+    squash: false,
+    paddle: false,
+    basket: false,
+    volley: false,
+    vistaGolf: false,
+    otros: '',
+  };
 
   checkboxCols: any[][] = [];
   checkboxColsBodega: any[][] = [];
@@ -367,54 +376,53 @@ amenidades: {
   ];
 
   booleanosGenerales = [
-  { key: 'cisterna', label: 'Cisterna' },
-  { key: 'hidroneumatico', label: 'Hidroneumático' },
-  { key: 'cancelesBano', label: 'Canceles de Baño' },
-  { key: 'riegoAspersion', label: 'Riego por Aspersión' },
-  { key: 'calentadorSolar', label: 'Calentador Solar' },
-  { key: 'lamparasSolares', label: 'Lámparas Solares' },
-  { key: 'aireAcondicionado', label: 'Aire Acondicionado' },
-  { key: 'alarma', label: 'Alarma' },
-  { key: 'bodega', label: 'Bodega' },
-  { key: 'calefaccion', label: 'Calefacción' },
-  { key: 'chimenea', label: 'Chimenea' },
-  { key: 'circuitoCerrado', label: 'Circuito Cerrado' },
-  { key: 'sistemaInteligente', label: 'Sistema Inteligente' },
-  { key: 'elevador', label: 'Elevador' },
-  { key: 'seguridad24h', label: 'Seguridad 24/7' },
-  { key: 'vistaPanoramica', label: 'Vista Panorámica' },
-  { key: 'vistaFloraFauna', label: 'Vista Flora y Fauna' },
-];
+    { key: 'cisterna', label: 'Cisterna' },
+    { key: 'hidroneumatico', label: 'Hidroneumático' },
+    { key: 'cancelesBano', label: 'Canceles de Baño' },
+    { key: 'riegoAspersion', label: 'Riego por Aspersión' },
+    { key: 'calentadorSolar', label: 'Calentador Solar' },
+    { key: 'lamparasSolares', label: 'Lámparas Solares' },
+    { key: 'aireAcondicionado', label: 'Aire Acondicionado' },
+    { key: 'alarma', label: 'Alarma' },
+    { key: 'bodega', label: 'Bodega' },
+    { key: 'calefaccion', label: 'Calefacción' },
+    { key: 'chimenea', label: 'Chimenea' },
+    { key: 'circuitoCerrado', label: 'Circuito Cerrado' },
+    { key: 'sistemaInteligente', label: 'Sistema Inteligente' },
+    { key: 'elevador', label: 'Elevador' },
+    { key: 'seguridad24h', label: 'Seguridad 24/7' },
+    { key: 'vistaPanoramica', label: 'Vista Panorámica' },
+    { key: 'vistaFloraFauna', label: 'Vista Flora y Fauna' },
+  ];
 
-booleanosServicios = [
-  { key: 'tipoGas', label: 'Gas' },
-  { key: 'internet', label: 'Internet' },
-  { key: 'telefonia', label: 'Telefonía' },
-  { key: 'tv', label: 'TV por cable' },
-  { key: 'enchufeCarros', label: 'Enchufe p/ autos eléctricos' },
-];
+  booleanosServicios = [
+    { key: 'tipoGas', label: 'Gas' },
+    { key: 'internet', label: 'Internet' },
+    { key: 'telefonia', label: 'Telefonía' },
+    { key: 'tv', label: 'TV por cable' },
+    { key: 'enchufeCarros', label: 'Enchufe p/ autos eléctricos' },
+  ];
 
-booleanosAmenidades = [
-  { key: 'juegosInfantiles', label: 'Juegos Infantiles' },
-  { key: 'campoGolf', label: 'Campo de Golf' },
-  { key: 'gimnasio', label: 'Gimnasio' },
-  { key: 'ludoteca', label: 'Ludoteca' },
-  { key: 'salonEvento', label: 'Salón de Eventos' },
-  { key: 'asadores', label: 'Asadores' },
-  { key: 'lagos', label: 'Lagos' },
-  { key: 'petFriendly', label: 'Pet Friendly' },
-  { key: 'piscina', label: 'Piscina' },
-  { key: 'jacuzzi', label: 'Jacuzzi' },
-  { key: 'jogging', label: 'Pista de Jogging' },
-  { key: 'futbol', label: 'Cancha de Futbol' },
-  { key: 'tenis', label: 'Cancha de Tenis' },
-  { key: 'squash', label: 'Squash' },
-  { key: 'paddle', label: 'Paddle' },
-  { key: 'basket', label: 'Cancha de Basket' },
-  { key: 'volley', label: 'Cancha de Volley' },
-  { key: 'vistaGolf', label: 'Vista al Campo de Golf' },
-];
-
+  booleanosAmenidades = [
+    { key: 'juegosInfantiles', label: 'Juegos Infantiles' },
+    { key: 'campoGolf', label: 'Campo de Golf' },
+    { key: 'gimnasio', label: 'Gimnasio' },
+    { key: 'ludoteca', label: 'Ludoteca' },
+    { key: 'salonEvento', label: 'Salón de Eventos' },
+    { key: 'asadores', label: 'Asadores' },
+    { key: 'lagos', label: 'Lagos' },
+    { key: 'petFriendly', label: 'Pet Friendly' },
+    { key: 'piscina', label: 'Piscina' },
+    { key: 'jacuzzi', label: 'Jacuzzi' },
+    { key: 'jogging', label: 'Pista de Jogging' },
+    { key: 'futbol', label: 'Cancha de Futbol' },
+    { key: 'tenis', label: 'Cancha de Tenis' },
+    { key: 'squash', label: 'Squash' },
+    { key: 'paddle', label: 'Paddle' },
+    { key: 'basket', label: 'Cancha de Basket' },
+    { key: 'volley', label: 'Cancha de Volley' },
+    { key: 'vistaGolf', label: 'Vista al Campo de Golf' },
+  ];
 
   tiposPropiedad = [
     'casa',
@@ -428,7 +436,12 @@ booleanosAmenidades = [
   ];
   estados = ['activa', 'oportunidad', 'remate bancario'];
 
-  constructor(private loading: LoadingService) {}
+  constructor(
+    private loading: LoadingService,
+    private propiedadService: PropiedadService,
+    private alerta: AlertaService,
+    private alertCtrl: AlertController
+  ) {}
   ngOnInit(): void {
     this.generarCheckboxCols();
     this.generarCheckboxColsRancho();
@@ -444,15 +457,45 @@ booleanosAmenidades = [
     this.setupAutocomplete();
   }
 
-  
-
   onKmzFileSelected(event: any): void {
     const archivo: File = event.target.files[0];
     if (archivo && archivo.name.endsWith('.kmz')) {
       console.log('Archivo KMZ seleccionado:', archivo);
     } else {
-      alert('Solo se permiten archivos con extensión .kmz');
+      this.alerta.mostrar(
+        'Solo se permiten archivos con extensión .kmz',
+        'error'
+      );
     }
+  }
+
+  onImagenPrincipalSeleccionada(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.imagenPrincipal = file;
+      const reader = new FileReader();
+      reader.onload = (e) =>
+        (this.imagenPrincipalUrl = e.target?.result as string);
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onImagenesSeleccionadas(event: any) {
+    const files = Array.from(event.target.files) as File[];
+    this.imagenes = files;
+    this.imagenesUrls = [];
+
+    files.forEach((file: File) => {
+      const reader = new FileReader();
+      reader.onload = (e) => this.imagenesUrls.push(e.target?.result as string);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  onArchivosSeleccionados(event: any) {
+    const files = Array.from(event.target.files) as File[];
+    this.archivos = files;
+    this.archivosNombres = files.map((f: File) => f.name);
   }
 
   generarCheckboxCols() {
@@ -484,23 +527,37 @@ booleanosAmenidades = [
   }
 
   generarCheckboxColsGenerales() {
-  const col1 = this.booleanosGenerales.filter((_, i) => i % 2 === 0);
-  const col2 = this.booleanosGenerales.filter((_, i) => i % 2 !== 0);
-  this.checkboxColsGenerales = [col1, col2];
-}
+    const col1 = this.booleanosGenerales.filter((_, i) => i % 2 === 0);
+    const col2 = this.booleanosGenerales.filter((_, i) => i % 2 !== 0);
+    this.checkboxColsGenerales = [col1, col2];
+  }
 
-generarCheckboxColsServicios() {
-  const col1 = this.booleanosServicios.filter((_, i) => i % 2 === 0);
-  const col2 = this.booleanosServicios.filter((_, i) => i % 2 !== 0);
-  this.checkboxColsServicios = [col1, col2];
-}
+  generarCheckboxColsServicios() {
+    const col1 = this.booleanosServicios.filter((_, i) => i % 2 === 0);
+    const col2 = this.booleanosServicios.filter((_, i) => i % 2 !== 0);
+    this.checkboxColsServicios = [col1, col2];
+  }
 
-generarCheckboxColsAmenidades() {
-  const col1 = this.booleanosAmenidades.filter((_, i) => i % 2 === 0);
-  const col2 = this.booleanosAmenidades.filter((_, i) => i % 2 !== 0);
-  this.checkboxColsAmenidades = [col1, col2];
-}
+  generarCheckboxColsAmenidades() {
+    const col1 = this.booleanosAmenidades.filter((_, i) => i % 2 === 0);
+    const col2 = this.booleanosAmenidades.filter((_, i) => i % 2 !== 0);
+    this.checkboxColsAmenidades = [col1, col2];
+  }
 
+  eliminarImagenPrincipal() {
+    this.imagenPrincipal = null;
+    this.imagenPrincipalUrl = null;
+  }
+
+  eliminarImagen(index: number) {
+    this.imagenes.splice(index, 1);
+    this.imagenesUrls.splice(index, 1);
+  }
+
+  eliminarArchivo(index: number) {
+    this.archivos.splice(index, 1);
+    this.archivosNombres.splice(index, 1);
+  }
 
   loadMap(): void {
     const center = { lat: 20.5888, lng: -100.3899 };
@@ -621,7 +678,51 @@ generarCheckboxColsAmenidades() {
     return parseFloat(valorLimpio || '0');
   }
 
-  guardarPropiedad() {
+  async guardarPropiedad() {
+    if (
+      !this.tipoOperacion ||
+      !this.tipoPropiedad ||
+      !this.precio ||
+      !this.datosPropietario.nombre ||
+      !this.datosPropietario.telefono ||
+      !this.datosPropietario.email
+    ) {
+      this.alerta.mostrar(
+        'Por favor completa todos los campos obligatorios.',
+        'warning'
+      );
+      return;
+    }
+
+    const { lat, lng } = this.direccion;
+    const verificacion = await this.propiedadService
+      .verificarCoordenadas(lat, lng)
+      .toPromise();
+    const coincidencias = verificacion?.coincidencias ?? 0;
+
+    if (coincidencias > 0) {
+      const texto = coincidencias === 1 ? 'vez' : 'veces';
+      const alerta = await this.alertCtrl.create({
+        header: 'Propiedad duplicada',
+        message: `Esta propiedad ya ha sido publicada ${coincidencias} ${texto}. ¿Deseas continuar?`,
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+          },
+          {
+            text: 'Sí, continuar',
+            role: 'confirm',
+            cssClass: 'boton-guardar',
+          },
+        ],
+      });
+
+      await alerta.present();
+      const { role } = await alerta.onDidDismiss();
+      if (role !== 'confirm') return;
+    }
+
     const tipoFinalTerreno =
       this.caracteristicas.terreno.tipo === 'otro'
         ? this.caracteristicas.terreno.tipoOtro
@@ -648,62 +749,108 @@ generarCheckboxColsAmenidades() {
         : { comparte: false },
       direccion: this.direccion,
       datosPropietario: this.datosPropietario,
+      generales: this.generales,
+      servicios: this.servicios,
+      amenidades: this.amenidades,
     };
 
-    if (
-      this.tipoPropiedad === 'casa' ||
-      this.tipoPropiedad === 'departamento'
-    ) {
-      propiedadAGuardar.caracteristicas = {
-        casaDepto: this.caracteristicas.casaDepto,
-      };
-    } else if (this.tipoPropiedad === 'terreno') {
-      propiedadAGuardar.caracteristicas = {
-        terreno: {
-          ...this.caracteristicas.terreno,
-          tipo: tipoFinalTerreno,
-        },
-      };
-    } else if (this.tipoPropiedad === 'local') {
-      propiedadAGuardar.caracteristicas = {
-        local: {
-          ...this.caracteristicas.local,
-          tipoCentro: tipoFinalCentro,
-          restriccionGiro: restriccionFinal,
-        },
-      };
-    } else if (this.tipoPropiedad === 'bodega') {
-      propiedadAGuardar.caracteristicas = {
-        bodega: { ...this.caracteristicas.bodega },
-      };
-    } else if (this.tipoPropiedad === 'rancho') {
-      const usoFinal =
-        this.caracteristicas.rancho.uso === 'otro'
-          ? this.caracteristicas.rancho.usoOtro
-          : this.caracteristicas.rancho.uso;
-
-      propiedadAGuardar.caracteristicas = {
-        rancho: {
-          ...this.caracteristicas.rancho,
-          uso: usoFinal,
-        },
-      };
-    } else if (this.tipoPropiedad === 'oficina') {
-      propiedadAGuardar.caracteristicas = {
-        oficina: { ...this.caracteristicas.oficina },
-      };
-    } else if (this.tipoPropiedad === 'edificio') {
-      propiedadAGuardar.caracteristicas = {
-        edificio: { ...this.caracteristicas.edificio },
-      };
+    switch (this.tipoPropiedad) {
+      case 'casa':
+      case 'departamento':
+        propiedadAGuardar.caracteristicas = {
+          casaDepto: this.caracteristicas.casaDepto,
+        };
+        break;
+      case 'terreno':
+        propiedadAGuardar.caracteristicas = {
+          terreno: { ...this.caracteristicas.terreno, tipo: tipoFinalTerreno },
+        };
+        break;
+      case 'local':
+        propiedadAGuardar.caracteristicas = {
+          local: {
+            ...this.caracteristicas.local,
+            tipoCentro: tipoFinalCentro,
+            restriccionGiro: restriccionFinal,
+          },
+        };
+        break;
+      case 'bodega':
+        propiedadAGuardar.caracteristicas = {
+          bodega: { ...this.caracteristicas.bodega },
+        };
+        break;
+      case 'rancho':
+        const usoFinal =
+          this.caracteristicas.rancho.uso === 'otro'
+            ? this.caracteristicas.rancho.usoOtro
+            : this.caracteristicas.rancho.uso;
+        propiedadAGuardar.caracteristicas = {
+          rancho: { ...this.caracteristicas.rancho, uso: usoFinal },
+        };
+        break;
+      case 'oficina':
+        propiedadAGuardar.caracteristicas = {
+          oficina: { ...this.caracteristicas.oficina },
+        };
+        break;
+      case 'edificio':
+        propiedadAGuardar.caracteristicas = {
+          edificio: { ...this.caracteristicas.edificio },
+        };
+        break;
     }
 
-    propiedadAGuardar.generales = this.generales;
-    propiedadAGuardar.servicios = this.servicios;
-    propiedadAGuardar.amenidades = this.amenidades;
+    const formData = new FormData();
+    formData.append('datos', JSON.stringify(propiedadAGuardar));
 
+    if (this.imagenPrincipal) {
+      formData.append('imagenPrincipal', this.imagenPrincipal);
+    }
 
+    this.imagenes.forEach((img) => {
+      formData.append('imagenes', img);
+    });
 
-    console.log('Datos a guardar:', propiedadAGuardar);
+    this.archivos.forEach((file) => {
+      formData.append('archivos', file);
+    });
+
+    if (!this.imagenPrincipal && this.imagenes.length === 0) {
+      const alertaImagenes = await this.alertCtrl.create({
+        header: 'Imágenes faltantes',
+        message:
+          'Esta propiedad no se puede publicar por falta de imágenes. ¿Deseas continuar?',
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+          },
+          {
+            text: 'Sí, continuar',
+            role: 'confirm',
+            cssClass: 'boton-guardar',
+          },
+        ],
+      });
+
+      await alertaImagenes.present();
+      const { role } = await alertaImagenes.onDidDismiss();
+      if (role !== 'confirm') return;
+    }
+
+    this.propiedadService.agregarPropiedad(formData).subscribe({
+      next: (res) => {
+        this.alerta.mostrar('Propiedad guardada exitosamente.', 'success');
+        console.log(res);
+      },
+      error: (err) => {
+        console.error('Error al guardar propiedad:', err);
+        this.alerta.mostrar(
+          'Hubo un error al guardar la propiedad.',
+          'warning'
+        );
+      },
+    });
   }
 }

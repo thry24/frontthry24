@@ -4,13 +4,10 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-privacidad',
   templateUrl: './privacidad.page.html',
   styleUrls: ['./privacidad.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class PrivacidadPage implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

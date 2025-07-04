@@ -25,8 +25,6 @@
             (mouseleave)="startHideMenuTimer()"
             >Propiedades</a
           >
-
-          <!-- Agente -->
           <ng-container
             *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
           >
@@ -50,7 +48,6 @@
             >
           </ng-container>
 
-          <!-- Inmobiliaria -->
           <ng-container
             *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
           >
@@ -76,26 +73,25 @@
         </div>
 
         <div class="nav nav-derecha" *ngIf="mostrarSesion">
-  <ng-container *ngIf="isLogged; else noSesion">
-    <div class="user-session">
-      <img
-        class="avatar"
-        [src]="user?.fotoPerfil || user?.logo || 'assets/img/user.jpg'"
-        alt="Usuario"
-      />
-      <button class="btn-logout" (click)="logout()">
-        Cerrar sesión
-      </button>
-    </div>
-  </ng-container>
+          <ng-container *ngIf="isLogged; else noSesion">
+            <div class="user-session">
+              <img
+                class="avatar"
+                [src]="user?.fotoPerfil || user?.logo || 'assets/img/user.jpg'"
+                alt="Usuario"
+              />
+              <button class="btn-logout" (click)="logout()">
+                Cerrar sesión
+              </button>
+            </div>
+          </ng-container>
 
-  <ng-template #noSesion>
-    <button class="btn-login" routerLink="/login">
-      Iniciar sesión
-    </button>
-  </ng-template>
-</div>
-
+          <ng-template #noSesion>
+            <button class="btn-login" routerLink="/login">
+              Iniciar sesión
+            </button>
+          </ng-template>
+        </div>
       </div>
     </ion-toolbar>
   </ion-header>
@@ -119,7 +115,6 @@
     (mouseleave)="startHideMenuTimer()"
   >
     <ng-container [ngSwitch]="activeMenu">
-      <!-- Inicio -->
       <ng-container *ngSwitchCase="'inicio'">
         <a routerLink="/quienes-somos">¿Quiénes somos?</a>
         <a routerLink="/que-es-ai24">¿Qué es Ai24?</a>
@@ -129,7 +124,6 @@
         <a routerLink="/#">Private Policy</a>
       </ng-container>
 
-      <!-- Propiedades -->
       <ng-container *ngSwitchCase="'propiedades'">
         <div class="submenu-group">
           <div
@@ -182,8 +176,6 @@
         >
         <a (click)="navegarProtegido('/favoritos')">Mis Favoritas</a>
       </ng-container>
-
-      <!-- Agente -->
       <ng-container *ngSwitchCase="'agente'">
         <ng-container
           *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
@@ -193,10 +185,9 @@
         <ng-container *ngIf="isLogged && rol === 'agente'">
           <a routerLink="/agente/agregar">Agregar Propiedad</a>
           <a routerLink="/requerimientos/publicar">Publicar Requerimiento</a>
+          <a routerLink="/agente/mis-publicaciones">Mis publicaciones</a>
         </ng-container>
       </ng-container>
-
-      <!-- Inmobiliaria -->
       <ng-container *ngSwitchCase="'inmobiliaria'">
         <ng-container
           *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
@@ -211,7 +202,6 @@
   </div>
 </div>
 
-<!-- Si es login page solo se muestra el logo -->
 <div class="header-wrapper" *ngIf="isLoginPage">
   <ion-header>
     <ion-toolbar class="ai24-toolbar">

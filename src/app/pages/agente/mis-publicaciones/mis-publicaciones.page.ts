@@ -65,7 +65,7 @@ export class MisPublicacionesPage implements OnInit {
   }
 
   editarPropiedad(propiedad: any) {
-    this.router.navigate(['/editar-propiedad', propiedad._id]);
+    this.router.navigate(['agente/editar-propiedad', propiedad._id]);
   }
 
   async eliminarPropiedad(propiedad: any) {

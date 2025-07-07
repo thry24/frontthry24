@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { AgenteGuard } from './guards/agente.guard';
+import { InmobiliariaGuard } from './guards/inmobiliaria.guard';
 
 const routes: Routes = [
   {
@@ -48,11 +50,18 @@ const routes: Routes = [
   },
   {
     path: 'agente/agregar',
-    loadChildren: () => import('./pages/agente/agregar/agregar.module').then( m => m.AgregarPageModule)
+    loadChildren: () => import('./pages/agente/agregar/agregar.module').then( m => m.AgregarPageModule),
+    canActivate: [AgenteGuard]
   },
   {
     path: 'agente/mis-publicaciones',
-    loadChildren: () => import('./pages/agente/mis-publicaciones/mis-publicaciones.module').then( m => m.MisPublicacionesPageModule)
+    loadChildren: () => import('./pages/agente/mis-publicaciones/mis-publicaciones.module').then( m => m.MisPublicacionesPageModule),
+    canActivate: [AgenteGuard]
+  },
+  {
+    path: 'agente/editar-propiedad/:id',
+    loadChildren: () => import('./pages/agente/editar-propiedad/editar-propiedad.module').then( m => m.EditarPropiedadPageModule),
+    canActivate: [AgenteGuard]
   },
 ];
 

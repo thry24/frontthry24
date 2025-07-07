@@ -30,6 +30,12 @@ export class PropiedadService {
     );
   }
 
+  obtenerPropiedadPorId(id: string) {
+    return this.http.get(`${this.apiUrl}/propiedades/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
   obtenerPropiedadesAgente() {
     return this.http.get(`${this.apiUrl}/propiedades/agente/mis-propiedades`, {
       headers: this.getHeaders(),
@@ -37,9 +43,8 @@ export class PropiedadService {
   }
 
   obtenerPropiedadesPublicadas() {
-  return this.http.get(`${this.apiUrl}/propiedades`);
-}
-
+    return this.http.get(`${this.apiUrl}/propiedades`);
+  }
 
   eliminarPropiedad(id: string) {
     return this.http.delete(`${this.apiUrl}/propiedades/${id}`, {

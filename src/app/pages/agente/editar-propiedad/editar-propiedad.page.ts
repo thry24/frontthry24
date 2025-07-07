@@ -5,31 +5,28 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '../../../services/loading.service';
 import { PropiedadService } from 'src/app/services/propiedad.service';
 import { AlertaService } from 'src/app/services/alerta.service';
-import { AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
 
 declare const google: any;
 
 @Component({
-  selector: 'app-agregar',
-  templateUrl: './agregar.page.html',
-  styleUrls: ['./agregar.page.scss'],
+  selector: 'app-editar',
+  templateUrl: './editar-propiedad.page.html',
+  styleUrls: ['./editar-propiedad.page.scss'],
   standalone: false,
 })
-export class AgregarPage implements OnInit, AfterViewInit {
+export class EditarPropiedadPage implements OnInit, AfterViewInit {
   @ViewChild('map', { static: false }) mapElement!: ElementRef;
   @ViewChild('autocompleteInput', { static: false })
   autocompleteInput!: ElementRef;
 
   map: any;
   marker: any;
-  mostrarGenerales = false;
-  mostrarServicios = false;
-  mostrarAmenidades = false;
 
+  idPropiedad = '';
   tipoOperacion = '';
   tipoPropiedad = '';
   precio!: number;
@@ -46,16 +43,13 @@ export class AgregarPage implements OnInit, AfterViewInit {
     lat: 0,
     lng: 0,
   };
-  otroTerreno = false;
-  otroTipoCentro = false;
-  otraRestriccion = false;
-  mostrarPopoverGenerales = false;
 
   datosPropietario = {
     nombre: '',
     telefono: '',
     email: '',
   };
+
   imagenPrincipalUrl: string | null = null;
   imagenesUrls: string[] = [];
   archivosNombres: string[] = [];
@@ -64,258 +58,32 @@ export class AgregarPage implements OnInit, AfterViewInit {
   imagenes: File[] = [];
   archivos: File[] = [];
 
-  caracteristicas: {
-    casaDepto: {
-      habitaciones: number;
-      recamaraPB: boolean;
-      banosCompletos: number;
-      mediosBanos: number;
-      estacionamiento: string;
-      closetVestidor: string;
-      superficie: string;
-      construccion: string;
-      pisos: number;
-      cocina: string;
-      [key: string]: any;
-    };
-    terreno: {
-      m2Frente: string;
-      m2Fondo: string;
-      tipo: string;
-      tipoOtro: String;
-      costoXM2: string;
-      kmz: boolean;
-      agua: boolean;
-      luz: boolean;
-      drenaje: boolean;
-    };
-    local: {
-      tipoCentro: string;
-      tipoCentroOtro: string;
-      plaza: string;
-      pasillo: string;
-      planta: string;
-      m2Frente: string;
-      m2Fondo: string;
-      restriccionGiro: string;
-      restriccionGiroOtro: string;
-      giro: string;
-      seguridad: boolean;
-    };
-    bodega: {
-      tipo: string;
-      m2Terreno: string;
-      m2Construccion: string;
-      oficinas: number;
-      banos: number;
-      recepcion: boolean;
-      mezzanine: boolean;
-      comedor: boolean;
-      andenCarga: boolean;
-      rampas: boolean;
-      patioManiobras: boolean;
-      resistenciaPiso: string;
-      recoleccionResiduos: boolean;
-      subestacion: boolean;
-      cargaElectrica: string;
-      kva: string;
-      crossDocking: boolean;
-      techoLoza: boolean;
-      techoLamina: boolean;
-      arcoTecho: boolean;
-      banosEmpleados: number;
-      [key: string]: any;
-    };
-    rancho: {
-      hectareas: string;
-      uso: string;
-      usoOtro: string;
-      pozo: boolean;
-      corrales: boolean;
-      casa: boolean;
-      casco: boolean;
-      establo: boolean;
-      invernadero: boolean;
-      bordo: boolean;
-      [key: string]: any;
-    };
-    oficina: {
-      superficie: String;
-      privados: number;
-      salaJuntas: number;
-      banosPrivados: number;
-      banosCompartidos: number;
-      comedores: boolean;
-      empleados: number;
-      corporativo: boolean;
-      [key: string]: any;
-    };
-    edificio: {
-      m2xPiso: String;
-      pisosEdificio: number;
-      oficinas: number;
-      sistemaIncendios: boolean;
-      aguasPluviales: boolean;
-      aguasNegras: boolean;
-      gatosHidraulicos: boolean;
-      autosustentable: boolean;
-      estacionamientos: number;
-      [key: string]: any;
-    };
-  } = {
-    casaDepto: {
-      habitaciones: 0,
-      recamaraPB: false,
-      banosCompletos: 0,
-      mediosBanos: 0,
-      estacionamiento: '',
-      closetVestidor: '',
-      superficie: '',
-      construccion: '',
-      pisos: 0,
-      cocina: '',
-      barraDesayunador: false,
-      balcon: false,
-      salaTV: false,
-      estudio: false,
-      areaLavado: false,
-      cuartoServicio: false,
-      sotano: false,
-      jardin: false,
-      terraza: false,
-    },
-    terreno: {
-      m2Frente: '',
-      m2Fondo: '',
-      tipo: '',
-      tipoOtro: '',
-      costoXM2: '',
-      kmz: false,
-      agua: false,
-      luz: false,
-      drenaje: false,
-    },
-    local: {
-      tipoCentro: '',
-      tipoCentroOtro: '',
-      plaza: '',
-      pasillo: '',
-      planta: '',
-      m2Frente: '',
-      m2Fondo: '',
-      restriccionGiro: '',
-      restriccionGiroOtro: '',
-      giro: '',
-      seguridad: false,
-    },
-    bodega: {
-      tipo: '',
-      m2Terreno: '',
-      m2Construccion: '',
-      oficinas: 0,
-      banos: 0,
-      recepcion: false,
-      mezzanine: false,
-      comedor: false,
-      andenCarga: false,
-      rampas: false,
-      patioManiobras: false,
-      resistenciaPiso: '',
-      recoleccionResiduos: false,
-      subestacion: false,
-      cargaElectrica: '',
-      kva: '',
-      crossDocking: false,
-      techoLoza: false,
-      techoLamina: false,
-      arcoTecho: false,
-      banosEmpleados: 0,
-    },
-    rancho: {
-      hectareas: '',
-      uso: '',
-      usoOtro: '',
-      pozo: false,
-      corrales: false,
-      casa: false,
-      casco: false,
-      establo: false,
-      invernadero: false,
-      bordo: false,
-    },
-    oficina: {
-      superficie: '',
-      privados: 0,
-      salaJuntas: 0,
-      banosPrivados: 0,
-      banosCompartidos: 0,
-      comedores: false,
-      empleados: 0,
-      corporativo: false,
-    },
-    edificio: {
-      m2xPiso: '',
-      pisosEdificio: 0,
-      oficinas: 0,
-      sistemaIncendios: false,
-      aguasPluviales: false,
-      aguasNegras: false,
-      gatosHidraulicos: false,
-      autosustentable: false,
-      estacionamientos: 0,
-    },
-  };
+  generales: { [key: string]: boolean } = {};
+  servicios: { [key: string]: boolean } = {};
+  amenidades: { [key: string]: boolean | string } = {};
 
-  generales: { [key: string]: boolean } = {
-    cisterna: false,
-    hidroneumatico: false,
-    cancelesBano: false,
-    riegoAspersion: false,
-    calentadorSolar: false,
-    lamparasSolares: false,
-    aireAcondicionado: false,
-    alarma: false,
-    bodega: false,
-    calefaccion: false,
-    chimenea: false,
-    circuitoCerrado: false,
-    sistemaInteligente: false,
-    elevador: false,
-    seguridad24h: false,
-    vistaPanoramica: false,
-    vistaFloraFauna: false,
-  };
+  caracteristicas: any = {};
 
-  servicios: { [key: string]: boolean } = {
-    tipoGas: false,
-    internet: false,
-    telefonia: false,
-    tv: false,
-    enchufeCarros: false,
-  };
-  amenidades: {
-    [key: string]: boolean | string;
-  } = {
-    juegosInfantiles: false,
-    campoGolf: false,
-    gimnasio: false,
-    ludoteca: false,
-    salonEvento: false,
-    asadores: false,
-    lagos: false,
-    petFriendly: false,
-    piscina: false,
-    jacuzzi: false,
-    jogging: false,
-    futbol: false,
-    tenis: false,
-    squash: false,
-    paddle: false,
-    basket: false,
-    volley: false,
-    vistaGolf: false,
-    otros: '',
-  };
+  tiposPropiedad = [
+    'casa',
+    'departamento',
+    'terreno',
+    'local',
+    'bodega',
+    'rancho',
+    'oficina',
+    'edificio',
+  ];
+  estados = ['activa', 'oportunidad', 'remate bancario'];
+
+  mostrarGenerales = false;
+  mostrarServicios = false;
+  mostrarAmenidades = false;
+
+  otroTerreno = false;
+  otroTipoCentro = false;
+  otraRestriccion = false;
+  direccionFormateada = '';
 
   checkboxCols: any[][] = [];
   checkboxColsBodega: any[][] = [];
@@ -425,26 +193,15 @@ export class AgregarPage implements OnInit, AfterViewInit {
     { key: 'vistaGolf', label: 'Vista al Campo de Golf' },
   ];
 
-  tiposPropiedad = [
-    'casa',
-    'departamento',
-    'terreno',
-    'local',
-    'bodega',
-    'rancho',
-    'oficina',
-    'edificio',
-  ];
-  estados = ['activa', 'oportunidad', 'remate bancario'];
-
   constructor(
-    private loading: LoadingService,
+    private route: ActivatedRoute,
     private propiedadService: PropiedadService,
     private alerta: AlertaService,
-    private alertCtrl: AlertController,
+    private loading: LoadingService,
     private router: Router
   ) {}
-  ngOnInit(): void {
+
+  ngOnInit() {
     this.generarCheckboxCols();
     this.generarCheckboxColsRancho();
     this.generarCheckboxColsOficina();
@@ -452,11 +209,58 @@ export class AgregarPage implements OnInit, AfterViewInit {
     this.generarCheckboxColsGenerales();
     this.generarCheckboxColsServicios();
     this.generarCheckboxColsAmenidades();
+
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.idPropiedad = id;
+        this.cargarPropiedad(id);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
-    this.loadMap();
     this.setupAutocomplete();
+  }
+
+  cargarPropiedad(id: string) {
+    this.loading.mostrar();
+    this.propiedadService.obtenerPropiedadPorId(id).subscribe({
+      next: (prop: any) => {
+        this.tipoOperacion = prop.tipoOperacion;
+        this.tipoPropiedad = prop.tipoPropiedad;
+        this.precio = prop.precio;
+        this.descripcion = prop.descripcion;
+        this.estadoPropiedad = prop.estadoPropiedad;
+        this.comisionComparte = prop.comision?.comparte || false;
+        this.comisionPorcentaje = prop.comision?.porcentaje || 0;
+
+        this.direccion = prop.direccion;
+        this.datosPropietario = prop.datosPropietario || {};
+        this.generales = prop.generales || {};
+        this.servicios = prop.servicios || {};
+        this.amenidades = prop.amenidades || {};
+        this.caracteristicas = prop.caracteristicas || {};
+        this.imagenesUrls = prop.imagenes || [];
+        this.imagenes = [];
+        this.archivosNombres = (prop.archivos || []).map((a: any) => a.nombre);
+        this.imagenPrincipalUrl = prop.imagenPrincipal || null;
+
+        console.log(prop);
+
+        this.actualizarDireccionPorCoordenadas(
+          this.direccion.lat,
+          this.direccion.lng
+        );
+        this.loadMap();
+        this.loading.ocultar();
+      },
+      error: () => {
+        this.alerta.mostrar('Error al cargar los datos', 'error');
+        this.loading.ocultar();
+        this.router.navigate(['/home']);
+      },
+    });
   }
 
   onKmzFileSelected(event: any): void {
@@ -471,13 +275,93 @@ export class AgregarPage implements OnInit, AfterViewInit {
     }
   }
 
+  async guardarCambios() {
+    if (
+      !this.tipoOperacion ||
+      !this.tipoPropiedad ||
+      !this.precio ||
+      !this.datosPropietario.nombre ||
+      !this.datosPropietario.telefono ||
+      !this.datosPropietario.email
+    ) {
+      this.alerta.mostrar(
+        'Por favor completa todos los campos obligatorios.',
+        'warning'
+      );
+      return;
+    }
+
+    const propiedadEditada: any = {
+      tipoOperacion: this.tipoOperacion,
+      tipoPropiedad: this.tipoPropiedad,
+      precio: this.precio,
+      descripcion: this.descripcion,
+      estadoPropiedad: this.estadoPropiedad,
+      comision: this.comisionComparte
+        ? { porcentaje: this.comisionPorcentaje, comparte: true }
+        : { comparte: false },
+      direccion: this.direccion,
+      datosPropietario: this.datosPropietario,
+      generales: this.generales,
+      servicios: this.servicios,
+      amenidades: this.amenidades,
+      caracteristicas: this.caracteristicas,
+    };
+
+    const formData = new FormData();
+    formData.append('datos', JSON.stringify(propiedadEditada));
+
+    const urlsFiltradas = this.imagenesUrls.filter(
+      (url) => !url.startsWith('data:')
+    );
+    formData.append('imagenesExistentes', JSON.stringify(urlsFiltradas));
+    formData.append('archivosExistentes', JSON.stringify(this.archivosNombres));
+
+    if (this.imagenPrincipal instanceof File) {
+      formData.append('imagenPrincipal', this.imagenPrincipal);
+      formData.append('imagenes', this.imagenPrincipal);
+    }
+
+    this.imagenes.forEach((img) => {
+      if (typeof img !== 'string') {
+        formData.append('imagenes', img);
+      }
+    });
+
+    this.archivos.forEach((file) => {
+      formData.append('archivos', file);
+    });
+
+    this.loading.mostrar();
+    this.propiedadService
+      .actualizarPropiedad(this.idPropiedad, formData)
+      .subscribe({
+        next: () => {
+          this.loading.ocultar();
+          this.alerta.mostrar('Propiedad actualizada con éxito.', 'success');
+          window.location.href = '/agente/mis-publicaciones';
+        },
+        error: () => {
+          this.loading.ocultar();
+          this.alerta.mostrar('Error al actualizar la propiedad.', 'error');
+        },
+      });
+  }
+
   onImagenPrincipalSeleccionada(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.imagenPrincipal = file;
+
       const reader = new FileReader();
-      reader.onload = (e) =>
-        (this.imagenPrincipalUrl = e.target?.result as string);
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        this.imagenPrincipalUrl = result;
+
+        if (!this.imagenesUrls.includes(result)) {
+          this.imagenesUrls.push(result);
+        }
+      };
       reader.readAsDataURL(file);
     }
   }
@@ -494,11 +378,24 @@ export class AgregarPage implements OnInit, AfterViewInit {
     }
 
     nuevosArchivos.forEach((file: File) => {
-      this.imagenes.push(file);
+      const yaExisteNuevo = this.imagenes.some(
+        (img) => img.name === file.name && img.size === file.size
+      );
 
-      const reader = new FileReader();
-      reader.onload = (e) => this.imagenesUrls.push(e.target?.result as string);
-      reader.readAsDataURL(file);
+      const yaExisteEnBD = this.imagenesUrls.some((url) =>
+        url.includes(file.name)
+      );
+
+      if (!yaExisteNuevo && !yaExisteEnBD) {
+        this.imagenes.push(file);
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64 = e.target?.result as string;
+          this.imagenesUrls.push(base64); 
+        };
+        reader.readAsDataURL(file);
+      }
     });
   }
 
@@ -578,7 +475,10 @@ export class AgregarPage implements OnInit, AfterViewInit {
   }
 
   loadMap(): void {
-    const center = { lat: 20.5888, lng: -100.3899 };
+    const lat = this.direccion.lat || 20.5888;
+    const lng = this.direccion.lng || -100.3899;
+
+    const center = { lat, lng };
 
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center,
@@ -594,7 +494,7 @@ export class AgregarPage implements OnInit, AfterViewInit {
       gmpDraggable: true,
     });
 
-    this.actualizarDireccionPorCoordenadas(center.lat, center.lng);
+    this.actualizarDireccionPorCoordenadas(lat, lng);
 
     this.marker.addListener('gmp-dragend', (event: any) => {
       const pos = event.latLng;
@@ -654,6 +554,8 @@ export class AgregarPage implements OnInit, AfterViewInit {
       if (status === 'OK' && results[0]) {
         const address = results[0];
 
+        this.direccionFormateada = address.formatted_address;
+
         for (const comp of address.address_components) {
           const types = comp.types;
 
@@ -694,166 +596,5 @@ export class AgregarPage implements OnInit, AfterViewInit {
   limpiarNumero(event: any): number {
     const valorLimpio = event?.target?.value?.replace(/[^0-9.]/g, '');
     return parseFloat(valorLimpio || '0');
-  }
-
-  async guardarPropiedad() {
-    if (
-      !this.tipoOperacion ||
-      !this.tipoPropiedad ||
-      !this.precio ||
-      !this.datosPropietario.nombre ||
-      !this.datosPropietario.telefono ||
-      !this.datosPropietario.email
-    ) {
-      this.alerta.mostrar(
-        'Por favor completa todos los campos obligatorios.',
-        'warning'
-      );
-      return;
-    }
-
-    this.loading.mostrar();
-
-    const { lat, lng } = this.direccion;
-    const verificacion = await this.propiedadService
-      .verificarCoordenadas(lat, lng)
-      .toPromise();
-    const coincidencias = verificacion?.coincidencias ?? 0;
-
-    if (coincidencias > 0) {
-      const texto = coincidencias === 1 ? 'vez' : 'veces';
-      const alerta = await this.alertCtrl.create({
-        header: 'Propiedad duplicada',
-        message: `Esta propiedad ya ha sido publicada ${coincidencias} ${texto}. ¿Deseas continuar?`,
-        buttons: [
-          {
-            text: 'Cancelar',
-            role: 'cancel',
-          },
-          {
-            text: 'Sí, continuar',
-            role: 'confirm',
-            cssClass: 'boton-guardar',
-          },
-        ],
-      });
-
-      await alerta.present();
-      const { role } = await alerta.onDidDismiss();
-      if (role !== 'confirm') return;
-    }
-
-    const tipoFinalTerreno =
-      this.caracteristicas.terreno.tipo === 'otro'
-        ? this.caracteristicas.terreno.tipoOtro
-        : this.caracteristicas.terreno.tipo;
-
-    const tipoFinalCentro =
-      this.caracteristicas.local.tipoCentro === 'otro'
-        ? this.caracteristicas.local.tipoCentroOtro
-        : this.caracteristicas.local.tipoCentro;
-
-    const restriccionFinal =
-      this.caracteristicas.local.restriccionGiro === 'otra'
-        ? this.caracteristicas.local.restriccionGiroOtro
-        : this.caracteristicas.local.restriccionGiro;
-
-    const propiedadAGuardar: any = {
-      tipoOperacion: this.tipoOperacion,
-      tipoPropiedad: this.tipoPropiedad,
-      precio: this.precio,
-      descripcion: this.descripcion,
-      estadoPropiedad: this.estadoPropiedad,
-      comision: this.comisionComparte
-        ? { porcentaje: this.comisionPorcentaje, comparte: true }
-        : { comparte: false },
-      direccion: this.direccion,
-      datosPropietario: this.datosPropietario,
-      generales: this.generales,
-      servicios: this.servicios,
-      amenidades: this.amenidades,
-    };
-
-    switch (this.tipoPropiedad) {
-      case 'casa':
-      case 'departamento':
-        propiedadAGuardar.caracteristicas = {
-          casaDepto: this.caracteristicas.casaDepto,
-        };
-        break;
-      case 'terreno':
-        propiedadAGuardar.caracteristicas = {
-          terreno: { ...this.caracteristicas.terreno, tipo: tipoFinalTerreno },
-        };
-        break;
-      case 'local':
-        propiedadAGuardar.caracteristicas = {
-          local: {
-            ...this.caracteristicas.local,
-            tipoCentro: tipoFinalCentro,
-            restriccionGiro: restriccionFinal,
-          },
-        };
-        break;
-      case 'bodega':
-        propiedadAGuardar.caracteristicas = {
-          bodega: { ...this.caracteristicas.bodega },
-        };
-        break;
-      case 'rancho':
-        const usoFinal =
-          this.caracteristicas.rancho.uso === 'otro'
-            ? this.caracteristicas.rancho.usoOtro
-            : this.caracteristicas.rancho.uso;
-        propiedadAGuardar.caracteristicas = {
-          rancho: { ...this.caracteristicas.rancho, uso: usoFinal },
-        };
-        break;
-      case 'oficina':
-        propiedadAGuardar.caracteristicas = {
-          oficina: { ...this.caracteristicas.oficina },
-        };
-        break;
-      case 'edificio':
-        propiedadAGuardar.caracteristicas = {
-          edificio: { ...this.caracteristicas.edificio },
-        };
-        break;
-    }
-
-    const formData = new FormData();
-    formData.append('datos', JSON.stringify(propiedadAGuardar));
-
-    if (this.imagenPrincipal) {
-      formData.append('imagenPrincipal', this.imagenPrincipal);
-      formData.append('imagenes', this.imagenPrincipal);
-    }
-
-    this.imagenes.forEach((img) => {
-      formData.append('imagenes', img);
-    });
-
-    this.archivos.forEach((file) => {
-      formData.append('archivos', file);
-    });
-
-    this.propiedadService.agregarPropiedad(formData).subscribe({
-      next: (res) => {
-        this.loading.ocultar();
-        this.alerta.mostrar('Propiedad enviada a borrador.', 'success');
-        setTimeout(() => {
-          window.location.href = '/agente/mis-publicaciones';
-        }, 3000);
-        console.log(res);
-      },
-      error: (err) => {
-        this.loading.ocultar();
-        console.error('Error al guardar propiedad:', err);
-        this.alerta.mostrar(
-          'Hubo un error al guardar la propiedad.',
-          'warning'
-        );
-      },
-    });
   }
 }

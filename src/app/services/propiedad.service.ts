@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
+import { HttpParams } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root',
@@ -42,9 +44,11 @@ export class PropiedadService {
     });
   }
 
-  obtenerPropiedadesPublicadas() {
-    return this.http.get(`${this.apiUrl}/propiedades`);
-  }
+obtenerPropiedadesPublicadas(filtros: any) {
+  const params = new HttpParams({ fromObject: filtros });
+  return this.http.get(`${this.apiUrl}/propiedades`, { params });
+}
+
 
   eliminarPropiedad(id: string) {
     return this.http.delete(`${this.apiUrl}/propiedades/${id}`, {

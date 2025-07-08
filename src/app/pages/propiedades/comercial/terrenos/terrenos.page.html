@@ -1,0 +1,203 @@
+<app-header></app-header>
+
+<ion-content [fullscreen]="true">
+  <section class="contenedor-filtros-con-fondo">
+    <div class="filtros-propiedades">
+      <h1 class="titulo-filtro">Filtrar Propiedades</h1>
+
+      <div class="barra-filtros">
+        <input
+          type="text"
+          placeholder="Buscar por palabras clave..."
+          [(ngModel)]="keyword"
+        />
+
+        <select [(ngModel)]="tipoOperacion">
+          <option value="">Tipo de operación</option>
+          <option value="renta">Renta</option>
+          <option value="venta">Venta</option>
+        </select>
+
+        <select [(ngModel)]="estado">
+          <option value="">Estado</option>
+          <option value="Aguascalientes">Aguascalientes</option>
+          <option value="Baja California">Baja California</option>
+          <option value="Baja California Sur">Baja California Sur</option>
+          <option value="Campeche">Campeche</option>
+          <option value="Chiapas">Chiapas</option>
+          <option value="Chihuahua">Chihuahua</option>
+          <option value="CDMX">Ciudad de México</option>
+          <option value="Coahuila">Coahuila</option>
+          <option value="Colima">Colima</option>
+          <option value="Durango">Durango</option>
+          <option value="Estado de México">Estado de México</option>
+          <option value="Guanajuato">Guanajuato</option>
+          <option value="Guerrero">Guerrero</option>
+          <option value="Hidalgo">Hidalgo</option>
+          <option value="Jalisco">Jalisco</option>
+          <option value="Michoacán">Michoacán</option>
+          <option value="Morelos">Morelos</option>
+          <option value="Nayarit">Nayarit</option>
+          <option value="Nuevo León">Nuevo León</option>
+          <option value="Oaxaca">Oaxaca</option>
+          <option value="Puebla">Puebla</option>
+          <option value="Querétaro">Querétaro</option>
+          <option value="Quintana Roo">Quintana Roo</option>
+          <option value="San Luis Potosí">San Luis Potosí</option>
+          <option value="Sinaloa">Sinaloa</option>
+          <option value="Sonora">Sonora</option>
+          <option value="Tabasco">Tabasco</option>
+          <option value="Tamaulipas">Tamaulipas</option>
+          <option value="Tlaxcala">Tlaxcala</option>
+          <option value="Veracruz">Veracruz</option>
+          <option value="Yucatán">Yucatán</option>
+          <option value="Zacatecas">Zacatecas</option>
+        </select>
+
+        <select [(ngModel)]="estadoPropiedad">
+          <option value="">Estado de la propiedad</option>
+          <option *ngFor="let estado of estados" [value]="estado">
+            {{ estado | titlecase }}
+          </option>
+        </select>
+
+        <input
+          type="text"
+          placeholder="Presupuesto máximo"
+          class="precio-input"
+          [(ngModel)]="precioMax"
+          (input)="formatearPrecio($event)"
+        />
+
+        <button class="btn-buscar" (click)="buscarPropiedades()">Buscar</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="resultados-section">
+    <h2 class="titulo-seccion">Terrenos</h2>
+    <div class="propiedades-grid">
+      <ng-container *ngIf="propiedades.length > 0; else noResultados">
+        <div
+          class="card-propiedad"
+          *ngFor="let propiedad of propiedadesPaginadas"
+        >
+          <div class="img-wrapper">
+            <img
+              [src]="propiedad.imagenPrincipal || 'assets/img/sin-imagen.jpg'"
+              alt="imagen"
+            />
+            <div class="etiqueta">
+              {{ propiedad.estadoPropiedad | uppercase }}
+            </div>
+            <div class="iconos-superiores">
+              <ion-icon
+                name="heart-outline"
+                class="icono"
+                title="Agregar a favoritos"
+              ></ion-icon>
+              <ion-icon
+                name="add-circle-outline"
+                class="icono"
+                title="Comparar"
+              ></ion-icon>
+            </div>
+          </div>
+
+          <div class="card-content">
+            <div class="tipo">{{ propiedad.tipoPropiedad | uppercase }}</div>
+            <div class="precio">{{ propiedad.precio | currency: 'MXN' }}</div>
+            <div class="descripcion">
+              {{ propiedad.descripcion || 'Sin descripción' }}
+            </div>
+            <div class="ubicacion">
+              <ion-icon name="location-outline"></ion-icon>
+              {{ propiedad.direccion?.municipio }}, {{
+              propiedad.direccion?.estado }}
+            </div>
+
+            <div class="detalles">
+              <span
+                *ngIf="propiedad.caracteristicas?.terreno?.m2Frente && propiedad.caracteristicas?.terreno?.m2Fondo"
+              >
+                <ion-icon name="expand-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.terreno?.m2Frente }} x {{
+                propiedad.caracteristicas?.terreno?.m2Fondo }} m (Frente x
+                Fondo)
+              </span>
+
+              <span *ngIf="propiedad.caracteristicas?.terreno?.tipo">
+                <ion-icon name="map-outline"></ion-icon>
+                Tipo: {{ propiedad.caracteristicas?.terreno?.tipo }}
+              </span>
+
+              <span *ngIf="propiedad.caracteristicas?.terreno?.costoXM2">
+                <ion-icon name="cash-outline"></ion-icon>
+                ${{ propiedad.caracteristicas?.terreno?.costoXM2 }} por m²
+              </span>
+            </div>
+
+            <div class="acciones">
+              <a
+                *ngIf="propiedad.agente?.telefono"
+                [href]="'tel:' + propiedad.agente.telefono"
+                class="btn-contacto"
+              >
+                <ion-icon name="call-outline"></ion-icon> Llamar
+              </a>
+
+              <a
+                *ngIf="propiedad.agente?.correo"
+                [href]="'mailto:' + propiedad.agente.correo + '?subject=' + asuntoEmail(propiedad) + '&body=' + cuerpoEmail(propiedad)"
+                class="btn-contacto"
+              >
+                <ion-icon name="mail-outline"></ion-icon> Email
+              </a>
+
+              <a
+                *ngIf="propiedad.agente?.telefono"
+                [href]="'https://wa.me/52' + propiedad.agente.telefono + '?text=' + mensajeWhatsApp(propiedad)"
+                class="btn-contacto"
+                target="_blank"
+              >
+                <ion-icon name="logo-whatsapp"></ion-icon> WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noResultados>
+        <div class="mensaje-vacio">
+          <ion-icon name="home-outline" style="font-size: 48px"></ion-icon>
+          <p>No hay propiedades registradas por el momento.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="paginacion" *ngIf="totalPaginas() > 1">
+      <button
+        (click)="cambiarPagina(paginaActual - 1)"
+        [disabled]="paginaActual === 1"
+      >
+        Anterior
+      </button>
+
+      <button
+        *ngFor="let pagina of [].constructor(totalPaginas()); let i = index"
+        (click)="cambiarPagina(i + 1)"
+        [class.activa]="paginaActual === i + 1"
+      >
+        {{ i + 1 }}
+      </button>
+
+      <button
+        (click)="cambiarPagina(paginaActual + 1)"
+        [disabled]="paginaActual === totalPaginas()"
+      >
+        Siguiente
+      </button>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+</ion-content>

@@ -69,7 +69,7 @@ export class HeaderComponent implements OnInit {
     this.rol = null;
     this.alerta.mostrar('Se ha cerrado sesión correctamente', 'success');
     setTimeout(() => {
-      this.router.navigate(['/login']);
+      window.location.href = '/login';
     }, 1500);
   }
 
@@ -129,14 +129,14 @@ export class HeaderComponent implements OnInit {
 
   navegarProtegido(ruta: string) {
     if (this.isLogged) {
-      this.router.navigate([ruta]);
+      window.location.href = ruta;
     } else {
       this.alerta.mostrar(
         'Debes iniciar sesión para acceder a esta sección',
         'warning'
       );
       setTimeout(() => {
-        this.router.navigate(['/login']);
+        window.location.href = '/login';
       }, 1500);
     }
   }

@@ -63,6 +63,38 @@ const routes: Routes = [
     loadChildren: () => import('./pages/agente/editar-propiedad/editar-propiedad.module').then( m => m.EditarPropiedadPageModule),
     canActivate: [AgenteGuard]
   },
+  {
+    path: 'propiedades/habitacional/casa',
+    loadChildren: () => import('./pages/propiedades/habitacional/casa/casa.module').then( m => m.CasaPageModule)
+  },
+  {
+    path: 'propiedades/habitacional/departamento',
+    loadChildren: () => import('./pages/propiedades/habitacional/departamento/departamento.module').then( m => m.DepartamentoPageModule)
+  },
+  {
+    path: 'propiedades/comercial/locales',
+    loadChildren: () => import('./pages/propiedades/comercial/locales/locales.module').then( m => m.LocalesPageModule)
+  },
+  {
+    path: 'propiedades/comercial/edificios',
+    loadChildren: () => import('./pages/propiedades/comercial/edificios/edificios.module').then( m => m.EdificiosPageModule)
+  },
+  {
+    path: 'propiedades/comercial/oficinas',
+    loadChildren: () => import('./pages/propiedades/comercial/oficinas/oficinas.module').then( m => m.OficinasPageModule)
+  },
+  {
+    path: 'propiedades/comercial/bodegas',
+    loadChildren: () => import('./pages/propiedades/comercial/bodegas/bodegas.module').then( m => m.BodegasPageModule)
+  },
+  {
+    path: 'propiedades/comercial/terrenos',
+    loadChildren: () => import('./pages/propiedades/comercial/terrenos/terrenos.module').then( m => m.TerrenosPageModule)
+  },
+  {
+    path: 'propiedades/comercial/ranchos',
+    loadChildren: () => import('./pages/propiedades/comercial/ranchos/ranchos.module').then( m => m.RanchosPageModule)
+  },
 ];
 
 @NgModule({

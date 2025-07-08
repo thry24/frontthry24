@@ -14,14 +14,14 @@ export class HomePage implements OnInit {
   constructor(private propiedadService: PropiedadService) {}
 
   ngOnInit() {
-    this.propiedadService.obtenerPropiedadesPublicadas().subscribe({
-      next: (res: any) => {
-        this.propiedades = res.propiedades || res;
-      },
-      error: (err) => {
-        console.error('Error al obtener propiedades:', err);
-      },
-    });
+    // this.propiedadService.obtenerPropiedadesPublicadas().subscribe({
+    //   next: (res: any) => {
+    //     this.propiedades = res.propiedades || res;
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al obtener propiedades:', err);
+    //   },
+    // });
   }
   seleccionarFiltro(filtro: string) {
     this.filtroSeleccionado = filtro;

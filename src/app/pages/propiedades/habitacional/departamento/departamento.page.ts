@@ -4,6 +4,7 @@ import { WishlistService } from 'src/app/services/wishlist.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AlertaService } from 'src/app/services/alerta.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { CompararService } from 'src/app/services/comparar.service';
 @Component({
   selector: 'app-departamento',
   templateUrl: './departamento.page.html',
@@ -17,7 +18,7 @@ export class DepartamentoPage implements OnInit {
   estado: string = '';
   estadoPropiedad: string = '';
   precioMax: string = '';
-  estados: string[] = ['activa', 'oportunidad', 'remate bancario'];
+  estados: string[] = ['activa', 'oportunidad', 'remate bancario', 'con inquilino'];
 
   paginaActual: number = 1;
   porPagina: number = 8;
@@ -37,7 +38,8 @@ export class DepartamentoPage implements OnInit {
     private wishlistService: WishlistService,
     private authService: AuthService,
     private alerta: AlertaService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private comparar: CompararService
   ) {}
 
   ngOnInit() {

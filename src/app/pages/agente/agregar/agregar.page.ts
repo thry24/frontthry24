@@ -435,7 +435,7 @@ export class AgregarPage implements OnInit, AfterViewInit {
     'oficina',
     'edificio',
   ];
-  estados = ['activa', 'oportunidad', 'remate bancario'];
+  estados = ['activa', 'oportunidad', 'remate bancario', 'con inquilino'];
 
   constructor(
     private loading: LoadingService,

@@ -18,7 +18,7 @@ export class BodegasPage implements OnInit {
   estado: string = '';
   estadoPropiedad: string = '';
   precioMax: string = '';
-  estados: string[] = ['activa', 'oportunidad', 'remate bancario'];
+  estados: string[] = ['activa', 'oportunidad', 'remate bancario', 'con inquilino'];
 
   paginaActual: number = 1;
   porPagina: number = 8;

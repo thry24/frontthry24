@@ -74,7 +74,7 @@ export class EditarPropiedadPage implements OnInit, AfterViewInit {
     'oficina',
     'edificio',
   ];
-  estados = ['activa', 'oportunidad', 'remate bancario'];
+  estados = ['activa', 'oportunidad', 'remate bancario', 'con inquilino'];
 
   mostrarGenerales = false;
   mostrarServicios = false;

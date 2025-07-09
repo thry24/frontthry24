@@ -3,6 +3,7 @@ import { PropiedadService } from 'src/app/services/propiedad.service';
 import { WishlistService } from 'src/app/services/wishlist.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AlertaService } from 'src/app/services/alerta.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-bodegas',
@@ -36,7 +37,8 @@ export class BodegasPage implements OnInit {
     private propiedadService: PropiedadService,
     private wishlistService: WishlistService,
     private authService: AuthService,
-    private alerta: AlertaService
+    private alerta: AlertaService,
+    private loading: LoadingService
   ) {}
 
   ngOnInit() {
@@ -45,12 +47,15 @@ export class BodegasPage implements OnInit {
   }
 
   cargarFavoritos() {
+    this.loading.mostrar();
     this.wishlistService.obtenerFavoritos().subscribe({
       next: (res) => {
         this.favoritos = res.map((p: any) => p._id);
+        this.loading.ocultar();
       },
       error: (err) => {
         console.error('Error al obtener favoritos:', err);
+        this.loading.ocultar();
       },
     });
   }
@@ -66,19 +71,29 @@ export class BodegasPage implements OnInit {
       return;
     }
 
+    this.loading.mostrar();
+
     if (this.esFavorito(propiedadId)) {
       this.wishlistService.eliminarDeFavoritos(propiedadId).subscribe({
         next: () => {
           this.favoritos = this.favoritos.filter((id) => id !== propiedadId);
+          this.loading.ocultar();
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+          this.loading.ocultar();
+        },
       });
     } else {
       this.wishlistService.agregarAFavoritos(propiedadId).subscribe({
         next: () => {
           this.favoritos.push(propiedadId);
+          this.loading.ocultar();
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+          this.loading.ocultar();
+        },
       });
     }
   }
@@ -134,13 +149,17 @@ export class BodegasPage implements OnInit {
 
     console.log(filtros);
 
+    this.loading.mostrar();
+
     this.propiedadService.obtenerPropiedadesPublicadas(filtros).subscribe({
       next: (res: any) => {
         this.propiedades = res.propiedades || res;
         this.paginaActual = 1;
+        this.loading.ocultar();
       },
       error: (err) => {
         console.error('Error al filtrar propiedades:', err);
+        this.loading.ocultar();
       },
     });
   }

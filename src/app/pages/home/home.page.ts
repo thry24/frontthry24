@@ -3,6 +3,7 @@ import { PropiedadService } from 'src/app/services/propiedad.service';
 import { WishlistService } from 'src/app/services/wishlist.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AlertaService } from 'src/app/services/alerta.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +33,8 @@ export class HomePage implements OnInit {
     private propiedadService: PropiedadService,
     private wishlistService: WishlistService,
     private authService: AuthService,
-    private alerta: AlertaService
+    private alerta: AlertaService,
+    private loading: LoadingService
   ) {}
 
   ngOnInit() {
@@ -62,19 +64,28 @@ export class HomePage implements OnInit {
       return;
     }
 
+    this.loading.mostrar();
+
     if (this.esFavorito(propiedadId)) {
       this.wishlistService.eliminarDeFavoritos(propiedadId).subscribe({
         next: () => {
           this.favoritos = this.favoritos.filter((id) => id !== propiedadId);
+          this.loading.ocultar();
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+          this.loading.ocultar();
+        },
       });
     } else {
       this.wishlistService.agregarAFavoritos(propiedadId).subscribe({
         next: () => {
           this.favoritos.push(propiedadId);
+          this.loading.ocultar();
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err), this.loading.ocultar();
+        },
       });
     }
   }
@@ -89,6 +100,8 @@ export class HomePage implements OnInit {
   }
 
   cargarPropiedades() {
+    this.loading.mostrar();
+
     this.propiedadService
       .obtenerPropiedadesPublicadas({
         tipoPropiedad: this.tipoSeleccionado,
@@ -97,9 +110,11 @@ export class HomePage implements OnInit {
         next: (res: any) => {
           this.propiedades = res.propiedades || res;
           this.propiedadesFiltradas = this.propiedades;
+          this.loading.ocultar();
         },
         error: (err) => {
           console.error('Error al obtener propiedades:', err);
+          this.loading.ocultar();
         },
       });
   }

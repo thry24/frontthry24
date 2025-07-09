@@ -9,6 +9,7 @@ import { EdificiosPageRoutingModule } from './edificios-routing.module';
 import { EdificiosPage } from './edificios.page';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
+import { LoadingComponent } from 'src/app/components/loading/loading.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { FooterComponent } from 'src/app/components/footer/footer.component';
     IonicModule,
     EdificiosPageRoutingModule,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    LoadingComponent
   ],
   declarations: [EdificiosPage]
 })

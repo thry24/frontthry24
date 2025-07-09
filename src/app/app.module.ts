@@ -6,9 +6,12 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { AlertaComponent } from './components/alerta/alerta.component';
 import { LoadingComponent } from './components/loading/loading.component';
+
+import { AuthInterceptor } from './interceptores/auth.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,11 +19,14 @@ import { LoadingComponent } from './components/loading/loading.component';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    AlertaComponent,
     HttpClientModule,
+    AlertaComponent,
     LoadingComponent,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

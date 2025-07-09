@@ -95,6 +95,10 @@ const routes: Routes = [
     path: 'propiedades/comercial/ranchos',
     loadChildren: () => import('./pages/propiedades/comercial/ranchos/ranchos.module').then( m => m.RanchosPageModule)
   },
+  {
+    path: 'favoritos',
+    loadChildren: () => import('./pages/favoritos/favoritos.module').then( m => m.FavoritosPageModule)
+  },
 ];
 
 @NgModule({

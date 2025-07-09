@@ -4,20 +4,17 @@
   <section class="contenedor-filtros-con-fondo">
     <div class="filtros-propiedades">
       <h1 class="titulo-filtro">Filtrar Propiedades</h1>
-
       <div class="barra-filtros">
         <input
           type="text"
           placeholder="Buscar por palabras clave..."
           [(ngModel)]="keyword"
         />
-
         <select [(ngModel)]="tipoOperacion">
           <option value="">Tipo de operación</option>
           <option value="renta">Renta</option>
           <option value="venta">Venta</option>
         </select>
-
         <select [(ngModel)]="estado">
           <option value="">Estado</option>
           <option value="Aguascalientes">Aguascalientes</option>
@@ -60,7 +57,6 @@
             {{ estado | titlecase }}
           </option>
         </select>
-
         <input
           type="text"
           placeholder="Presupuesto máximo"
@@ -68,7 +64,45 @@
           [(ngModel)]="precioMax"
           (input)="formatearPrecio($event)"
         />
+      </div>
 
+      <div class="filtros-opcionales-toggle">
+        <button
+          class="btn-opcionales"
+          (click)="mostrarCaracteristicas = !mostrarCaracteristicas"
+        >
+          <ion-icon
+            [name]="mostrarCaracteristicas ? 'remove-outline' : 'add-outline'"
+          ></ion-icon>
+        </button>
+      </div>
+
+      <div *ngIf="mostrarCaracteristicas" class="filtros-opcionales">
+        <input
+          type="text"
+          placeholder="Hectáreas"
+          [(ngModel)]="caracteristicas.hectareas"
+        />
+
+        <select [(ngModel)]="caracteristicas.uso">
+          <option value="">Uso del terreno</option>
+          <option value="Agrícola">Agrícola</option>
+          <option value="Ganadero">Ganadero</option>
+          <option value="Mixto">Mixto</option>
+        </select>
+
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="caracteristicas.pozo" />
+          ¿Tiene pozo?
+        </label>
+
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="caracteristicas.corrales" />
+          ¿Tiene corrales?
+        </label>
+      </div>
+
+      <div class="buscar-wrapper">
         <button class="btn-buscar" (click)="buscarPropiedades()">Buscar</button>
       </div>
     </div>

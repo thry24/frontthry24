@@ -5,10 +5,10 @@ import { PropiedadService } from 'src/app/services/propiedad.service';
   selector: 'app-locales',
   templateUrl: './locales.page.html',
   styleUrls: ['./locales.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class LocalesPage implements OnInit {
-propiedades: any[] = [];
+  propiedades: any[] = [];
   keyword: string = '';
   tipoOperacion: string = '';
   estado: string = '';
@@ -18,6 +18,15 @@ propiedades: any[] = [];
 
   paginaActual: number = 1;
   porPagina: number = 8;
+
+  caracteristicas: any = {
+    tipoCentro: '',
+    plaza: '',
+    pasillo: '',
+    planta: '',
+  };
+
+  mostrarCaracteristicas: boolean = false;
 
   constructor(private propiedadService: PropiedadService) {}
 
@@ -52,7 +61,7 @@ propiedades: any[] = [];
   }
 
   buscarPropiedades() {
-    const filtros = {
+    const filtros: any = {
       keyword: this.keyword,
       tipoOperacion: this.tipoOperacion,
       estado: this.estado,
@@ -60,6 +69,18 @@ propiedades: any[] = [];
       precioMax: this.precioMax,
       tipoPropiedad: 'local',
     };
+
+    const hayCaracteristicas = Object.values(this.caracteristicas).some(
+      (valor) => valor !== null && valor !== '' && valor !== false
+    );
+
+    if (hayCaracteristicas) {
+      filtros.caracteristicas = JSON.stringify({
+        local: this.caracteristicas,
+      });
+    }
+
+    console.log(filtros);
 
     this.propiedadService.obtenerPropiedadesPublicadas(filtros).subscribe({
       next: (res: any) => {

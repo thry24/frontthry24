@@ -11,55 +11,53 @@
           placeholder="Buscar por palabras clave..."
           [(ngModel)]="keyword"
         />
-
         <select [(ngModel)]="tipoOperacion">
           <option value="">Tipo de operación</option>
           <option value="renta">Renta</option>
           <option value="venta">Venta</option>
         </select>
-
-        <select [(ngModel)]="estado">
-          <option value="">Estado</option>
-          <option value="Aguascalientes">Aguascalientes</option>
-          <option value="Baja California">Baja California</option>
-          <option value="Baja California Sur">Baja California Sur</option>
-          <option value="Campeche">Campeche</option>
-          <option value="Chiapas">Chiapas</option>
-          <option value="Chihuahua">Chihuahua</option>
-          <option value="CDMX">Ciudad de México</option>
-          <option value="Coahuila">Coahuila</option>
-          <option value="Colima">Colima</option>
-          <option value="Durango">Durango</option>
-          <option value="Estado de México">Estado de México</option>
-          <option value="Guanajuato">Guanajuato</option>
-          <option value="Guerrero">Guerrero</option>
-          <option value="Hidalgo">Hidalgo</option>
-          <option value="Jalisco">Jalisco</option>
-          <option value="Michoacán">Michoacán</option>
-          <option value="Morelos">Morelos</option>
-          <option value="Nayarit">Nayarit</option>
-          <option value="Nuevo León">Nuevo León</option>
-          <option value="Oaxaca">Oaxaca</option>
-          <option value="Puebla">Puebla</option>
-          <option value="Querétaro">Querétaro</option>
-          <option value="Quintana Roo">Quintana Roo</option>
-          <option value="San Luis Potosí">San Luis Potosí</option>
-          <option value="Sinaloa">Sinaloa</option>
-          <option value="Sonora">Sonora</option>
-          <option value="Tabasco">Tabasco</option>
-          <option value="Tamaulipas">Tamaulipas</option>
-          <option value="Tlaxcala">Tlaxcala</option>
-          <option value="Veracruz">Veracruz</option>
-          <option value="Yucatán">Yucatán</option>
-          <option value="Zacatecas">Zacatecas</option>
-        </select>
+       <select [(ngModel)]="estado">
+  <option value="">Estado</option>
+  <option value="Aguascalientes">Aguascalientes</option>
+  <option value="Baja California">Baja California</option>
+  <option value="Baja California Sur">Baja California Sur</option>
+  <option value="Campeche">Campeche</option>
+  <option value="Chiapas">Chiapas</option>
+  <option value="Chihuahua">Chihuahua</option>
+  <option value="CDMX">Ciudad de México</option>
+  <option value="Coahuila">Coahuila</option>
+  <option value="Colima">Colima</option>
+  <option value="Durango">Durango</option>
+  <option value="Estado de México">Estado de México</option>
+  <option value="Guanajuato">Guanajuato</option>
+  <option value="Guerrero">Guerrero</option>
+  <option value="Hidalgo">Hidalgo</option>
+  <option value="Jalisco">Jalisco</option>
+  <option value="Michoacán">Michoacán</option>
+  <option value="Morelos">Morelos</option>
+  <option value="Nayarit">Nayarit</option>
+  <option value="Nuevo León">Nuevo León</option>
+  <option value="Oaxaca">Oaxaca</option>
+  <option value="Puebla">Puebla</option>
+  <option value="Querétaro">Querétaro</option>
+  <option value="Quintana Roo">Quintana Roo</option>
+  <option value="San Luis Potosí">San Luis Potosí</option>
+  <option value="Sinaloa">Sinaloa</option>
+  <option value="Sonora">Sonora</option>
+  <option value="Tabasco">Tabasco</option>
+  <option value="Tamaulipas">Tamaulipas</option>
+  <option value="Tlaxcala">Tlaxcala</option>
+  <option value="Veracruz">Veracruz</option>
+  <option value="Yucatán">Yucatán</option>
+  <option value="Zacatecas">Zacatecas</option>
+</select>
 
         <select [(ngModel)]="estadoPropiedad">
-          <option value="">Estado de la propiedad</option>
-          <option *ngFor="let estado of estados" [value]="estado">
-            {{ estado | titlecase }}
-          </option>
-        </select>
+  <option value="">Estado de la propiedad</option>
+  <option *ngFor="let estado of estados" [value]="estado">
+    {{ estado | titlecase }}
+  </option>
+</select>
 
         <input
           type="text"
@@ -68,7 +66,48 @@
           [(ngModel)]="precioMax"
           (input)="formatearPrecio($event)"
         />
+      </div>
 
+      <div class="filtros-opcionales-toggle">
+        <button
+          class="btn-opcionales"
+          (click)="mostrarCaracteristicas = !mostrarCaracteristicas"
+        >
+          <ion-icon
+            [name]="mostrarCaracteristicas ? 'remove-outline' : 'add-outline'"
+          ></ion-icon>
+        </button>
+      </div>
+
+      <div *ngIf="mostrarCaracteristicas" class="filtros-opcionales">
+        <input
+          type="number"
+          min="0"
+          placeholder="Habitaciones"
+          [(ngModel)]="caracteristicas.habitaciones"
+        />
+        <input
+          type="number"
+          min="0"
+          placeholder="Baños completos"
+          [(ngModel)]="caracteristicas.banosCompletos"
+        />
+        <input
+          type="number"
+          min="0"
+          placeholder="Medios baños"
+          [(ngModel)]="caracteristicas.mediosBanos"
+        />
+        <select [(ngModel)]="caracteristicas.estacionamiento">
+          <option value="">Estacionamiento</option>
+          <option value="0">Sin estacionamiento</option>
+          <option value="1">1 cajón</option>
+          <option value="2">2 cajones</option>
+          <option value="3+">3 o más</option>
+        </select>
+      </div>
+
+      <div class="buscar-wrapper">
         <button class="btn-buscar" (click)="buscarPropiedades()">Buscar</button>
       </div>
     </div>
@@ -119,12 +158,13 @@
             <div class="detalles">
               <span
                 ><ion-icon name="bed-outline"></ion-icon> {{
-                propiedad.caracteristicas?.casaDepto?.habitaciones || 0 }}</span
+                propiedad.caracteristicas?.casaDepto?.habitaciones || 0 }}
+                habitaciones</span
               >
               <span
                 ><ion-icon name="water-outline"></ion-icon> {{
-                propiedad.caracteristicas?.casaDepto?.banosCompletos || 0
-                }}</span
+                propiedad.caracteristicas?.casaDepto?.banosCompletos || 0 }}
+                baños</span
               >
               <span
                 ><ion-icon name="car-outline"></ion-icon> {{

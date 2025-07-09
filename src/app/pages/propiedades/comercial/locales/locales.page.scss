@@ -10,14 +10,13 @@
     background-image: url('/assets/img/fondo-ciudad.jpg');
     background-size: cover;
     background-position: center;
-    opacity: 0.8;
     z-index: -1;
     border-radius: 0 0 32px 32px;
   }
 }
 
 .filtros-propiedades {
-  background: #ffffff;
+  background: #fff;
   padding: 2rem;
   border-radius: 20px;
   max-width: 1100px;
@@ -33,48 +32,108 @@
     margin-bottom: 1.5rem;
     text-align: center;
   }
+}
 
-  .barra-filtros {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
+.barra-filtros,
+.filtros-opcionales {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
 
-    input,
-    select {
-      flex: 1 1 180px;
-      padding: 0.7rem;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      transition: border 0.2s ease;
-      background: #fff;
+.barra-filtros input,
+.barra-filtros select,
+.filtros-opcionales input,
+.filtros-opcionales select {
+  flex: 1 1 180px;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  background: #fff;
+  transition: border 0.2s ease;
 
-      &:focus {
-        border-color: #ff6600;
-        outline: none;
-      }
+  &:focus {
+    border-color: #ff6600;
+    outline: none;
+  }
+}
+
+.precio-input {
+  text-align: center;
+}
+
+.btn-buscar {
+  background: #ff6600;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #e25500;
+  }
+}
+
+.buscar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.filtros-opcionales-toggle {
+  width: 100%;
+  text-align: center;
+  margin-top: 2rem 0 2rem 0;
+
+  .btn-opcionales {
+    background: transparent;
+    color: #ff6600;
+    font-weight: bold;
+    border: 1.5px dashed #ff6600;
+    border-radius: 8px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+
+    ion-icon {
+      font-size: 1.2rem;
+      vertical-align: middle;
     }
 
-    .precio-input {
-      text-align: center;
-    }
-
-    .btn-buscar {
+    &:hover {
       background: #ff6600;
       color: white;
-      border: none;
-      padding: 0.7rem 1.2rem;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-
-      &:hover {
-        background: #e25500;
-      }
     }
+  }
+}
+
+
+.filtros-opcionales .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    accent-color: #ff6600;
+    transform: scale(1.2);
+  }
+
+  &:hover {
+    border-color: #ff6600;
   }
 }
 
@@ -106,10 +165,10 @@
 
   &:hover {
     transform: translateY(-6px);
-  }
 
-  &:hover .img-wrapper img {
-    transform: scale(1.05);
+    .img-wrapper img {
+      transform: scale(1.05);
+    }
   }
 
   .img-wrapper {
@@ -152,8 +211,8 @@
         border-radius: 50%;
         padding: 6px;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease-in-out;
         cursor: pointer;
+        transition: all 0.2s ease-in-out;
 
         &:hover {
           background: #ff6600;
@@ -267,7 +326,6 @@
   border-bottom: 3px solid #ff6600;
   display: block;
 }
-
 
 .mensaje-vacio {
   text-align: center;

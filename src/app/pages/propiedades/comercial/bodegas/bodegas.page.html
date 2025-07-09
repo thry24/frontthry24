@@ -11,13 +11,11 @@
           placeholder="Buscar por palabras clave..."
           [(ngModel)]="keyword"
         />
-
         <select [(ngModel)]="tipoOperacion">
           <option value="">Tipo de operación</option>
           <option value="renta">Renta</option>
           <option value="venta">Venta</option>
         </select>
-
         <select [(ngModel)]="estado">
           <option value="">Estado</option>
           <option value="Aguascalientes">Aguascalientes</option>
@@ -60,7 +58,6 @@
             {{ estado | titlecase }}
           </option>
         </select>
-
         <input
           type="text"
           placeholder="Presupuesto máximo"
@@ -68,7 +65,47 @@
           [(ngModel)]="precioMax"
           (input)="formatearPrecio($event)"
         />
+      </div>
 
+      <div class="filtros-opcionales-toggle">
+        <button
+          class="btn-opcionales"
+          (click)="mostrarCaracteristicas = !mostrarCaracteristicas"
+        >
+          <ion-icon
+            [name]="mostrarCaracteristicas ? 'remove-outline' : 'add-outline'"
+          ></ion-icon>
+        </button>
+      </div>
+
+      <div *ngIf="mostrarCaracteristicas" class="filtros-opcionales">
+        <select [(ngModel)]="caracteristicas.tipo">
+          <option value="">Tipo de Bodega</option>
+          <option value="Industrial">Industrial</option>
+          <option value="Logística">Logística</option>
+          <option value="Comercial">Comercial</option>
+        </select>
+
+        <input
+          type="number"
+          placeholder="Terreno (m²)"
+          [(ngModel)]="caracteristicas.m2Terreno"
+        />
+
+        <input
+          type="number"
+          placeholder="Construcción (m²)"
+          [(ngModel)]="caracteristicas.m2Construccion"
+        />
+
+        <input
+          type="number"
+          placeholder="Número de oficinas"
+          [(ngModel)]="caracteristicas.oficinas"
+        />
+      </div>
+
+      <div class="buscar-wrapper">
         <button class="btn-buscar" (click)="buscarPropiedades()">Buscar</button>
       </div>
     </div>

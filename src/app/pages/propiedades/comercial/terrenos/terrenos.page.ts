@@ -5,10 +5,10 @@ import { PropiedadService } from 'src/app/services/propiedad.service';
   selector: 'app-terrenos',
   templateUrl: './terrenos.page.html',
   styleUrls: ['./terrenos.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class TerrenosPage implements OnInit {
-propiedades: any[] = [];
+  propiedades: any[] = [];
   keyword: string = '';
   tipoOperacion: string = '';
   estado: string = '';
@@ -19,6 +19,17 @@ propiedades: any[] = [];
   paginaActual: number = 1;
   porPagina: number = 8;
 
+  caracteristicas: any = {
+    m2Frente: '',
+    m2Fondo: '',
+    tipo: '',
+    costoXM2: '',
+  };
+
+  mostrarCaracteristicas: boolean = false;
+
+  costoXM2Formateado: string = '';
+
   constructor(private propiedadService: PropiedadService) {}
 
   ngOnInit() {
@@ -28,6 +39,24 @@ propiedades: any[] = [];
   get propiedadesPaginadas() {
     const inicio = (this.paginaActual - 1) * this.porPagina;
     return this.propiedades.slice(inicio, inicio + this.porPagina);
+  }
+
+  formatearCostoXM2(event: any): void {
+    let entrada = event.target.value;
+
+    const valorNumerico = entrada.replace(/\D/g, '');
+
+    this.caracteristicas.costoXM2 = valorNumerico;
+
+    const numero = parseFloat(valorNumerico);
+    this.costoXM2Formateado = isNaN(numero)
+      ? ''
+      : numero.toLocaleString('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        });
   }
 
   totalPaginas(): number {
@@ -52,7 +81,7 @@ propiedades: any[] = [];
   }
 
   buscarPropiedades() {
-    const filtros = {
+    const filtros: any = {
       keyword: this.keyword,
       tipoOperacion: this.tipoOperacion,
       estado: this.estado,
@@ -60,6 +89,18 @@ propiedades: any[] = [];
       precioMax: this.precioMax,
       tipoPropiedad: 'terreno',
     };
+
+    const hayCaracteristicas = Object.values(this.caracteristicas).some(
+      (valor) => valor !== null && valor !== '' && valor !== false
+    );
+
+    if (hayCaracteristicas) {
+      filtros.caracteristicas = JSON.stringify({
+        terreno: this.caracteristicas,
+      });
+    }
+
+    console.log(filtros);
 
     this.propiedadService.obtenerPropiedadesPublicadas(filtros).subscribe({
       next: (res: any) => {

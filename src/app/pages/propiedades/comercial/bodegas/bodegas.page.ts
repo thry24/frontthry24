@@ -5,10 +5,10 @@ import { PropiedadService } from 'src/app/services/propiedad.service';
   selector: 'app-bodegas',
   templateUrl: './bodegas.page.html',
   styleUrls: ['./bodegas.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class BodegasPage implements OnInit {
- propiedades: any[] = [];
+  propiedades: any[] = [];
   keyword: string = '';
   tipoOperacion: string = '';
   estado: string = '';
@@ -18,6 +18,14 @@ export class BodegasPage implements OnInit {
 
   paginaActual: number = 1;
   porPagina: number = 8;
+
+  caracteristicas: any = {
+    tipo: '',
+    m2Terreno: '',
+    m2Construccion: '',
+    oficinas: '',
+  };
+  mostrarCaracteristicas: boolean = false;
 
   constructor(private propiedadService: PropiedadService) {}
 
@@ -52,7 +60,7 @@ export class BodegasPage implements OnInit {
   }
 
   buscarPropiedades() {
-    const filtros = {
+    const filtros: any = {
       keyword: this.keyword,
       tipoOperacion: this.tipoOperacion,
       estado: this.estado,
@@ -60,6 +68,18 @@ export class BodegasPage implements OnInit {
       precioMax: this.precioMax,
       tipoPropiedad: 'bodega',
     };
+
+    const hayCaracteristicas = Object.values(this.caracteristicas).some(
+      (valor) => valor !== null && valor !== '' && valor !== false
+    );
+
+    if (hayCaracteristicas) {
+      filtros.caracteristicas = JSON.stringify({
+        bodega: this.caracteristicas,
+      });
+    }
+
+    console.log(filtros);
 
     this.propiedadService.obtenerPropiedadesPublicadas(filtros).subscribe({
       next: (res: any) => {

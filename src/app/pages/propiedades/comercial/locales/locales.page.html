@@ -11,13 +11,11 @@
           placeholder="Buscar por palabras clave..."
           [(ngModel)]="keyword"
         />
-
         <select [(ngModel)]="tipoOperacion">
           <option value="">Tipo de operación</option>
           <option value="renta">Renta</option>
           <option value="venta">Venta</option>
         </select>
-
         <select [(ngModel)]="estado">
           <option value="">Estado</option>
           <option value="Aguascalientes">Aguascalientes</option>
@@ -60,7 +58,6 @@
             {{ estado | titlecase }}
           </option>
         </select>
-
         <input
           type="text"
           placeholder="Presupuesto máximo"
@@ -68,7 +65,48 @@
           [(ngModel)]="precioMax"
           (input)="formatearPrecio($event)"
         />
+      </div>
 
+      <div class="filtros-opcionales-toggle">
+        <button
+          class="btn-opcionales"
+          (click)="mostrarCaracteristicas = !mostrarCaracteristicas"
+        >
+          <ion-icon
+            [name]="mostrarCaracteristicas ? 'remove-outline' : 'add-outline'"
+          ></ion-icon>
+        </button>
+      </div>
+
+      <div *ngIf="mostrarCaracteristicas" class="filtros-opcionales">
+        <select [(ngModel)]="caracteristicas.tipoCentro">
+          <option value="">Tipo de Centro</option>
+          <option value="Plaza Comercial">Plaza Comercial</option>
+          <option value="Mercado">Mercado</option>
+          <option value="Centro Histórico">Centro Histórico</option>
+        </select>
+
+        <input
+          type="text"
+          placeholder="Nombre de la plaza"
+          [(ngModel)]="caracteristicas.plaza"
+        />
+
+        <input
+          type="text"
+          placeholder="Pasillo"
+          [(ngModel)]="caracteristicas.pasillo"
+        />
+
+        <select [(ngModel)]="caracteristicas.planta">
+          <option value="">Planta</option>
+          <option value="Planta Baja">Planta Baja</option>
+          <option value="Planta Alta">Planta Alta</option>
+          <option value="Sótano">Sótano</option>
+        </select>
+      </div>
+
+      <div class="buscar-wrapper">
         <button class="btn-buscar" (click)="buscarPropiedades()">Buscar</button>
       </div>
     </div>

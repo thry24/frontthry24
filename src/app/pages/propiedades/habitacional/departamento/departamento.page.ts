@@ -18,6 +18,15 @@ export class DepartamentoPage implements OnInit {
   paginaActual: number = 1;
   porPagina: number = 8;
 
+  caracteristicas: any = {
+    habitaciones: null,
+    banosCompletos: null,
+    mediosBanos: null,
+    estacionamiento: '',
+  };
+
+  mostrarCaracteristicas: boolean = false;
+
   constructor(private propiedadService: PropiedadService) {}
 
   ngOnInit() {
@@ -51,7 +60,7 @@ export class DepartamentoPage implements OnInit {
   }
 
   buscarPropiedades() {
-    const filtros = {
+    const filtros: any = {
       keyword: this.keyword,
       tipoOperacion: this.tipoOperacion,
       estado: this.estado,
@@ -59,6 +68,18 @@ export class DepartamentoPage implements OnInit {
       precioMax: this.precioMax,
       tipoPropiedad: 'departamento',
     };
+
+    const hayCaracteristicas = Object.values(this.caracteristicas).some(
+      (valor) => valor !== null && valor !== '' && valor !== false
+    );
+
+    if (hayCaracteristicas) {
+      filtros.caracteristicas = JSON.stringify({
+        casaDepto: this.caracteristicas,
+      });
+    }
+
+    console.log(filtros);
 
     this.propiedadService.obtenerPropiedadesPublicadas(filtros).subscribe({
       next: (res: any) => {

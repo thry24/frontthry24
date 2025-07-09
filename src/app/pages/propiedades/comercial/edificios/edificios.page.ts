@@ -5,10 +5,10 @@ import { PropiedadService } from 'src/app/services/propiedad.service';
   selector: 'app-edificios',
   templateUrl: './edificios.page.html',
   styleUrls: ['./edificios.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class EdificiosPage implements OnInit {
- propiedades: any[] = [];
+  propiedades: any[] = [];
   keyword: string = '';
   tipoOperacion: string = '';
   estado: string = '';
@@ -18,6 +18,15 @@ export class EdificiosPage implements OnInit {
 
   paginaActual: number = 1;
   porPagina: number = 8;
+
+  caracteristicas: any = {
+    m2xPiso: '',
+    pisosEdificio: '',
+    oficinas: '',
+    sistemaIncendios: false,
+  };
+
+  mostrarCaracteristicas: boolean = false;
 
   constructor(private propiedadService: PropiedadService) {}
 
@@ -52,7 +61,7 @@ export class EdificiosPage implements OnInit {
   }
 
   buscarPropiedades() {
-    const filtros = {
+    const filtros: any = {
       keyword: this.keyword,
       tipoOperacion: this.tipoOperacion,
       estado: this.estado,
@@ -60,6 +69,18 @@ export class EdificiosPage implements OnInit {
       precioMax: this.precioMax,
       tipoPropiedad: 'edificio',
     };
+
+    const hayCaracteristicas = Object.values(this.caracteristicas).some(
+      (valor) => valor !== null && valor !== '' && valor !== false
+    );
+
+    if (hayCaracteristicas) {
+      filtros.caracteristicas = JSON.stringify({
+        edificio: this.caracteristicas,
+      });
+    }
+
+    console.log(filtros);
 
     this.propiedadService.obtenerPropiedadesPublicadas(filtros).subscribe({
       next: (res: any) => {

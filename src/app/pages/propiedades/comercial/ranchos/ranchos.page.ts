@@ -19,6 +19,15 @@ propiedades: any[] = [];
   paginaActual: number = 1;
   porPagina: number = 8;
 
+    caracteristicas: any = {
+    hectareas: '',
+      uso: '',
+      pozo: false,
+      corrales: false,
+  };
+
+  mostrarCaracteristicas: boolean = false;
+
   constructor(private propiedadService: PropiedadService) {}
 
   ngOnInit() {
@@ -52,7 +61,7 @@ propiedades: any[] = [];
   }
 
   buscarPropiedades() {
-    const filtros = {
+    const filtros: any= {
       keyword: this.keyword,
       tipoOperacion: this.tipoOperacion,
       estado: this.estado,
@@ -60,6 +69,18 @@ propiedades: any[] = [];
       precioMax: this.precioMax,
       tipoPropiedad: 'rancho',
     };
+
+    const hayCaracteristicas = Object.values(this.caracteristicas).some(
+      (valor) => valor !== null && valor !== '' && valor !== false
+    );
+
+    if (hayCaracteristicas) {
+      filtros.caracteristicas = JSON.stringify({
+        rancho: this.caracteristicas,
+      });
+    }
+
+    console.log(filtros);
 
     this.propiedadService.obtenerPropiedadesPublicadas(filtros).subscribe({
       next: (res: any) => {

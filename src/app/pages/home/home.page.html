@@ -1,124 +1,50 @@
 <app-header></app-header>
 
 <ion-content [fullscreen]="true">
-  <div class="hero-section">
-    <div class="overlay">
-      <h1 class="title">Descubre tu Nuevo Hogar</h1>
-      <p class="subtitle">Rápido | Fácil | AI24</p>
+  <section class="hero-ai24">
+    <div class="glass-content">
+      <h1 class="titulo-ai24">Bienvenido a <span>Ai24</span></h1>
+      <p class="subtitulo-ai24">
+        Plataforma inteligente para buscar, publicar y gestionar propiedades.
+        Donde compradores, arrendadores y asesores se conectan en un solo lugar.
+      </p>
+    </div>
+  </section>
 
-      <div class="filters">
-        <button
-          class="filter"
-          [class.selected]="filtroSeleccionado === 'TODO'"
-          (click)="seleccionarFiltro('TODO')"
+  <section class="tabs-tipos">
+    <div class="contenedor-tabs-y-titulo">
+      <ul class="lista-tipos">
+        <li
+          class="item-tipo"
+          *ngFor="let tipo of tipos"
+          [ngClass]="{ activo: tipoSeleccionado === tipo.clave }"
+          (click)="cambiarTipo(tipo.clave)"
         >
-          TODO
-        </button>
-        <button
-          class="filter"
-          [class.selected]="filtroSeleccionado === 'RENTA'"
-          (click)="seleccionarFiltro('RENTA')"
-        >
-          RENTA
-        </button>
-        <button
-          class="filter"
-          [class.selected]="filtroSeleccionado === 'VENTA'"
-          (click)="seleccionarFiltro('VENTA')"
-        >
-          VENTA
-        </button>
-      </div>
+          {{ tipo.label }}
+        </li>
+      </ul>
 
-      <div class="search-bar">
-        <div class="row">
-          <input
-            type="text"
-            placeholder="Describe las características que buscas"
-          />
-
-          <select>
-            <option value="" disabled selected hidden>Tipo</option>
-            <option value="">---</option>
-            <option value="casa">Casa</option>
-            <option value="departamento">Departamento</option>
-            <option value="terreno">Terreno</option>
-            <option value="local">Local</option>
-            <option value="bodega">Bodega</option>
-            <option value="rancho">Rancho</option>
-            <option value="oficina">Oficina</option>
-            <option value="edificio">Edificio</option>
-          </select>
-
-          <div class="ubicacion-wrapper">
-            <input
-              list="estados"
-              placeholder="Ubicación"
-              class="input-ubicacion"
-            />
-            <datalist id="estados">
-              <option value="">---</option>
-              <option value="Aguascalientes"></option>
-              <option value="Baja California"></option>
-              <option value="Baja California Sur"></option>
-              <option value="Campeche"></option>
-              <option value="Chiapas"></option>
-              <option value="Chihuahua"></option>
-              <option value="Ciudad de México"></option>
-              <option value="Coahuila"></option>
-              <option value="Colima"></option>
-              <option value="Durango"></option>
-              <option value="Estado de México"></option>
-              <option value="Guanajuato"></option>
-              <option value="Guerrero"></option>
-              <option value="Hidalgo"></option>
-              <option value="Jalisco"></option>
-              <option value="Michoacán"></option>
-              <option value="Morelos"></option>
-              <option value="Nayarit"></option>
-              <option value="Nuevo León"></option>
-              <option value="Oaxaca"></option>
-              <option value="Puebla"></option>
-              <option value="Querétaro"></option>
-              <option value="Quintana Roo"></option>
-              <option value="San Luis Potosí"></option>
-              <option value="Sinaloa"></option>
-              <option value="Sonora"></option>
-              <option value="Tabasco"></option>
-              <option value="Tamaulipas"></option>
-              <option value="Tlaxcala"></option>
-              <option value="Veracruz"></option>
-              <option value="Yucatán"></option>
-              <option value="Zacatecas"></option>
-            </datalist>
-          </div>
-        </div>
-
-        <div class="row">
-          <select>
-            <option>Habitaciones</option>
-          </select>
-          <select>
-            <option>Baños</option>
-          </select>
-          <input
-            type="text"
-            class="input-precio"
-            placeholder="Presupuesto máximo"
-            [(ngModel)]="presupuestoMaximo"
-            (input)="formatearPresupuesto($event)"
-          />
-
-          <button class="btn-buscar">Buscar</button>
-        </div>
+      <div class="seccion-destacadas">
+        <h4 class="subtitulo-naranja">PROPIEDADES DESTACADAS</h4>
+        <h2 class="titulo-destacadas">
+          Descubre nuestras propiedades destacas
+        </h2>
+        <p class="descripcion-destacadas">
+          Miles de propiedades disponibles para comprar o rentar.
+        </p>
       </div>
     </div>
-  </div>
+  </section>
 
   <section class="resultados-section">
-    <h2 class="titulo-seccion">Propiedades</h2>
-    <div class="propiedades-grid">
-      <div class="card-propiedad" *ngFor="let propiedad of propiedades">
+    <div
+      class="propiedades-grid"
+      *ngIf="propiedadesFiltradas.length > 0; else sinPropiedades"
+    >
+      <div
+        class="card-propiedad"
+        *ngFor="let propiedad of propiedadesFiltradas.slice(0, 4)"
+      >
         <div class="img-wrapper">
           <img
             [src]="propiedad.imagenPrincipal || 'assets/img/sin-imagen.jpg'"
@@ -126,6 +52,20 @@
           />
           <div class="etiqueta">
             {{ propiedad.estadoPropiedad | uppercase }}
+          </div>
+          <div class="iconos-superiores">
+            <ion-icon
+              [name]="esFavorito(propiedad._id) ? 'heart' : 'heart-outline'"
+              [class.favorito-activo]="esFavorito(propiedad._id)"
+              class="icono"
+              title="Agregar a favoritos"
+              (click)="toggleFavorito(propiedad._id)"
+            ></ion-icon>
+            <ion-icon
+              name="add-circle-outline"
+              class="icono"
+              title="Comparar"
+            ></ion-icon>
           </div>
         </div>
 
@@ -142,96 +82,198 @@
           </div>
 
           <div class="detalles">
-            <span
-              ><ion-icon name="bed-outline"></ion-icon> {{
-              propiedad.caracteristicas?.casaDepto?.habitaciones || 0 }}</span
+            <ng-container
+              *ngIf="tipoSeleccionado === 'casa' || tipoSeleccionado === 'departamento'"
             >
-            <span
-              ><ion-icon name="water-outline"></ion-icon> {{
-              propiedad.caracteristicas?.casaDepto?.banosCompletos || 0 }}</span
-            >
-            <span
-              ><ion-icon name="car-outline"></ion-icon> {{
-              propiedad.caracteristicas?.casaDepto?.estacionamiento || 0
-              }}</span
-            >
+              <span
+                ><ion-icon name="bed-outline"></ion-icon> {{
+                propiedad.caracteristicas?.casaDepto?.habitaciones || 0 }}
+                recámaras</span
+              >
+              <span
+                ><ion-icon name="water-outline"></ion-icon> {{
+                propiedad.caracteristicas?.casaDepto?.banosCompletos || 0 }}
+                baños</span
+              >
+              <span
+                ><ion-icon name="car-outline"></ion-icon> {{
+                propiedad.caracteristicas?.casaDepto?.estacionamiento || 0
+                }}</span
+              >
+            </ng-container>
+
+            <ng-container *ngIf="tipoSeleccionado === 'terreno'">
+              <span
+                *ngIf="propiedad.caracteristicas?.terreno?.m2Frente && propiedad.caracteristicas?.terreno?.m2Fondo"
+              >
+                <ion-icon name="expand-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.terreno?.m2Frente }} x {{
+                propiedad.caracteristicas?.terreno?.m2Fondo }} m (Frente x
+                Fondo)
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.terreno?.tipo">
+                <ion-icon name="map-outline"></ion-icon>
+                Tipo: {{ propiedad.caracteristicas?.terreno?.tipo }}
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.terreno?.costoXM2">
+                <ion-icon name="cash-outline"></ion-icon>
+                ${{ propiedad.caracteristicas?.terreno?.costoXM2 }} por m²
+              </span>
+            </ng-container>
+
+            <ng-container *ngIf="tipoSeleccionado === 'rancho'">
+              <span *ngIf="propiedad.caracteristicas?.rancho?.hectareas">
+                <ion-icon name="analytics-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.rancho?.hectareas }} hectáreas
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.rancho?.uso">
+                <ion-icon name="leaf-outline"></ion-icon>
+                Uso: {{ propiedad.caracteristicas?.rancho?.uso }}
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.rancho?.pozo">
+                <ion-icon name="water-outline"></ion-icon>
+                Cuenta con pozo
+              </span>
+            </ng-container>
+
+            <ng-container *ngIf="tipoSeleccionado === 'oficina'">
+              <span *ngIf="propiedad.caracteristicas?.oficina?.superficie">
+                <ion-icon name="expand-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.oficina?.superficie }} m²
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.oficina?.privados">
+                <ion-icon name="people-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.oficina?.privados }} privados
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.oficina?.salaJuntas">
+                <ion-icon name="podium-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.oficina?.salaJuntas }} sala(s) de
+                juntas
+              </span>
+            </ng-container>
+            <ng-container *ngIf="tipoSeleccionado === 'local'">
+              <span *ngIf="propiedad.caracteristicas?.local?.superficie">
+                <ion-icon name="expand-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.local?.superficie }} m²
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.local?.estacionamientos">
+                <ion-icon name="car-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.local?.estacionamientos }}
+                estacionamientos
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.local?.frente">
+                <ion-icon name="contract-outline"></ion-icon>
+                Frente: {{ propiedad.caracteristicas?.local?.frente }} m
+              </span>
+            </ng-container>
+            <ng-container *ngIf="tipoSeleccionado === 'bodega'">
+              <span *ngIf="propiedad.caracteristicas?.bodega?.superficie">
+                <ion-icon name="expand-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.bodega?.superficie }} m²
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.bodega?.resistenciaPiso">
+                <ion-icon name="construct-outline"></ion-icon>
+                Piso: {{ propiedad.caracteristicas?.bodega?.resistenciaPiso }}
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.bodega?.altura">
+                <ion-icon name="trending-up-outline"></ion-icon>
+                Altura: {{ propiedad.caracteristicas?.bodega?.altura }} m
+              </span>
+            </ng-container>
+            <ng-container *ngIf="tipoSeleccionado === 'edificio'">
+              <span *ngIf="propiedad.caracteristicas?.edificio?.niveles">
+                <ion-icon name="layers-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.edificio?.niveles }} niveles
+              </span>
+              <span *ngIf="propiedad.caracteristicas?.edificio?.departamentos">
+                <ion-icon name="business-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.edificio?.departamentos }}
+                departamentos
+              </span>
+              <span
+                *ngIf="propiedad.caracteristicas?.edificio?.estacionamientos"
+              >
+                <ion-icon name="car-outline"></ion-icon>
+                {{ propiedad.caracteristicas?.edificio?.estacionamientos }}
+                estacionamientos
+              </span>
+            </ng-container>
           </div>
 
           <div class="acciones">
-            <button><ion-icon name="call-outline"></ion-icon> Llamar</button>
-            <button><ion-icon name="mail-outline"></ion-icon> Email</button>
-            <button><ion-icon name="logo-whatsapp"></ion-icon> WhatsApp</button>
+            <a
+              *ngIf="propiedad.agente?.telefono"
+              [href]="'tel:' + propiedad.agente.telefono"
+              class="btn-contacto"
+            >
+              <ion-icon name="call-outline"></ion-icon> Llamar
+            </a>
+            <a
+              *ngIf="propiedad.agente?.correo"
+              [href]="'mailto:' + propiedad.agente.correo"
+              class="btn-contacto"
+            >
+              <ion-icon name="mail-outline"></ion-icon> Email
+            </a>
+            <a
+              *ngIf="propiedad.agente?.telefono"
+              [href]="'https://wa.me/52' + propiedad.agente.telefono"
+              target="_blank"
+              class="btn-contacto"
+            >
+              <ion-icon name="logo-whatsapp"></ion-icon> WhatsApp
+            </a>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="ver-mas-wrapper">
+      <button class="btn-ver-mas" (click)="verMas()">Ver más</button>
+    </div>
+
+    <ng-template #sinPropiedades>
+      <p class="mensaje-vacio">No hay propiedades disponibles de este tipo.</p>
+    </ng-template>
   </section>
 
   <section class="formulario-agente">
     <form class="form-contacto">
       <h2 class="form-title">CONTACTA A UN AGENTE ES MUY FÁCIL</h2>
-
       <select>
         <option value="" disabled selected hidden>Tipo</option>
-        <option value="">---</option>
-        <option value="casa">Casa</option>
-        <option value="departamento">Departamento</option>
-        <option value="terreno">Terreno</option>
-        <option value="local">Local</option>
-        <option value="bodega">Bodega</option>
-        <option value="rancho">Rancho</option>
-        <option value="oficina">Oficina</option>
-        <option value="edificio">Edificio</option>
       </select>
-
       <select required>
         <option value="" disabled selected>Información</option>
-        <option>Cliente comprador</option>
-        <option>Cliente arrendador</option>
-        <option>Cliente propietario</option>
-        <option>Asesor inmobiliario</option>
       </select>
-
       <div class="fila-doble">
         <input type="text" placeholder="nombre" required />
         <input type="text" placeholder="apellidos" required />
       </div>
-
       <div class="fila-doble">
         <input type="tel" placeholder="teléfono" required />
         <input type="email" placeholder="Email" required />
       </div>
-
       <div class="fila-doble">
         <input type="text" placeholder="ciudad" required />
         <input type="text" placeholder="municipio" required />
       </div>
-
       <input
         type="text"
         placeholder="escribe las características de la propiedad que buscas"
       />
-
       <div class="fila-doble">
         <input type="number" placeholder="presupuesto mínimo" />
         <input type="number" placeholder="presupuesto máximo" />
       </div>
-
       <select>
         <option value="" disabled selected>Forma de Pago</option>
-        <option>Crédito</option>
-        <option>Contado</option>
-        <option>Por definir</option>
       </select>
-
       <select required>
         <option value="" disabled selected>
           ¿Por qué medio quieres que te enviemos la información?
         </option>
-        <option>WhatsApp</option>
-        <option>Correo electrónico</option>
       </select>
-
       <button type="submit" class="boton-submit">Submit</button>
     </form>
   </section>

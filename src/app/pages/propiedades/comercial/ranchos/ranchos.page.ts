@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { PropiedadService } from 'src/app/services/propiedad.service';
+import { WishlistService } from 'src/app/services/wishlist.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { AlertaService } from 'src/app/services/alerta.service';
 
 @Component({
   selector: 'app-ranchos',
   templateUrl: './ranchos.page.html',
   styleUrls: ['./ranchos.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class RanchosPage implements OnInit {
-propiedades: any[] = [];
+  propiedades: any[] = [];
   keyword: string = '';
   tipoOperacion: string = '';
   estado: string = '';
@@ -19,19 +22,70 @@ propiedades: any[] = [];
   paginaActual: number = 1;
   porPagina: number = 8;
 
-    caracteristicas: any = {
+  caracteristicas: any = {
     hectareas: '',
-      uso: '',
-      pozo: false,
-      corrales: false,
+    uso: '',
+    pozo: false,
+    corrales: false,
   };
 
   mostrarCaracteristicas: boolean = false;
 
-  constructor(private propiedadService: PropiedadService) {}
+  favoritos: string[] = [];
+
+  constructor(
+    private propiedadService: PropiedadService,
+    private wishlistService: WishlistService,
+    private authService: AuthService,
+    private alerta: AlertaService
+  ) {}
 
   ngOnInit() {
     this.buscarPropiedades();
+    this.cargarFavoritos();
+  }
+
+  cargarFavoritos() {
+    this.wishlistService.obtenerFavoritos().subscribe({
+      next: (res) => {
+        this.favoritos = res.map((p: any) => p._id);
+      },
+      error: (err) => {
+        console.error('Error al obtener favoritos:', err);
+      },
+    });
+  }
+
+  toggleFavorito(propiedadId: string) {
+    if (!this.authService.estaAutenticado()) {
+      this.alerta.mostrar('Debes de iniciar sesión');
+
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 3000);
+
+      return;
+    }
+
+    if (this.esFavorito(propiedadId)) {
+      this.wishlistService.eliminarDeFavoritos(propiedadId).subscribe({
+        next: () => {
+          this.favoritos = this.favoritos.filter((id) => id !== propiedadId);
+        },
+        error: (err) => console.error(err),
+      });
+    } else {
+      this.wishlistService.agregarAFavoritos(propiedadId).subscribe({
+        next: () => {
+          this.favoritos.push(propiedadId);
+        },
+        error: (err) => console.error(err),
+      });
+    }
+  }
+
+  esFavorito(propiedadId: string): boolean {
+    return this.favoritos.includes(propiedadId);
   }
 
   get propiedadesPaginadas() {
@@ -61,7 +115,7 @@ propiedades: any[] = [];
   }
 
   buscarPropiedades() {
-    const filtros: any= {
+    const filtros: any = {
       keyword: this.keyword,
       tipoOperacion: this.tipoOperacion,
       estado: this.estado,

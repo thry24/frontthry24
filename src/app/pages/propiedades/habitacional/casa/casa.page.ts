@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PropiedadService } from 'src/app/services/propiedad.service';
+import { WishlistService } from 'src/app/services/wishlist.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { AlertaService } from 'src/app/services/alerta.service';
 
 @Component({
   selector: 'app-casa',
@@ -28,10 +31,61 @@ export class CasaPage implements OnInit {
 
   mostrarCaracteristicas: boolean = false;
 
-  constructor(private propiedadService: PropiedadService) {}
+  favoritos: string[] = [];
+
+  constructor(
+    private propiedadService: PropiedadService,
+    private wishlistService: WishlistService,
+    private authService: AuthService,
+    private alerta: AlertaService
+  ) {}
 
   ngOnInit() {
     this.buscarPropiedades();
+    this.cargarFavoritos();
+  }
+
+  cargarFavoritos() {
+    this.wishlistService.obtenerFavoritos().subscribe({
+      next: (res) => {
+        this.favoritos = res.map((p: any) => p._id);
+      },
+      error: (err) => {
+        console.error('Error al obtener favoritos:', err);
+      },
+    });
+  }
+
+  toggleFavorito(propiedadId: string) {
+    if (!this.authService.estaAutenticado()) {
+      this.alerta.mostrar('Debes de iniciar sesión');
+
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 3000);
+
+      return;
+    }
+
+    if (this.esFavorito(propiedadId)) {
+      this.wishlistService.eliminarDeFavoritos(propiedadId).subscribe({
+        next: () => {
+          this.favoritos = this.favoritos.filter((id) => id !== propiedadId);
+        },
+        error: (err) => console.error(err),
+      });
+    } else {
+      this.wishlistService.agregarAFavoritos(propiedadId).subscribe({
+        next: () => {
+          this.favoritos.push(propiedadId);
+        },
+        error: (err) => console.error(err),
+      });
+    }
+  }
+
+  esFavorito(propiedadId: string): boolean {
+    return this.favoritos.includes(propiedadId);
   }
 
   get propiedadesPaginadas() {

@@ -2,10 +2,10 @@
   <ion-header>
     <ion-toolbar class="ai24-toolbar">
       <div class="ai24-container">
-        <div class="logo" routerLink="/">
+        <a class="logo" href="/">
           <img src="assets/logo-ai24.jpeg" alt="Logo AI24" />
           <span>AI24</span>
-        </div>
+        </a>
 
         <div class="nav nav-centrado">
           <a
@@ -25,6 +25,7 @@
             (mouseleave)="startHideMenuTimer()"
             >Propiedades</a
           >
+
           <ng-container
             *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
           >
@@ -37,6 +38,7 @@
               >Agente</a
             >
           </ng-container>
+
           <ng-container *ngIf="isLogged && rol === 'agente'">
             <a
               class="dropdown-trigger"
@@ -60,6 +62,7 @@
               >Inmobiliaria</a
             >
           </ng-container>
+
           <ng-container *ngIf="isLogged && rol === 'inmobiliaria'">
             <a
               class="dropdown-trigger"
@@ -87,9 +90,7 @@
           </ng-container>
 
           <ng-template #noSesion>
-            <button class="btn-login" routerLink="/login">
-              Iniciar sesión
-            </button>
+            <a class="btn-login" href="/login">Iniciar sesión</a>
           </ng-template>
         </div>
       </div>
@@ -116,12 +117,12 @@
   >
     <ng-container [ngSwitch]="activeMenu">
       <ng-container *ngSwitchCase="'inicio'">
-        <a routerLink="/quienes-somos">¿Quiénes somos?</a>
-        <a routerLink="/que-es-ai24">¿Qué es Ai24?</a>
-        <a routerLink="/servicios">Nuestros Servicios</a>
-        <a routerLink="/faqs">FAQs</a>
-        <a routerLink="/blog">Blog</a>
-        <a routerLink="/#">Private Policy</a>
+        <a href="/quienes-somos">¿Quiénes somos?</a>
+        <a href="/que-es-ai24">¿Qué es Ai24?</a>
+        <a href="/servicios">Nuestros Servicios</a>
+        <a href="/faqs">FAQs</a>
+        <a href="/blog">Blog</a>
+        <a href="/#">Private Policy</a>
       </ng-container>
 
       <ng-container *ngSwitchCase="'propiedades'">
@@ -136,36 +137,28 @@
             >
           </div>
           <div *ngIf="areaHabitacionalOpen" class="submenu">
-            <a routerLink="/propiedades/habitacional/casa">Casa</a>
-            <a routerLink="/propiedades/habitacional/departamento"
-              >Departamento</a
-            >
+            <a href="/propiedades/habitacional/casa">Casa</a>
+            <a href="/propiedades/habitacional/departamento">Departamento</a>
           </div>
         </div>
+
         <div class="submenu-group">
           <div class="menu-section-title" (click)="toggleSubmenu('comercial')">
             <span>ÁREA COMERCIAL</span>
             <span class="arrow-icon" [class.rotate]="areaComercialOpen">›</span>
           </div>
           <div *ngIf="areaComercialOpen" class="submenu">
-            <a routerLink="/propiedades/comercial/locales"
-              >Locales</a
-            >
-            <a routerLink="/propiedades/comercial/edificios">Edificios</a>
-            <a routerLink="/propiedades/comercial/oficinas">Oficinas</a>
-            <a routerLink="/propiedades/comercial/bodegas"
-              >Bodegas</a
-            >
-            <a routerLink="/propiedades/comercial/terrenos"
-              >Terrenos</a
-            >
-            <a routerLink="/propiedades/comercial/ranchos"
-              >Ranchos</a
-            >
+            <a href="/propiedades/comercial/locales">Locales</a>
+            <a href="/propiedades/comercial/edificios">Edificios</a>
+            <a href="/propiedades/comercial/oficinas">Oficinas</a>
+            <a href="/propiedades/comercial/bodegas">Bodegas</a>
+            <a href="/propiedades/comercial/terrenos">Terrenos</a>
+            <a href="/propiedades/comercial/ranchos">Ranchos</a>
           </div>
         </div>
-        <a routerLink="/propiedades/busqueda-rentas">Búsqueda de Rentas</a>
-        <a routerLink="/propiedades/busqueda-mapas">Búsqueda con Mapas</a>
+
+        <a href="/propiedades/busqueda-rentas">Búsqueda de Rentas</a>
+        <a href="/propiedades/busqueda-mapas">Búsqueda con Mapas</a>
         <a (click)="navegarProtegido('/propiedades/comparar')"
           >Comparar Propiedades</a
         >
@@ -174,26 +167,28 @@
         >
         <a (click)="navegarProtegido('/favoritos')">Mis Favoritas</a>
       </ng-container>
+
       <ng-container *ngSwitchCase="'agente'">
         <ng-container
           *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
         >
-          <a routerLink="/agentes">Agentes</a>
+          <a href="/agentes">Agentes</a>
         </ng-container>
         <ng-container *ngIf="isLogged && rol === 'agente'">
-          <a routerLink="/agente/agregar">Agregar Propiedad</a>
-          <a routerLink="/requerimientos/publicar">Publicar Requerimiento</a>
-          <a routerLink="/agente/mis-publicaciones">Mis publicaciones</a>
+          <a href="/agente/agregar">Agregar Propiedad</a>
+          <a href="/requerimientos/publicar">Publicar Requerimiento</a>
+          <a href="/agente/mis-publicaciones">Mis publicaciones</a>
         </ng-container>
       </ng-container>
+
       <ng-container *ngSwitchCase="'inmobiliaria'">
         <ng-container
           *ngIf="isLogged && (rol === 'cliente' || rol === 'propietario')"
         >
-          <a routerLink="/directorio/inmobiliarias">Directorio Inmobiliarias</a>
+          <a href="/directorio/inmobiliarias">Directorio Inmobiliarias</a>
         </ng-container>
         <ng-container *ngIf="isLogged && rol === 'inmobiliaria'">
-          <a routerLink="/requerimientos/publicar">Publicar Requerimiento</a>
+          <a href="/requerimientos/publicar">Publicar Requerimiento</a>
         </ng-container>
       </ng-container>
     </ng-container>
@@ -204,10 +199,10 @@
   <ion-header>
     <ion-toolbar class="ai24-toolbar">
       <div class="ai24-container">
-        <div class="logo" routerLink="/">
+        <a class="logo" href="/">
           <img src="assets/logo-ai24.jpeg" alt="Logo AI24" />
           <span>AI24</span>
-        </div>
+        </a>
       </div>
     </ion-toolbar>
   </ion-header>

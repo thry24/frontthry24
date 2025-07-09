@@ -126,9 +126,11 @@
             </div>
             <div class="iconos-superiores">
               <ion-icon
-                name="heart-outline"
+                [name]="esFavorito(propiedad._id) ? 'heart' : 'heart-outline'"
+                [class.favorito-activo]="esFavorito(propiedad._id)"
                 class="icono"
                 title="Agregar a favoritos"
+                (click)="toggleFavorito(propiedad._id)"
               ></ion-icon>
               <ion-icon
                 name="add-circle-outline"

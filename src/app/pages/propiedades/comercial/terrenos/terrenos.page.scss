@@ -373,3 +373,16 @@
     }
   }
 }
+
+.iconos-superiores {
+  .icono.favorito-activo {
+    background: #ffebeb;
+    color: #e53935;
+    border: 1px solid #e53935;
+  }
+
+  .icono.favorito-activo:hover {
+    background: #e53935;
+    color: #fff;
+  }
+}

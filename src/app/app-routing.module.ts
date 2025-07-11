@@ -97,7 +97,33 @@ const routes: Routes = [
   },
   {
     path: 'favoritos',
-    loadChildren: () => import('./pages/favoritos/favoritos.module').then( m => m.FavoritosPageModule)
+    loadChildren: () => import('./pages/favoritos/favoritos.module').then( m => m.FavoritosPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'comparar',
+    loadChildren: () => import('./pages/comparar/comparar.module').then( m => m.CompararPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'propiedades/busqueda-rentas',
+    loadChildren: () => import('./pages/propiedades/busqueda-rentas/busqueda-rentas.module').then( m => m.BusquedaRentasPageModule)
+  },
+  {
+    path: 'propiedades/busqueda-mapas',
+    loadChildren: () => import('./pages/propiedades/busqueda-mapas/busqueda-mapas.module').then( m => m.BusquedaMapasPageModule)
+  },
+  {
+    path: 'contacto/agente',
+    loadChildren: () => import('./pages/contacto/agente/agente.module').then( m => m.AgentePageModule)
+  },
+  {
+    path: 'directorio/inmobiliarias',
+    loadChildren: () => import('./pages/directorio/inmobiliarias/inmobiliarias.module').then( m => m.InmobiliariasPageModule)
+  },
+  {
+    path: 'agentes',
+    loadChildren: () => import('./pages/agentes/agentes.module').then( m => m.AgentesPageModule)
   },
 ];
 

@@ -10,6 +10,7 @@ import { AgentesPage } from './agentes.page';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { AlertaComponent } from "src/app/components/alerta/alerta.component";
+import { LoadingComponent } from 'src/app/components/loading/loading.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { AlertaComponent } from "src/app/components/alerta/alerta.component";
     AgentesPageRoutingModule,
     HeaderComponent,
     FooterComponent,
-    AlertaComponent
+    AlertaComponent,
+    LoadingComponent
 ],
   declarations: [AgentesPage]
 })

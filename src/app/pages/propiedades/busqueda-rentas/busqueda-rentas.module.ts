@@ -9,6 +9,7 @@ import { BusquedaRentasPageRoutingModule } from './busqueda-rentas-routing.modul
 import { BusquedaRentasPage } from './busqueda-rentas.page';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
+import { LoadingComponent } from 'src/app/components/loading/loading.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { FooterComponent } from 'src/app/components/footer/footer.component';
     BusquedaRentasPageRoutingModule,
     HeaderComponent,
     FooterComponent,
+    LoadingComponent
   ],
   declarations: [BusquedaRentasPage]
 })

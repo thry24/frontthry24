@@ -74,7 +74,10 @@
         <div class="card-content">
           <div class="tipo">{{ propiedad.tipoPropiedad | uppercase }}</div>
           <div class="precio">{{ propiedad.precio | currency: 'MXN' }}</div>
-          <div class="descripcion"> {{ propiedad.descripcion?.length > 75 ? (propiedad.descripcion |slice:0:75) + '... Ver más' : (propiedad.descripcion || 'Sindescripción') }}
+          <div class="descripcion">
+            {{ propiedad.descripcion?.length > 75 ? (propiedad.descripcion
+            |slice:0:75) + '... Ver más' : (propiedad.descripcion ||
+            'Sindescripción') }}
           </div>
 
           <div class="ubicacion">
@@ -240,43 +243,134 @@
   </section>
 
   <section class="formulario-agente">
-    <form class="form-contacto">
+    <form
+      class="form-contacto"
+      (ngSubmit)="enviarFormulario()"
+      #formAgente="ngForm"
+    >
       <h2 class="form-title">CONTACTA A UN AGENTE ES MUY FÁCIL</h2>
-      <select>
-        <option value="" disabled selected hidden>Tipo</option>
+
+      <select
+        required
+        [(ngModel)]="formData.tipoPropiedad"
+        name="tipoPropiedad"
+      >
+        <option value="" disabled selected hidden>Tipo de propiedad</option>
+        <option *ngFor="let tipo of tipos" [value]="tipo.clave">
+          {{ tipo.label }}
+        </option>
       </select>
-      <select required>
-        <option value="" disabled selected>Información</option>
+
+      <select required [(ngModel)]="formData.soy" name="soy">
+        <option value="" disabled selected hidden>Soy...</option>
+        <option value="cliente-comprador">Cliente comprador</option>
+        <option value="cliente-arrendatario">Cliente arrendatario</option>
+        <option value="cliente-propietario">Cliente propietario</option>
+        <option value="asesor-inmobiliario">Asesor inmobiliario</option>
       </select>
+
       <div class="fila-doble">
-        <input type="text" placeholder="nombre" required />
-        <input type="text" placeholder="apellidos" required />
+        <input
+          type="text"
+          placeholder="Nombre"
+          required
+          [(ngModel)]="formData.nombre"
+          name="nombre"
+        />
+        <input
+          type="text"
+          placeholder="Apellidos"
+          required
+          [(ngModel)]="formData.apellidos"
+          name="apellidos"
+        />
       </div>
+
       <div class="fila-doble">
-        <input type="tel" placeholder="teléfono" required />
-        <input type="email" placeholder="Email" required />
+        <input
+          type="tel"
+          placeholder="Teléfono"
+          required
+          pattern="[0-9]{10}"
+          [(ngModel)]="formData.telefono"
+          name="telefono"
+          title="Ingresa 10 dígitos"
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          required
+          [(ngModel)]="formData.email"
+          name="email"
+        />
       </div>
+
       <div class="fila-doble">
-        <input type="text" placeholder="ciudad" required />
-        <input type="text" placeholder="municipio" required />
+        <input
+          type="text"
+          placeholder="Ciudad"
+          required
+          [(ngModel)]="formData.ciudad"
+          name="ciudad"
+        />
+        <input
+          type="text"
+          placeholder="Municipio"
+          required
+          [(ngModel)]="formData.municipio"
+          name="municipio"
+        />
       </div>
+
       <input
         type="text"
-        placeholder="escribe las características de la propiedad que buscas"
+        placeholder="Escribe las características de la propiedad que buscas"
+        [(ngModel)]="formData.caracteristicas"
+        name="caracteristicas"
       />
-      <div class="fila-doble">
-        <input type="number" placeholder="presupuesto mínimo" />
-        <input type="number" placeholder="presupuesto máximo" />
-      </div>
-      <select>
-        <option value="" disabled selected>Forma de Pago</option>
+<div class="fila-doble">
+  <input
+    type="text"
+    placeholder="Presupuesto mínimo"
+    [value]="formatearPrecio(formData.presupuestoMin)"
+    (input)="actualizarPresupuesto($event, 'min')"
+  />
+
+  <input
+    type="text"
+    placeholder="Presupuesto máximo"
+    [value]="formatearPrecio(formData.presupuestoMax)"
+    (input)="actualizarPresupuesto($event, 'max')"
+  />
+</div>
+
+
+
+      <select
+        required
+        [(ngModel)]="formData.formaPago"
+        name="formaPago"
+        (change)="verificarBroker()"
+      >
+        <option value="" disabled selected hidden>Forma de Pago</option>
+        <option value="recursos-propios">Recursos propios</option>
+        <option value="credito-hipotecario">Crédito hipotecario</option>
+        <option value="no-se">Aún no sé</option>
       </select>
-      <select required>
+
+      <select
+        required
+        [(ngModel)]="formData.medioContacto"
+        name="medioContacto"
+      >
         <option value="" disabled selected>
           ¿Por qué medio quieres que te enviemos la información?
         </option>
+        <option value="whatsapp">WhatsApp</option>
+        <option value="correo">Correo electrónico</option>
       </select>
-      <button type="submit" class="boton-submit">Submit</button>
+
+      <button type="submit" class="boton-submit">Enviar</button>
     </form>
   </section>
 

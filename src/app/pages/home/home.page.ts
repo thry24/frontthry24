@@ -4,7 +4,7 @@ import { WishlistService } from 'src/app/services/wishlist.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AlertaService } from 'src/app/services/alerta.service';
 import { LoadingService } from 'src/app/services/loading.service';
-
+import { FormulariosService } from 'src/app/services/formularios.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -15,6 +15,23 @@ export class HomePage implements OnInit {
   propiedades: any[] = [];
   propiedadesFiltradas: any[] = [];
   tipoSeleccionado: string = 'casa';
+  formaPago: string = '';
+
+  formData: any = {
+  tipoPropiedad: '',
+  soy: '',
+  nombre: '',
+  apellidos: '',
+  telefono: '',
+  email: '',
+  ciudad: '',
+  municipio: '',
+  caracteristicas: '',
+  presupuestoMin: '',
+  presupuestoMax: '',
+  formaPago: '',
+  medioContacto: ''
+};
 
   tipos = [
     { clave: 'casa', label: 'Casas' },
@@ -34,7 +51,8 @@ export class HomePage implements OnInit {
     private wishlistService: WishlistService,
     private authService: AuthService,
     private alerta: AlertaService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private formulariosService: FormulariosService
   ) {}
 
   ngOnInit() {
@@ -134,4 +152,51 @@ export class HomePage implements OnInit {
     const ruta = `/propiedades/${rutas[this.tipoSeleccionado] || ''}`;
     window.location.href = ruta;
   }
+
+  verificarBroker() {
+  if (this.formaPago === 'no-se') {
+    this.alerta.mostrar('Podemos ayudarte conectándote con un broker hipotecario');
+  }
+}
+
+enviarFormulario() {
+   if (!this.formData.valid) {
+      this.alerta.mostrar('Debes llenar todos los campos obligatorios correctamente');
+      return;
+    }
+  if (!this.formData.email || !this.formData.telefono) return;
+
+  this.loading.mostrar();
+  this.formulariosService.enviarFormulario(this.formData).subscribe({
+    next: () => {
+      this.alerta.mostrar('Formulario enviado correctamente');
+      this.loading.ocultar();
+    },
+    error: (err) => {
+      console.error('Error al enviar formulario:', err);
+      this.loading.ocultar();
+    }
+  });
+}
+
+formatearPrecio(valor: any): string {
+  if (valor === null || valor === undefined || valor === '') return '';
+  const numero = Number(valor);
+  if (isNaN(numero)) return '';
+  return '$' + numero.toLocaleString('es-MX');
+}
+
+actualizarPresupuesto(event: Event, campo: 'min' | 'max') {
+  const input = event.target as HTMLInputElement;
+  const valorLimpio = input.value.replace(/[^0-9]/g, '');
+  const numero = parseInt(valorLimpio || '0', 10);
+
+  if (campo === 'min') {
+    this.formData.presupuestoMin = numero;
+  } else {
+    this.formData.presupuestoMax = numero;
+  }
+}
+
+
 }

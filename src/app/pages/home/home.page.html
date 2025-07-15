@@ -42,9 +42,10 @@
       class="propiedades-grid"
       *ngIf="propiedadesFiltradas.length > 0; else sinPropiedades"
     >
-      <div
+      <a
         class="card-propiedad"
         *ngFor="let propiedad of propiedadesFiltradas.slice(0, 4)"
+        [routerLink]="['/detalle-propiedad', propiedad._id]"
       >
         <div class="img-wrapper">
           <img
@@ -73,9 +74,9 @@
         <div class="card-content">
           <div class="tipo">{{ propiedad.tipoPropiedad | uppercase }}</div>
           <div class="precio">{{ propiedad.precio | currency: 'MXN' }}</div>
-          <div class="descripcion">
-            {{ propiedad.descripcion || 'Sin descripción' }}
+          <div class="descripcion"> {{ propiedad.descripcion?.length > 75 ? (propiedad.descripcion |slice:0:75) + '... Ver más' : (propiedad.descripcion || 'Sindescripción') }}
           </div>
+
           <div class="ubicacion">
             <ion-icon name="location-outline"></ion-icon>
             {{ propiedad.direccion?.municipio }}, {{ propiedad.direccion?.estado
@@ -226,7 +227,7 @@
             </a>
           </div>
         </div>
-      </div>
+      </a>
     </div>
 
     <div class="ver-mas-wrapper">

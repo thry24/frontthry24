@@ -117,9 +117,10 @@
     <h2 class="titulo-seccion">Locales</h2>
     <div class="propiedades-grid">
       <ng-container *ngIf="propiedades.length > 0; else noResultados">
-        <div
+        <a
           class="card-propiedad"
           *ngFor="let propiedad of propiedadesPaginadas"
+          [routerLink]="['/detalle-propiedad', propiedad._id]"
         >
           <div class="img-wrapper">
             <img
@@ -149,7 +150,9 @@
             <div class="tipo">{{ propiedad.tipoPropiedad | uppercase }}</div>
             <div class="precio">{{ propiedad.precio | currency: 'MXN' }}</div>
             <div class="descripcion">
-              {{ propiedad.descripcion || 'Sin descripción' }}
+              {{ propiedad.descripcion?.length > 75 ? (propiedad.descripcion
+              |slice:0:75) + '... Ver más' : (propiedad.descripcion ||
+              'Sindescripción') }}
             </div>
             <div class="ubicacion">
               <ion-icon name="location-outline"></ion-icon>
@@ -204,7 +207,7 @@
               </a>
             </div>
           </div>
-        </div>
+        </a>
       </ng-container>
       <ng-template #noResultados>
         <div class="mensaje-vacio">

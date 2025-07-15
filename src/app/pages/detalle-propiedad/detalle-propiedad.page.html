@@ -1,0 +1,482 @@
+<app-header></app-header>
+
+<ion-content *ngIf="propiedad">
+  <section class="detalle-header">
+    <div class="detalle-top">
+      <a class="btn-volver" href="/home">← Volver</a>
+      <h2 class="titulo-principal">Detalles de la Propiedad</h2>
+    </div>
+  </section>
+
+  <section class="detalle-info-grid row">
+    <div class="detalle-info col-izq">
+      <div class="galeria-principal" *ngIf="propiedad.imagenes?.length > 0">
+        <div class="img-wrapper-detalle">
+          <img
+            [src]="imagenActual"
+            alt="Imagen destacada"
+            class="imagen-principal"
+          />
+
+          <div class="iconos-superiores">
+            <ion-icon
+              [name]="esFavorito(propiedad._id) ? 'heart' : 'heart-outline'"
+              [class.favorito-activo]="esFavorito(propiedad._id)"
+              class="icono"
+              title="Agregar a favoritos"
+              (click)="toggleFavorito(propiedad._id)"
+            ></ion-icon>
+
+            <ion-icon
+              [name]="esComparada(propiedad._id) ? 'remove-circle-outline' : 'add-circle-outline'"
+              [class.favorito-activo]="esComparada(propiedad._id)"
+              class="icono"
+              title="Comparar"
+              (click)="toggleComparar(propiedad._id)"
+            ></ion-icon>
+          </div>
+        </div>
+
+        <div class="miniaturas">
+          <img
+            *ngFor="let img of propiedad.imagenes"
+            [src]="img"
+            class="miniatura"
+            [class.activa]="img === imagenActual"
+            (click)="imagenActual = img"
+          />
+        </div>
+      </div>
+
+      <div class="detalle-clave-comision">
+        <span *ngIf="propiedad?.clave">
+          <ion-icon name="key-outline"></ion-icon> Clave:
+          <strong>{{ propiedad.clave }}</strong>
+        </span>
+        <span *ngIf="propiedad?.comision?.porcentaje">
+          <ion-icon name="cash-outline"></ion-icon> Comisión:
+          <strong>{{ propiedad.comision.porcentaje }}%</strong>
+        </span>
+        <span *ngIf="propiedad?.comision?.comparte !== undefined">
+          <ion-icon name="people-outline"></ion-icon>
+          Comparte comisión:
+          <strong>{{ propiedad.comision.comparte ? 'Sí' : 'No' }}</strong>
+        </span>
+      </div>
+
+      <h3 class="detalle-titulo">
+        {{ verMas ? propiedad.descripcion : (propiedad.descripcion |
+        slice:0:500) + (propiedad.descripcion?.length > 500 ? '...' : '') }}
+        <span
+          *ngIf="propiedad?.descripcion?.length > 500"
+          class="ver-mas-btn"
+          (click)="verMas = !verMas"
+        >
+          {{ verMas ? ' Ver menos' : ' Ver más' }}
+        </span>
+      </h3>
+
+      <p class="detalle-direccion">
+        <ion-icon name="location-outline"></ion-icon>
+        {{ propiedad.direccion?.colonia }}, {{ propiedad.direccion?.municipio
+        }}, {{ propiedad.direccion?.estado }}
+      </p>
+
+      <div class="detalle-etiqueta">
+        {{ propiedad.estadoPropiedad | uppercase }}
+      </div>
+
+      <div class="detalle-etiqueta tipo-propiedad">
+        <ion-icon [name]="iconoTipoPropiedad"></ion-icon>
+        {{ propiedad.tipoPropiedad | titlecase }}
+      </div>
+
+      <h4 class="detalle-precio">
+        {{ propiedad.precio | currency: 'MXN' : 'symbol' }}
+        <small>en {{ propiedad.tipoOperacion }}</small>
+      </h4>
+
+      <div class="detalle-caracteristicas" [ngSwitch]="propiedad.tipoPropiedad">
+        <ng-container *ngSwitchCase="'casa'">
+          <ng-container *ngTemplateOutlet="casaDepto"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'departamento'">
+          <ng-container *ngTemplateOutlet="casaDepto"></ng-container>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'terreno'">
+          <span *ngIf="propiedad.caracteristicas?.terreno?.m2Frente">
+            <ion-icon name="resize-outline"></ion-icon> Frente: {{
+            propiedad.caracteristicas.terreno.m2Frente }} m
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.terreno?.m2Fondo">
+            <ion-icon name="resize-outline"></ion-icon> Fondo: {{
+            propiedad.caracteristicas.terreno.m2Fondo }} m
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.terreno?.agua">
+            <ion-icon name="water-outline"></ion-icon> Agua
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.terreno?.luz">
+            <ion-icon name="flash-outline"></ion-icon> Luz
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.terreno?.drenaje">
+            <ion-icon name="trail-sign-outline"></ion-icon> Drenaje
+          </span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'local'">
+          <span *ngIf="propiedad.caracteristicas?.local?.tipoCentro">
+            <ion-icon name="business-outline"></ion-icon> Tipo de centro: {{
+            propiedad.caracteristicas.local.tipoCentro }}
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.local?.plaza">
+            <ion-icon name="storefront-outline"></ion-icon> Plaza: {{
+            propiedad.caracteristicas.local.plaza }}
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.local?.pasillo">
+            <ion-icon name="walk-outline"></ion-icon> Pasillo: {{
+            propiedad.caracteristicas.local.pasillo }}
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.local?.seguridad">
+            <ion-icon name="shield-outline"></ion-icon> Seguridad
+          </span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'bodega'">
+          <span *ngIf="propiedad.caracteristicas?.bodega?.tipo">
+            <ion-icon name="business-outline"></ion-icon> Tipo: {{
+            propiedad.caracteristicas.bodega.tipo }}
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.bodega?.m2Terreno">
+            <ion-icon name="expand-outline"></ion-icon> Terreno: {{
+            propiedad.caracteristicas.bodega.m2Terreno }} m²
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.bodega?.m2Construccion">
+            <ion-icon name="trending-up-outline"></ion-icon> Construcción: {{
+            propiedad.caracteristicas.bodega.m2Construccion }} m²
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.bodega?.oficinas">
+            <ion-icon name="construct-outline"></ion-icon> Oficinas: {{
+            propiedad.caracteristicas.bodega.oficinas }}
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.bodega?.andenCarga">
+            <ion-icon name="trail-sign-outline"></ion-icon> Andén de carga
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.bodega?.mezzanine">
+            <ion-icon name="layers-outline"></ion-icon> Mezzanine
+          </span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'rancho'">
+          <span *ngIf="propiedad.caracteristicas?.rancho?.hectareas">
+            <ion-icon name="earth-outline"></ion-icon> Hectáreas: {{
+            propiedad.caracteristicas.rancho.hectareas }}
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.rancho?.pozo">
+            <ion-icon name="water-outline"></ion-icon> Pozo
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.rancho?.casa">
+            <ion-icon name="home-outline"></ion-icon> Casa
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.rancho?.corrales">
+            <ion-icon name="bonfire-outline"></ion-icon> Corrales
+          </span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'oficina'">
+          <span *ngIf="propiedad.caracteristicas?.oficina?.superficie">
+            <ion-icon name="expand-outline"></ion-icon> Superficie: {{
+            propiedad.caracteristicas.oficina.superficie }} m²
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.oficina?.privados">
+            <ion-icon name="people-outline"></ion-icon> Privados: {{
+            propiedad.caracteristicas.oficina.privados }}
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.oficina?.salaJuntas">
+            <ion-icon name="today-outline"></ion-icon> Sala de juntas: {{
+            propiedad.caracteristicas.oficina.salaJuntas }}
+          </span>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'edificio'">
+          <span *ngIf="propiedad.caracteristicas?.edificio?.m2xPiso">
+            <ion-icon name="expand-outline"></ion-icon> m² por piso: {{
+            propiedad.caracteristicas.edificio.m2xPiso }}
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.edificio?.pisosEdificio">
+            <ion-icon name="layers-outline"></ion-icon> Pisos: {{
+            propiedad.caracteristicas.edificio.pisosEdificio }}
+          </span>
+          <span *ngIf="propiedad.caracteristicas?.edificio?.estacionamientos">
+            <ion-icon name="car-outline"></ion-icon> Estacionamientos: {{
+            propiedad.caracteristicas.edificio.estacionamientos }}
+          </span>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+          <span>No hay características disponibles.</span>
+        </ng-container>
+      </div>
+
+      <div
+        class="detalle-extra"
+        *ngIf="propiedad?.generales || propiedad?.servicios || propiedad?.amenidades"
+      >
+        <div class="seccion-caracteristicas">
+          <h4>
+            <ion-icon name="settings-outline"></ion-icon> Características
+            Generales
+          </h4>
+          <span *ngIf="propiedad.generales?.cisterna">Cisterna</span>
+          <span *ngIf="propiedad.generales?.hidroneumatico"
+            >Hidroneumático</span
+          >
+          <span *ngIf="propiedad.generales?.cancelesBano"
+            >Canceles de baño</span
+          >
+          <span *ngIf="propiedad.generales?.riegoAspersion"
+            >Riego por aspersión</span
+          >
+          <span *ngIf="propiedad.generales?.calentadorSolar"
+            >Calentador solar</span
+          >
+          <span *ngIf="propiedad.generales?.lamparasSolares"
+            >Lámparas solares</span
+          >
+          <span *ngIf="propiedad.generales?.aireAcondicionado"
+            >Aire acondicionado</span
+          >
+          <span *ngIf="propiedad.generales?.alarma">Alarma</span>
+          <span *ngIf="propiedad.generales?.bodega">Bodega</span>
+          <span *ngIf="propiedad.generales?.calefaccion">Calefacción</span>
+          <span *ngIf="propiedad.generales?.chimenea">Chimenea</span>
+          <span *ngIf="propiedad.generales?.circuitoCerrado"
+            >Circuito cerrado</span
+          >
+          <span *ngIf="propiedad.generales?.sistemaInteligente"
+            >Sistema inteligente</span
+          >
+          <span *ngIf="propiedad.generales?.elevador">Elevador</span>
+          <span *ngIf="propiedad.generales?.seguridad24h">Seguridad 24/7</span>
+          <span *ngIf="propiedad.generales?.vistaPanoramica"
+            >Vista panorámica</span
+          >
+          <span *ngIf="propiedad.generales?.vistaFloraFauna"
+            >Vista flora/fauna</span
+          >
+        </div>
+
+        <div class="seccion-caracteristicas">
+          <h4><ion-icon name="wifi-outline"></ion-icon> Servicios</h4>
+          <span *ngIf="propiedad.servicios?.tipoGas">Gas</span>
+          <span *ngIf="propiedad.servicios?.internet">Internet</span>
+          <span *ngIf="propiedad.servicios?.telefonia">Telefonía</span>
+          <span *ngIf="propiedad.servicios?.tv">TV por cable</span>
+          <span *ngIf="propiedad.servicios?.enchufeCarros"
+            >Cargador eléctrico</span
+          >
+        </div>
+
+        <div class="seccion-caracteristicas">
+          <h4><ion-icon name="sparkles-outline"></ion-icon> Amenidades</h4>
+          <span *ngIf="propiedad.amenidades?.juegosInfantiles"
+            >Juegos infantiles</span
+          >
+          <span *ngIf="propiedad.amenidades?.campoGolf">Campo de golf</span>
+          <span *ngIf="propiedad.amenidades?.gimnasio">Gimnasio</span>
+          <span *ngIf="propiedad.amenidades?.ludoteca">Ludoteca</span>
+          <span *ngIf="propiedad.amenidades?.salonEvento"
+            >Salón de eventos</span
+          >
+          <span *ngIf="propiedad.amenidades?.asadores">Asadores</span>
+          <span *ngIf="propiedad.amenidades?.lagos">Lagos</span>
+          <span *ngIf="propiedad.amenidades?.petFriendly">Pet friendly</span>
+          <span *ngIf="propiedad.amenidades?.piscina">Piscina</span>
+          <span *ngIf="propiedad.amenidades?.jacuzzi">Jacuzzi</span>
+          <span *ngIf="propiedad.amenidades?.jogging">Pista de jogging</span>
+          <span *ngIf="propiedad.amenidades?.futbol">Cancha de fútbol</span>
+          <span *ngIf="propiedad.amenidades?.tenis">Cancha de tenis</span>
+          <span *ngIf="propiedad.amenidades?.squash">Squash</span>
+          <span *ngIf="propiedad.amenidades?.paddle">Paddle</span>
+          <span *ngIf="propiedad.amenidades?.basket">Basketball</span>
+          <span *ngIf="propiedad.amenidades?.volley">Volleyball</span>
+          <span *ngIf="propiedad.amenidades?.vistaGolf"
+            >Vista al campo de golf</span
+          >
+          <span *ngIf="propiedad.amenidades?.otros"
+            >{{ propiedad.caracteristicas.amenidades.otros }}</span
+          >
+        </div>
+      </div>
+
+      <ng-template #casaDepto>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.habitaciones">
+          <ion-icon name="bed-outline"></ion-icon> {{
+          propiedad.caracteristicas.casaDepto.habitaciones }} Recámaras
+        </span>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.banosCompletos">
+          <ion-icon name="water-outline"></ion-icon> {{
+          propiedad.caracteristicas.casaDepto.banosCompletos }} Baños
+        </span>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.mediosBanos">
+          <ion-icon name="water-outline"></ion-icon> {{
+          propiedad.caracteristicas.casaDepto.mediosBanos }} Medios baños
+        </span>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.estacionamiento">
+          <ion-icon name="car-outline"></ion-icon> {{
+          propiedad.caracteristicas.casaDepto.estacionamiento }}
+        </span>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.superficie">
+          <ion-icon name="expand-outline"></ion-icon> {{
+          propiedad.caracteristicas.casaDepto.superficie }} m²
+        </span>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.construccion">
+          <ion-icon name="trending-up-outline"></ion-icon> {{
+          propiedad.caracteristicas.casaDepto.construccion }} m² construidos
+        </span>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.pisos">
+          <ion-icon name="layers-outline"></ion-icon> {{
+          propiedad.caracteristicas.casaDepto.pisos }} pisos
+        </span>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.jardin">
+          <ion-icon name="leaf-outline"></ion-icon> Jardín
+        </span>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.terraza">
+          <ion-icon name="sunny-outline"></ion-icon> Terraza
+        </span>
+        <span *ngIf="propiedad.caracteristicas?.casaDepto?.cuartoServicio">
+          <ion-icon name="person-outline"></ion-icon> Cuarto de servicio
+        </span>
+      </ng-template>
+    </div>
+
+    <div class="detalle-agente col-der">
+      <div class="agente-card">
+        <img
+          [src]="propiedad.agente?.fotoPerfil"
+          alt="Foto del agente"
+          class="agente-foto"
+        />
+        <h4 class="agente-nombre">{{ propiedad.agente?.nombre }}</h4>
+        <p class="agente-rol">Agente inmobiliario</p>
+      </div>
+
+      <div class="form-agenda">
+        <h4 class="agenda-titulo">Agenda tu cita</h4>
+        <div>
+          <div class="form-group">
+            <input
+              type="text"
+              [(ngModel)]="cita.nombre"
+              name="nombre"
+              placeholder="Nombre"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="email"
+              [(ngModel)]="cita.email"
+              name="email"
+              placeholder="Correo"
+              required
+            />
+          </div>
+          <div class="form-group fecha-hora">
+            <input
+              type="date"
+              [(ngModel)]="cita.fecha"
+              name="fecha"
+              required
+              [min]="hoy"
+              (change)="validarHora()"
+              (click)="abrirFecha($event)"
+            />
+
+            <input
+              type="time"
+              [(ngModel)]="cita.hora"
+              name="hora"
+              required
+              [min]="minHora"
+              (change)="validarHora()"
+              (click)="abrirHora($event)"
+            />
+          </div>
+          <div class="form-group">
+            <textarea
+              [(ngModel)]="cita.mensaje"
+              name="mensaje"
+              placeholder="Mensaje opcional..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="contacto-desbloqueado fila-contacto">
+          <button
+            [disabled]="!citaValida"
+            (click)="abrirMailto()"
+            class="fila-contacto btn-enlace"
+          >
+            <ion-icon name="mail-outline"></ion-icon> Email
+          </button>
+          <button
+            [disabled]="!citaValida"
+            (click)="abrirWhatsApp()"
+            class="fila-contacto btn-enlace"
+          >
+            <ion-icon name="logo-whatsapp"></ion-icon> WhatsApp
+          </button>
+        </div>
+      </div>
+
+      <br><br><br>
+
+      <div class="bloque-simple imagen-opiniones">
+        <img src="assets/img/banner.png" alt="Opiniones del agente" />
+      </div>
+    </div>
+  </section>
+  <section class="row detalle-info-grid">
+    <div class="detalle-info col-izq">
+      <section
+        class="mapa-container"
+        *ngIf="propiedad?.direccion?.lat && propiedad?.direccion?.lng"
+      >
+        <h4 class="mapa-titulo">Ubicación aproximada</h4>
+        <div
+          id="map"
+          style="
+            height: 400px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          "
+        ></div>
+      </section>
+    </div>
+
+    <div class=" detalle-agente col-der">
+     <div class="contenedor-lugares">
+      <div class="bloque-simple">
+        <h4>Lugares cercanos (500m)</h4>
+        <p>Explora sitios útiles cerca de esta propiedad:</p>
+
+        <div class="grid-lugares">
+          <ng-container *ngFor="let tipo of tiposLugares">
+            <div class="conteo-lugar" *ngIf="conteoLugares[tipo] > 0">
+              <ion-icon [name]="iconoCategoria(tipo)"></ion-icon>
+              <span class="nombre">{{ tipo | titlecase }}</span>
+              <span class="cantidad"
+                >{{ conteoLugares[tipo] > 9 ? '9+' : conteoLugares[tipo]
+                }}</span
+              >
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+</ion-content>

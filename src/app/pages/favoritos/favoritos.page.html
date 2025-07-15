@@ -5,11 +5,8 @@
   <div class="wrapper-flex-contenido">
     <section class="resultados-section">
       <h1 class="titulo-seccion">Mis Favoritos</h1>
-      <div
-        class="propiedades-grid"
-        *ngIf="propiedades.length > 0; else sinFavoritos"
-      >
-        <div class="card-propiedad" *ngFor="let propiedad of propiedades">
+      <div class="propiedades-grid" *ngIf="propiedades.length > 0; else sinFavoritos">
+        <div class="card-propiedad" *ngFor="let propiedad of propiedades" [routerLink]="['/detalle-propiedad', propiedad._id]">
           <div class="img-wrapper">
             <img
               [src]="propiedad.imagenPrincipal || 'assets/img/sin-imagen.jpg'"

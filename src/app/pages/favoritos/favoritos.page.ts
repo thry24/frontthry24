@@ -48,7 +48,4 @@ export class FavoritosPage implements OnInit {
       }, 1000);
     });
   }
-
-  verMas() {
-  }
 }

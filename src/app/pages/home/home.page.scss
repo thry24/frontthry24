@@ -13,7 +13,6 @@
 
 .glass-content {
   background: rgba(10, 20, 30, 0.65);
-  /* más opaco */
   border-radius: 20px;
   padding: 2rem 3rem;
   max-width: 720px;
@@ -54,7 +53,6 @@
   background: #e25500;
 }
 
-/* Tabs tipo de propiedad */
 .tabs-tipos {
   background: #fff;
   padding: 3rem 1rem 1.5rem;
@@ -298,6 +296,7 @@ input:focus {
     .descripcion {
       font-size: 0.9rem;
       margin-bottom: 0.5rem;
+      color: #0a2b4a;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;

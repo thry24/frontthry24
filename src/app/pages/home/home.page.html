@@ -42,7 +42,7 @@
       class="propiedades-grid"
       *ngIf="propiedadesFiltradas.length > 0; else sinPropiedades"
     >
-      <a
+      <div
         class="card-propiedad"
         *ngFor="let propiedad of propiedadesFiltradas.slice(0, 4)"
         [routerLink]="['/detalle-propiedad', propiedad._id]"
@@ -61,13 +61,15 @@
               [class.favorito-activo]="esFavorito(propiedad._id)"
               class="icono"
               title="Agregar a favoritos"
-              (click)="toggleFavorito(propiedad._id)"
+              (click)="toggleFavorito($event, propiedad._id)"
             ></ion-icon>
             <ion-icon
-              name="add-circle-outline"
-              class="icono"
-              title="Comparar"
-            ></ion-icon>
+                [name]="esComparada(propiedad._id) ? 'remove-circle-outline' : 'add-circle-outline'"
+                [class.comparar-activo]="esComparada(propiedad._id)"
+                class="icono"
+                title="Comparar"
+                (click)="toggleComparar($event, propiedad._id, propiedad.tipoPropiedad)"
+              ></ion-icon>
           </div>
         </div>
 
@@ -230,7 +232,7 @@
             </a>
           </div>
         </div>
-      </a>
+      </div>
     </div>
 
     <div class="ver-mas-wrapper">

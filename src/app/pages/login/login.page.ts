@@ -52,7 +52,7 @@ export class LoginPage implements OnInit, OnDestroy {
         this.loading.ocultar();
         this.alerta.mostrar('¡Bienvenido!', 'success');
         setTimeout(() => {
-          this.router.navigate(['/home']);
+          window.location.href= "/home";
         }, 2000);
       },
       error: (err) => {

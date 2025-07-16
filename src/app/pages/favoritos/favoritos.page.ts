@@ -39,7 +39,8 @@ export class FavoritosPage implements OnInit {
     return true;
   }
 
-  toggleFavorito(id: string): void {
+  toggleFavorito(event: Event, id: string): void {
+    event.stopPropagation();
     this.loading.mostrar();
     this.wishlist.eliminarDeFavoritos(id).subscribe(() => {
       setTimeout(() => {

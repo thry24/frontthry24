@@ -28,12 +28,12 @@
             ></ion-icon>
 
             <ion-icon
-              [name]="esComparada(propiedad._id) ? 'remove-circle-outline' : 'add-circle-outline'"
-              [class.favorito-activo]="esComparada(propiedad._id)"
-              class="icono"
-              title="Comparar"
-              (click)="toggleComparar(propiedad._id)"
-            ></ion-icon>
+                [name]="esComparada(propiedad._id) ? 'remove-circle-outline' : 'add-circle-outline'"
+                [class.comparar-activo]="esComparada(propiedad._id)"
+                class="icono"
+                title="Comparar"
+                (click)="toggleComparar($event, propiedad._id, propiedad.tipoPropiedad)"
+              ></ion-icon>
           </div>
         </div>
 

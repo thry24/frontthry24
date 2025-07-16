@@ -1,0 +1,87 @@
+<app-header></app-header>
+
+<ion-content [fullscreen]="true">
+  <section class="comparar-section">
+    <h1 class="titulo-comparar">Tus propiedades para comparar</h1>
+
+    <ul class="lista-tipos">
+      <li
+        class="item-tipo"
+        *ngFor="let tipo of tipos"
+        [ngClass]="{ activo: tipoSeleccionado === tipo.clave }"
+        (click)="cambiarTipo(tipo.clave)"
+      >
+        {{ tipo.label }}
+      </li>
+    </ul>
+
+    <div *ngIf="obtenerPorTipoSeleccionado().length > 0" class="tabla-wrapper">
+      <div class="tabla-contenedor">
+      <table class="tabla-comparar-vertical">
+        <thead>
+          <tr>
+            <th></th>
+            <th *ngFor="let propiedad of obtenerPorTipoSeleccionado()">
+              <img
+                class="img-tabla"
+                [src]="propiedad.imagenPrincipal || 'assets/img/sin-imagen.jpg'"
+                alt="img"
+              />
+              <ion-button
+                fill="clear"
+                size="small"
+                color="danger"
+                (click)="eliminarDeComparacion(propiedad._id)"
+              >
+                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td class="campo-label">Ubicación</td>
+            <td *ngFor="let propiedad of obtenerPorTipoSeleccionado()">
+              {{ propiedad.direccion?.municipio }}, {{
+              propiedad.direccion?.estado }}
+            </td>
+          </tr>
+          <tr>
+            <td class="campo-label">Precio</td>
+            <td *ngFor="let propiedad of obtenerPorTipoSeleccionado()">
+              {{ propiedad.precio | currency: 'MXN' }}
+            </td>
+          </tr>
+
+          <tr *ngFor="let campo of camposVisibles">
+            <td class="campo-label">{{ campo.label }}</td>
+            <td *ngFor="let propiedad of obtenerPorTipoSeleccionado()">
+              <ng-container
+                *ngIf="!esValorVacio(propiedad.caracteristicas?.[campo.tipo]?.[campo.clave]); else sinDato"
+              >
+                <ng-container
+                  [ngSwitch]="propiedad.caracteristicas[campo.tipo][campo.clave]"
+                >
+                  <span *ngSwitchCase="true">✔️</span>
+                  <span *ngSwitchCase="false">❌</span>
+                  <span *ngSwitchDefault>
+                    {{ propiedad.caracteristicas[campo.tipo][campo.clave] }}
+                  </span>
+                </ng-container>
+              </ng-container>
+              <ng-template #sinDato>—</ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div *ngIf="obtenerPorTipoSeleccionado().length === 0">
+      <p class="mensaje-vacio">No hay propiedades comparadas de este tipo.</p>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+</ion-content>

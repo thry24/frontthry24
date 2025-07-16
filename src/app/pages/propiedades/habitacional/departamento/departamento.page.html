@@ -117,7 +117,7 @@
     <h2 class="titulo-seccion">Departamentos</h2>
     <div class="propiedades-grid">
       <ng-container *ngIf="propiedades.length > 0; else noResultados">
-        <a
+        <div
           class="card-propiedad"
           *ngFor="let propiedad of propiedadesPaginadas"
           [routerLink]="['/detalle-propiedad', propiedad._id]"
@@ -136,13 +136,15 @@
                 [class.favorito-activo]="esFavorito(propiedad._id)"
                 class="icono"
                 title="Agregar a favoritos"
-                (click)="toggleFavorito(propiedad._id)"
+                (click)="toggleFavorito($event, propiedad._id)"
               ></ion-icon>
 
               <ion-icon
-                name="add-circle-outline"
+                [name]="esComparada(propiedad._id) ? 'remove-circle-outline' : 'add-circle-outline'"
+                [class.comparar-activo]="esComparada(propiedad._id)"
                 class="icono"
                 title="Comparar"
+                (click)="toggleComparar($event, propiedad._id, propiedad.tipoPropiedad)"
               ></ion-icon>
             </div>
           </div>
@@ -150,8 +152,11 @@
           <div class="card-content">
             <div class="tipo">{{ propiedad.tipoPropiedad | uppercase }}</div>
             <div class="precio">{{ propiedad.precio | currency: 'MXN' }}</div>
-            <div class="descripcion"> {{ propiedad.descripcion?.length > 75 ? (propiedad.descripcion |slice:0:75) + '... Ver más' : (propiedad.descripcion || 'Sindescripción') }}
-          </div>
+            <div class="descripcion">
+              {{ propiedad.descripcion?.length > 75 ? (propiedad.descripcion
+              |slice:0:75) + '... Ver más' : (propiedad.descripcion ||
+              'Sindescripción') }}
+            </div>
             <div class="ubicacion">
               <ion-icon name="location-outline"></ion-icon>
               {{ propiedad.direccion?.municipio }}, {{
@@ -203,7 +208,7 @@
               </a>
             </div>
           </div>
-        </a>
+        </div>
       </ng-container>
       <ng-template #noResultados>
         <div class="mensaje-vacio">

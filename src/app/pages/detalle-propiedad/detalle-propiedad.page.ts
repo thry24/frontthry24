@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { AlertaService } from 'src/app/services/alerta.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { WishlistService } from 'src/app/services/wishlist.service';
+import { CompararService } from 'src/app/services/comparar.service';
 
 @Component({
   selector: 'app-detalle-propiedad',
@@ -19,7 +20,7 @@ export class DetallePropiedadPage implements OnInit {
   minHora: string = '00:00';
   imagenActual: string = '';
   favoritos: string[] = [];
-  comparar: string[] = [];
+  comparadas: string[] = [];
   verMas: boolean = false;
 
   cita = {
@@ -47,7 +48,8 @@ export class DetallePropiedadPage implements OnInit {
     private authService: AuthService,
     private alertaService: AlertaService,
     private loadingService: LoadingService,
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
+    private comparar: CompararService
   ) {}
 
   get iconoTipoPropiedad(): string {
@@ -75,6 +77,7 @@ export class DetallePropiedadPage implements OnInit {
 
   ngOnInit() {
     this.cargarFavoritos();
+    this.cargarComparadas();
 
     const usuario = this.authService.obtenerUsuario();
     if (usuario) {
@@ -175,23 +178,79 @@ export class DetallePropiedadPage implements OnInit {
       },
     });
   }
-
-  esComparada(id: string): boolean {
-    return this.comparar.includes(id);
+ cargarComparadas() {
+    this.loadingService.mostrar();
+    this.comparar.obtenerComparaciones().subscribe({
+      next: (res) => {
+        this.comparadas = res.map((p: any) => p._id);
+        this.loadingService.ocultar();
+      },
+      error: (err) => {
+        console.error('Error al obtener comparaciones:', err);
+        this.loadingService.ocultar();
+      },
+    });
   }
 
-  toggleComparar(id: string) {
-    if (this.esComparada(id)) {
-      this.comparar = this.comparar.filter((i) => i !== id);
+  toggleComparar(event: Event, propiedadId: string, tipoPropiedad: string) {
+    event.stopPropagation();
+
+    if (!this.authService.estaAutenticado()) {
+      this.alertaService.mostrar('Debes iniciar sesión para comparar propiedades');
+
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 3000);
+
+      return;
+    }
+
+    this.loadingService.mostrar();
+
+    if (this.esComparada(propiedadId)) {
+      this.comparar.eliminarDeComparacion(propiedadId).subscribe({
+        next: (res: any) => {
+          this.comparadas = this.comparadas.filter((id) => id !== propiedadId);
+          if (res?.msg) {
+            this.alertaService.mostrar(res.msg);
+          }
+          this.loadingService.ocultar();
+        },
+        error: (err) => {
+          console.error(err);
+          this.alertaService.mostrar(
+            err.error?.msg || 'Error al eliminar de comparación.'
+          );
+          this.loadingService.ocultar();
+        },
+      });
     } else {
-      if (this.comparar.length >= 3) {
-        // Usa tu servicio de alerta si quieres
-        alert('Máximo 3 propiedades para comparar');
-        return;
-      }
-      this.comparar.push(id);
+      this.comparar.agregarAComparacion(propiedadId, tipoPropiedad).subscribe({
+        next: (res: any) => {
+          this.comparadas.push(propiedadId);
+          if (res?.msg) {
+            this.alertaService.mostrar(res.msg);
+          }
+          if (res?.advertencia) {
+            this.alertaService.mostrar(res.advertencia);
+          }
+          this.loadingService.ocultar();
+        },
+        error: (err) => {
+          console.error(err);
+          this.alertaService.mostrar(
+            err.error?.msg || 'Error al agregar a comparación.'
+          );
+          this.loadingService.ocultar();
+        },
+      });
     }
   }
+
+  esComparada(propiedadId: string): boolean {
+    return this.comparadas.includes(propiedadId);
+  }
+
 
   cargarMapa(lat: number, lng: number) {
     const map = new google.maps.Map(

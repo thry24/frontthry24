@@ -4,6 +4,7 @@ import { WishlistService } from 'src/app/services/wishlist.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AlertaService } from 'src/app/services/alerta.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { CompararService } from 'src/app/services/comparar.service';
 
 @Component({
   selector: 'app-locales',
@@ -33,19 +34,93 @@ export class LocalesPage implements OnInit {
   mostrarCaracteristicas: boolean = false;
 
   favoritos: string[] = [];
+  comparadas: string[] = [];
 
   constructor(
     private propiedadService: PropiedadService,
     private wishlistService: WishlistService,
     private authService: AuthService,
     private alerta: AlertaService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private comparar: CompararService
   ) {}
 
   ngOnInit() {
     this.buscarPropiedades();
     this.cargarFavoritos();
+    this.cargarComparadas();
   }
+
+   cargarComparadas() {
+  this.loading.mostrar();
+  this.comparar.obtenerComparaciones().subscribe({
+    next: (res) => {
+      this.comparadas = res.map((p: any) => p._id);
+      this.loading.ocultar();
+    },
+    error: (err) => {
+      console.error('Error al obtener comparaciones:', err);
+      this.loading.ocultar();
+    },
+  });
+}
+
+toggleComparar(event: Event, propiedadId: string, tipoPropiedad: string) {
+  event.stopPropagation();
+
+  if (!this.authService.estaAutenticado()) {
+    this.alerta.mostrar('Debes iniciar sesión para comparar propiedades');
+
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 3000);
+
+    return;
+  }
+
+  this.loading.mostrar();
+
+  if (this.esComparada(propiedadId)) {
+    this.comparar.eliminarDeComparacion(propiedadId).subscribe({
+      next: (res: any) => {
+        this.comparadas = this.comparadas.filter((id) => id !== propiedadId);
+        if (res?.msg) {
+          this.alerta.mostrar(res.msg); 
+        }
+        this.loading.ocultar();
+      },
+      error: (err) => {
+        console.error(err);
+        this.alerta.mostrar(err.error?.msg || 'Error al eliminar de comparación.');
+        this.loading.ocultar();
+      },
+    });
+  } else {
+    this.comparar.agregarAComparacion(propiedadId, tipoPropiedad).subscribe({
+      next: (res: any) => {
+        this.comparadas.push(propiedadId);
+        if (res?.msg) {
+          this.alerta.mostrar(res.msg);
+        }
+        if (res?.advertencia) {
+          this.alerta.mostrar(res.advertencia);
+        }
+        this.loading.ocultar();
+      },
+      error: (err) => {
+        console.error(err);
+        this.alerta.mostrar(err.error?.msg || 'Error al agregar a comparación.');
+        this.loading.ocultar();
+      },
+    });
+  }
+}
+
+
+esComparada(propiedadId: string): boolean {
+  return this.comparadas.includes(propiedadId);
+}
+
 
   cargarFavoritos() {
     this.loading.mostrar();
@@ -62,7 +137,8 @@ export class LocalesPage implements OnInit {
     });
   }
 
-  toggleFavorito(propiedadId: string) {
+  toggleFavorito(event: Event, propiedadId: string) {
+    event.stopPropagation();
     if (!this.authService.estaAutenticado()) {
       this.alerta.mostrar('Debes de iniciar sesión');
 

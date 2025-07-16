@@ -101,11 +101,6 @@ const routes: Routes = [
     // canActivate: [AuthGuard]
   },
   {
-    path: 'comparar',
-    loadChildren: () => import('./pages/comparar/comparar.module').then( m => m.CompararPageModule),
-    // canActivate: [AuthGuard]
-  },
-  {
     path: 'propiedades/busqueda-rentas',
     loadChildren: () => import('./pages/propiedades/busqueda-rentas/busqueda-rentas.module').then( m => m.BusquedaRentasPageModule)
   },
@@ -128,6 +123,10 @@ const routes: Routes = [
   {
     path: 'detalle-propiedad/:id',
     loadChildren: () => import('./pages/detalle-propiedad/detalle-propiedad.module').then( m => m.DetallePropiedadPageModule)
+  },
+  {
+    path: 'propiedades/comparar',
+    loadChildren: () => import('./pages/propiedades/comparar/comparar.module').then( m => m.CompararPageModule)
   },
 ];
 

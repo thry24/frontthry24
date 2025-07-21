@@ -19,20 +19,20 @@ export class HomePage implements OnInit {
   formaPago: string = '';
 
   formData: any = {
-  tipoPropiedad: '',
-  soy: '',
-  nombre: '',
-  apellidos: '',
-  telefono: '',
-  email: '',
-  ciudad: '',
-  municipio: '',
-  caracteristicas: '',
-  presupuestoMin: '',
-  presupuestoMax: '',
-  formaPago: '',
-  medioContacto: ''
-};
+    tipoPropiedad: '',
+    soy: '',
+    nombre: '',
+    apellidos: '',
+    telefono: '',
+    email: '',
+    ciudad: '',
+    municipio: '',
+    caracteristicas: '',
+    presupuestoMin: '',
+    presupuestoMax: '',
+    formaPago: '',
+    medioContacto: '',
+  };
 
   tipos = [
     { clave: 'casa', label: 'Casas' },
@@ -63,7 +63,7 @@ export class HomePage implements OnInit {
     this.cargarFavoritos();
     this.cargarComparadas();
   }
-   cargarComparadas() {
+  cargarComparadas() {
     this.loading.mostrar();
     this.comparar.obtenerComparaciones().subscribe({
       next: (res) => {
@@ -231,49 +231,73 @@ export class HomePage implements OnInit {
   }
 
   verificarBroker() {
-  if (this.formaPago === 'no-se') {
-    this.alerta.mostrar('Podemos ayudarte conectándote con un broker hipotecario');
+    if (this.formaPago === 'no-se') {
+      this.alerta.mostrar(
+        'Podemos ayudarte conectándote con un broker hipotecario'
+      );
+    }
   }
-}
 
-enviarFormulario() {
-   if (!this.formData.valid) {
-      this.alerta.mostrar('Debes llenar todos los campos obligatorios correctamente');
+  enviarFormulario() {
+    const camposRequeridos = [
+      'nombre',
+      'apellidos',
+      'telefono',
+      'email',
+      'tipoPropiedad',
+      'soy',
+      'presupuestoMin',
+      'presupuestoMax',
+      'formaPago',
+      'medioContacto',
+      'municipio',
+      'ciudad',
+      'caracteristicas',
+    ];
+
+    const faltanCampos = camposRequeridos.some((campo) => {
+      const valor = this.formData[campo];
+      return valor === undefined || valor === null || valor === '';
+    });
+
+    if (faltanCampos) {
+      this.alerta.mostrar(
+        'Debes llenar todos los campos obligatorios correctamente'
+      );
       return;
     }
-  if (!this.formData.email || !this.formData.telefono) return;
 
-  this.loading.mostrar();
-  this.formulariosService.enviarFormulario(this.formData).subscribe({
-    next: () => {
-      this.alerta.mostrar('Formulario enviado correctamente');
-      this.loading.ocultar();
-    },
-    error: (err) => {
-      console.error('Error al enviar formulario:', err);
-      this.loading.ocultar();
-    }
-  });
-}
+    if (!this.formData.email || !this.formData.telefono) return;
 
-formatearPrecio(valor: any): string {
-  if (valor === null || valor === undefined || valor === '') return '';
-  const numero = Number(valor);
-  if (isNaN(numero)) return '';
-  return '$' + numero.toLocaleString('es-MX');
-}
-
-actualizarPresupuesto(event: Event, campo: 'min' | 'max') {
-  const input = event.target as HTMLInputElement;
-  const valorLimpio = input.value.replace(/[^0-9]/g, '');
-  const numero = parseInt(valorLimpio || '0', 10);
-
-  if (campo === 'min') {
-    this.formData.presupuestoMin = numero;
-  } else {
-    this.formData.presupuestoMax = numero;
+    this.loading.mostrar();
+    this.formulariosService.enviarFormulario(this.formData).subscribe({
+      next: () => {
+        this.alerta.mostrar('Formulario enviado correctamente');
+        this.loading.ocultar();
+      },
+      error: (err) => {
+        console.error('Error al enviar formulario:', err);
+        this.loading.ocultar();
+      },
+    });
   }
-}
 
+  formatearPrecio(valor: any): string {
+    if (valor === null || valor === undefined || valor === '') return '';
+    const numero = Number(valor);
+    if (isNaN(numero)) return '';
+    return '$' + numero.toLocaleString('es-MX');
+  }
 
+  actualizarPresupuesto(event: Event, campo: 'min' | 'max') {
+    const input = event.target as HTMLInputElement;
+    const valorLimpio = input.value.replace(/[^0-9]/g, '');
+    const numero = parseInt(valorLimpio || '0', 10);
+
+    if (campo === 'min') {
+      this.formData.presupuestoMin = numero;
+    } else {
+      this.formData.presupuestoMax = numero;
+    }
+  }
 }

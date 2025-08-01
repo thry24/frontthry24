@@ -80,3 +80,47 @@ ion-modal.custom-verification-modal {
 a {
   text-decoration: none !important;
 }
+
+ion-alert.alert-opciones-ficha {
+  .alert-wrapper {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .alert-head h2 {
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .alert-message {
+    text-align: center;
+    color: #555;
+    margin-top: 4px;
+    margin-bottom: 12px;
+  }
+
+  .alert-button-group {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .alert-button.btn-opcion {
+    color: #0a2b4a;
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding: 12px 0;
+  }
+
+  .alert-button.btn-cancelar {
+    margin-top: 16px;
+    color: #888;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
+}

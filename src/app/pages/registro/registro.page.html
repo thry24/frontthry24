@@ -112,6 +112,31 @@
                 accept="image/*"
               />
             </ion-item>
+
+            <ion-item lines="none" class="firma-digital-container" *ngIf="rol === 'agente'">
+  <ion-label position="stacked">Firma Digital</ion-label>
+  <div class="firma-wrapper">
+    <canvas
+      #firmaCanvas
+      width="300"
+      height="150"
+      (mousedown)="iniciarDibujo($event)"
+      (mousemove)="dibujar($event)"
+      (mouseup)="terminarDibujo()"
+      (mouseleave)="terminarDibujo()"
+      (touchstart)="iniciarDibujo($event)"
+      (touchmove)="dibujar($event)"
+      (touchend)="terminarDibujo()"
+    ></canvas>
+
+    <ion-button size="small" fill="outline" (click)="limpiarFirma()" class="limpiar-firma">
+      Limpiar Firma
+    </ion-button>
+
+  </div>
+</ion-item>
+
+
           </ng-container>
 
           <ion-button expand="block" type="submit" class="btn-login-ai24">

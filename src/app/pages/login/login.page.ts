@@ -45,6 +45,7 @@ export class LoginPage implements OnInit, OnDestroy {
     this.authService.login(this.correo, this.password).subscribe({
       next: (res) => {
         const { token, user } = res;
+        console.log('Inicio de sesión exitoso:', user);
         this.authService.guardarSesion(token, user);
         this.correo = '';
         this.password = '';

@@ -348,17 +348,74 @@
 
 
 
-      <select
-        required
-        [(ngModel)]="formData.formaPago"
-        name="formaPago"
-        (change)="verificarBroker()"
-      >
-        <option value="" disabled selected hidden>Forma de Pago</option>
-        <option value="recursos-propios">Recursos propios</option>
-        <option value="credito-hipotecario">Crédito hipotecario</option>
-        <option value="no-se">Aún no sé</option>
-      </select>
+   <!-- Solo mostrar si soy cliente arrendatario -->
+<!-- Sección solo visible si soy arrendatario -->
+<div *ngIf="formData.soy === 'cliente-arrendatario'" class="fila-doble">
+
+  <div class="input-group">
+    <label>
+      <input type="checkbox" [(ngModel)]="formData.cuentaPoliza" name="cuentaPoliza" />
+      ¿Cuentas con póliza?
+    </label>
+  </div>
+
+  <div class="input-group">
+    <label>
+      <input type="checkbox" [(ngModel)]="formData.cuentaAval" name="cuentaAval" />
+      ¿Cuentas con aval?
+    </label>
+  </div>
+
+  <div class="input-group">
+    <label for="cuantasMascotas">¿Cuántas mascotas tienes?</label>
+    <select
+      id="cuantasMascotas"
+      [(ngModel)]="formData.cuantasMascotas"
+      name="cuantasMascotas"
+      required
+    >
+      <option value="" disabled>Selecciona una opción</option>
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3+">3 o más</option>
+    </select>
+  </div>
+
+  <div class="input-group">
+    <label for="tiempoMudanza">¿Cuándo te quieres mudar?</label>
+    <select
+      id="tiempoMudanza"
+      [(ngModel)]="formData.tiempoMudanza"
+      name="tiempoMudanza"
+      required
+    >
+      <option value="" disabled>Selecciona una opción</option>
+      <option value="inmediato">De inmediato</option>
+      <option value="1-2">En 1 a 2 meses</option>
+      <option value="3">En 3 meses</option>
+      <option value="4+">En 4 meses o más</option>
+    </select>
+  </div>
+</div>
+
+<!-- Forma de pago: solo si NO es arrendatario -->
+<div *ngIf="formData.soy !== 'cliente-arrendatario'" class="input-group">
+  <label for="formaPago">Forma de pago</label>
+  <select
+    id="formaPago"
+    required
+    [(ngModel)]="formData.formaPago"
+    name="formaPago"
+    (change)="verificarBroker()"
+  >
+    <option value="" disabled>Selecciona una opción</option>
+    <option value="recursos-propios">Recursos propios</option>
+    <option value="credito-hipotecario">Crédito hipotecario</option>
+    <option value="no-se">Aún no sé</option>
+  </select>
+</div>
+
 
       <select
         required

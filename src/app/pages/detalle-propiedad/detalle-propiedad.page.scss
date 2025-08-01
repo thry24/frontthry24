@@ -623,3 +623,42 @@ section.row {
     flex-direction: column;
     align-items: center;
 }
+
+ion-alert.glass-alert {
+  --backdrop-opacity: 0.5;
+
+  .alert-wrapper {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+  }
+
+  .alert-head h2 {
+    color: #0a2b4a;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .custom-alert p {
+    color: #444;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  button.alert-button {
+    color: #0a2b4a;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  button.alert-button.cancel-btn {
+    color: #888;
+  }
+}

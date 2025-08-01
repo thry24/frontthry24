@@ -6,7 +6,8 @@ import { AlertaService } from 'src/app/services/alerta.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { WishlistService } from 'src/app/services/wishlist.service';
 import { CompararService } from 'src/app/services/comparar.service';
-
+import { AlertController } from '@ionic/angular';
+import { PdfPropiedadService } from 'src/app/services/pdf-propiedad.service';
 @Component({
   selector: 'app-detalle-propiedad',
   templateUrl: './detalle-propiedad.page.html',
@@ -22,7 +23,7 @@ export class DetallePropiedadPage implements OnInit {
   favoritos: string[] = [];
   comparadas: string[] = [];
   verMas: boolean = false;
-
+  usuarioActivo: any = null;
   cita = {
     nombre: '',
     email: '',
@@ -49,7 +50,9 @@ export class DetallePropiedadPage implements OnInit {
     private alertaService: AlertaService,
     private loadingService: LoadingService,
     private wishlistService: WishlistService,
-    private comparar: CompararService
+    private comparar: CompararService,
+    private pdfService: PdfPropiedadService,
+    private alertCtrl: AlertController
   ) {}
 
   get iconoTipoPropiedad(): string {
@@ -80,6 +83,9 @@ export class DetallePropiedadPage implements OnInit {
     this.cargarComparadas();
 
     const usuario = this.authService.obtenerUsuario();
+    this.usuarioActivo = usuario || null;
+    console.log('Usuario activo:', this.usuarioActivo);
+
     if (usuario) {
       this.cita.nombre = usuario.nombre || '';
       this.cita.email = usuario.correo || '';
@@ -124,8 +130,134 @@ export class DetallePropiedadPage implements OnInit {
       }
     });
   }
+private async convertirImagenesABase64(urls: string[]): Promise<string[]> {
+  const resultados: string[] = [];
+
+  for (const url of urls) {
+    try {
+      const base64 = await this.convertirImagenABase64(url);
+      if (base64) resultados.push(base64);
+    } catch (error) {
+      console.warn(`Error al convertir imagen ${url} a base64`, error);
+    }
+  }
+
+  return resultados;
+}
 
   ngAfterViewInit() {}
+
+  private async convertirImagenABase64(url: string): Promise<string | null> {
+    if (!url) return null;
+
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      return await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.error('Error convirtiendo imagen a base64:', url, error);
+      return null;
+    }
+  }
+
+ async mostrarOpcionesPDF() {
+  const alert = await this.alertCtrl.create({
+  header: '¿Cómo deseas generar la ficha?',
+  message: 'Elige cómo mostrar los datos de contacto en el PDF:',
+  cssClass: 'alert-opciones-ficha',
+  buttons: [
+    {
+      text: 'CON DATOS DEL ASESOR',
+      handler: () => this.generarPDF('asesor'),
+      cssClass: 'btn-opcion',
+    },
+    {
+      text: 'CON MIS DATOS',
+      handler: () => this.generarPDF('usuario'),
+      cssClass: 'btn-opcion',
+    },
+    {
+      text: 'SIN DATOS DE CONTACTO',
+      handler: () => this.generarPDF('ninguno'),
+      cssClass: 'btn-opcion',
+    },
+    {
+      text: 'CANCELAR',
+      role: 'cancel',
+      cssClass: 'btn-cancelar',
+    },
+  ],
+});
+await alert.present();
+
+}
+
+
+
+  async generarPDF(opcion: 'asesor' | 'usuario' | 'ninguno') {
+  if (!this.propiedad) return;
+
+  this.loadingService.mostrar();
+
+  try {
+    const imagenPrincipalBase64 =
+      this.propiedad.imagenPrincipalBase64 ||
+      (await this.convertirImagenABase64(this.propiedad.imagenPrincipal));
+
+    let logoBase64 = '';
+
+if (opcion === 'usuario') {
+  logoBase64 = (await this.convertirImagenABase64(
+  this.usuarioActivo?.fotoPerfil || this.usuarioActivo?.logo
+)) ?? '';
+
+} else if (opcion === 'asesor') {
+  logoBase64 = (await this.convertirImagenABase64(
+  this.propiedad.agente?.fotoPerfil || this.propiedad.agente?.logo
+)) ?? '';
+
+}
+
+
+
+    const mapaBase64 =
+      this.propiedad.mapaBase64 ||
+      (await this.pdfService.obtenerMapaBase64(
+        this.propiedad.direccion?.lat,
+        this.propiedad.direccion?.lng
+      ));
+
+    const logoAi24Path = 'assets/logo-ai24.jpeg';
+    const logoAi24Base64 = await this.convertirImagenABase64(logoAi24Path);
+
+    const imagenesBase64 = await this.convertirImagenesABase64(this.propiedad.imagenes || []);
+
+    const propiedadConBase64 = {
+      ...this.propiedad,
+      imagenPrincipalBase64,
+      logoBase64,
+      logoAi24Base64,
+      imagenesBase64,
+      mapaBase64,
+    };
+
+    await this.pdfService.generarPDF(propiedadConBase64, opcion, this.usuarioActivo);
+    this.alertaService.mostrar('PDF generado con éxito.', 'success');
+
+  } catch (error) {
+    console.error('Error generando PDF:', error);
+    this.alertaService.mostrar('Error al generar el PDF.', 'error');
+  } finally {
+    this.loadingService.ocultar();
+  }
+}
+
+  
 
   esFavorito(id: string): boolean {
     return this.favoritos.includes(id);
@@ -178,7 +310,7 @@ export class DetallePropiedadPage implements OnInit {
       },
     });
   }
- cargarComparadas() {
+  cargarComparadas() {
     this.loadingService.mostrar();
     this.comparar.obtenerComparaciones().subscribe({
       next: (res) => {
@@ -196,7 +328,9 @@ export class DetallePropiedadPage implements OnInit {
     event.stopPropagation();
 
     if (!this.authService.estaAutenticado()) {
-      this.alertaService.mostrar('Debes iniciar sesión para comparar propiedades');
+      this.alertaService.mostrar(
+        'Debes iniciar sesión para comparar propiedades'
+      );
 
       setTimeout(() => {
         window.location.href = '/login';
@@ -250,7 +384,6 @@ export class DetallePropiedadPage implements OnInit {
   esComparada(propiedadId: string): boolean {
     return this.comparadas.includes(propiedadId);
   }
-
 
   cargarMapa(lat: number, lng: number) {
     const map = new google.maps.Map(

@@ -20,6 +20,13 @@
 
           <div class="iconos-superiores">
             <ion-icon
+              name="download-outline"
+              class="icono"
+              title="Descargar PDF"
+              (click)="mostrarOpcionesPDF()"
+            ></ion-icon>
+
+            <ion-icon
               [name]="esFavorito(propiedad._id) ? 'heart' : 'heart-outline'"
               [class.favorito-activo]="esFavorito(propiedad._id)"
               class="icono"
@@ -28,12 +35,12 @@
             ></ion-icon>
 
             <ion-icon
-                [name]="esComparada(propiedad._id) ? 'remove-circle-outline' : 'add-circle-outline'"
-                [class.comparar-activo]="esComparada(propiedad._id)"
-                class="icono"
-                title="Comparar"
-                (click)="toggleComparar($event, propiedad._id, propiedad.tipoPropiedad)"
-              ></ion-icon>
+              [name]="esComparada(propiedad._id) ? 'remove-circle-outline' : 'add-circle-outline'"
+              [class.comparar-activo]="esComparada(propiedad._id)"
+              class="icono"
+              title="Comparar"
+              (click)="toggleComparar($event, propiedad._id, propiedad.tipoPropiedad)"
+            ></ion-icon>
           </div>
         </div>
 
@@ -430,7 +437,7 @@
         </div>
       </div>
 
-      <br><br><br>
+      <br /><br /><br />
 
       <div class="bloque-simple imagen-opiniones">
         <img src="assets/img/banner.png" alt="Opiniones del agente" />
@@ -455,25 +462,25 @@
       </section>
     </div>
 
-    <div class=" detalle-agente col-der">
-     <div class="contenedor-lugares">
-      <div class="bloque-simple">
-        <h4>Lugares cercanos (500m)</h4>
-        <p>Explora sitios útiles cerca de esta propiedad:</p>
+    <div class="detalle-agente col-der">
+      <div class="contenedor-lugares">
+        <div class="bloque-simple">
+          <h4>Lugares cercanos (500m)</h4>
+          <p>Explora sitios útiles cerca de esta propiedad:</p>
 
-        <div class="grid-lugares">
-          <ng-container *ngFor="let tipo of tiposLugares">
-            <div class="conteo-lugar" *ngIf="conteoLugares[tipo] > 0">
-              <ion-icon [name]="iconoCategoria(tipo)"></ion-icon>
-              <span class="nombre">{{ tipo | titlecase }}</span>
-              <span class="cantidad"
-                >{{ conteoLugares[tipo] > 9 ? '9+' : conteoLugares[tipo]
-                }}</span
-              >
-            </div>
-          </ng-container>
+          <div class="grid-lugares">
+            <ng-container *ngFor="let tipo of tiposLugares">
+              <div class="conteo-lugar" *ngIf="conteoLugares[tipo] > 0">
+                <ion-icon [name]="iconoCategoria(tipo)"></ion-icon>
+                <span class="nombre">{{ tipo | titlecase }}</span>
+                <span class="cantidad"
+                  >{{ conteoLugares[tipo] > 9 ? '9+' : conteoLugares[tipo]
+                  }}</span
+                >
+              </div>
+            </ng-container>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   </section>

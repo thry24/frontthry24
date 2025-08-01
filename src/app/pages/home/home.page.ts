@@ -32,6 +32,11 @@ export class HomePage implements OnInit {
     presupuestoMax: '',
     formaPago: '',
     medioContacto: '',
+
+    cuentaPoliza: false,
+  cuentaAval: false,
+  cuantasMascotas: '',
+  tiempoMudanza: '',
   };
 
   tipos = [
@@ -248,7 +253,6 @@ export class HomePage implements OnInit {
       'soy',
       'presupuestoMin',
       'presupuestoMax',
-      'formaPago',
       'medioContacto',
       'municipio',
       'ciudad',

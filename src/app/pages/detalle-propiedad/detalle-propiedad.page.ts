@@ -165,6 +165,37 @@ private async convertirImagenesABase64(urls: string[]): Promise<string[]> {
     }
   }
 
+  private obtenerConteoLugares(lat: number, lng: number): Promise<{ [key: string]: number }> {
+  return new Promise((resolve) => {
+    const service = new google.maps.places.PlacesService(document.createElement('div'));
+    const tipos = this.tiposLugares;
+    const conteo: { [key: string]: number } = {};
+    let completados = 0;
+
+    tipos.forEach((tipo) => {
+      const request: google.maps.places.PlaceSearchRequest = {
+        location: new google.maps.LatLng(lat, lng),
+        radius: 500,
+        type: tipo,
+      };
+
+      service.nearbySearch(request, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+          conteo[tipo] = results.length;
+        } else {
+          conteo[tipo] = 0;
+        }
+
+        completados++;
+        if (completados === tipos.length) {
+          resolve(conteo);
+        }
+      });
+    });
+  });
+}
+
+
  async mostrarOpcionesPDF() {
   const alert = await this.alertCtrl.create({
   header: '¿Cómo deseas generar la ficha?',
@@ -237,6 +268,11 @@ if (opcion === 'usuario') {
 
     const imagenesBase64 = await this.convertirImagenesABase64(this.propiedad.imagenes || []);
 
+    const conteoLugares = await this.obtenerConteoLugares(
+      this.propiedad.direccion?.lat,
+      this.propiedad.direccion?.lng
+    );
+
     const propiedadConBase64 = {
       ...this.propiedad,
       imagenPrincipalBase64,
@@ -244,6 +280,7 @@ if (opcion === 'usuario') {
       logoAi24Base64,
       imagenesBase64,
       mapaBase64,
+      conteoLugares,
     };
 
     await this.pdfService.generarPDF(propiedadConBase64, opcion, this.usuarioActivo);

@@ -1,0 +1,170 @@
+.recorridos-content {
+  --background: #f9f9f9;
+  padding: 16px;
+
+  .tabla-scroll {
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .tabla-recorridos {
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: collapse;
+    font-size: 14px;
+
+    thead {
+      background-color: #002c71;
+      color: white;
+
+      th {
+        padding: 12px 8px;
+        text-align: left;
+        white-space: nowrap;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #ddd;
+
+        &:hover {
+          background-color: #f0f4ff;
+        }
+      }
+
+      td {
+        padding: 12px 8px;
+        vertical-align: top;
+        white-space: nowrap;
+
+        .imagen-propiedad {
+          max-width: 60px;
+          border-radius: 6px;
+        }
+
+        ion-icon {
+          font-size: 20px;
+        }
+
+        .verde {
+          color: green;
+        }
+
+        .rojo {
+          color: red;
+        }
+      }
+    }
+  }
+}
+
+.aniadir-btn {
+  background-color: #caa630;
+  color: white;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 10px 20px;
+
+  ion-icon {
+    margin-right: 6px;
+  }
+}
+.formulario-recorrido {
+  max-width: 640px;
+  margin: 30px auto;
+  background: #ffffff;
+  padding: 35px 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e0e0e0;
+  animation: fadeIn 0.3s ease;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    color: #001253;
+    margin-bottom: 25px;
+  }
+
+  ion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  ion-item {
+    --background: #f9f9f9;
+    --min-height: 50px;
+    --padding-start: 12px;
+    --inner-padding-end: 12px;
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    font-size: 15px;
+  }
+
+  ion-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 4px;
+  }
+
+  ion-input,
+  ion-textarea,
+  ion-datetime {
+    --padding-start: 10px;
+    --padding-end: 10px;
+    font-size: 15px;
+    background-color: #ffffff;
+    border-radius: 6px;
+  }
+
+  ion-datetime {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    --padding-start: 10px;
+    --padding-end: 10px;
+  }
+
+  ion-checkbox {
+    margin-right: 10px;
+    --checkbox-background: #f0f0f0;
+    --border-color: #888;
+  }
+
+  .acciones-formulario {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+
+    ion-button {
+      --background: #001253;
+      --background-activated: #001253cc;
+      --border-radius: 10px;
+      --color: #fff;
+      font-weight: 600;
+      padding: 12px 24px;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

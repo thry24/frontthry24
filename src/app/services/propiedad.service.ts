@@ -4,7 +4,6 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { HttpParams } from '@angular/common/http';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -44,11 +43,10 @@ export class PropiedadService {
     });
   }
 
-obtenerPropiedadesPublicadas(filtros: any) {
-  const params = new HttpParams({ fromObject: filtros });
-  return this.http.get(`${this.apiUrl}/propiedades`, { params });
-}
-
+  obtenerPropiedadesPublicadas(filtros: any) {
+    const params = new HttpParams({ fromObject: filtros });
+    return this.http.get(`${this.apiUrl}/propiedades`, { params });
+  }
 
   eliminarPropiedad(id: string) {
     return this.http.delete(`${this.apiUrl}/propiedades/${id}`, {
@@ -56,12 +54,10 @@ obtenerPropiedadesPublicadas(filtros: any) {
     });
   }
 
-  publicarPropiedad(id: string) {
-    return this.http.patch(
-      `${this.apiUrl}/propiedades/${id}/publicar`,
-      {},
-      { headers: this.getHeaders() }
-    );
+  publicarPropiedad(id: string, body: any = {}) {
+    return this.http.patch(`${this.apiUrl}/propiedades/${id}/publicar`, body, {
+      headers: this.getHeaders(),
+    });
   }
 
   actualizarEstadoPropiedad(id: string, estadoPropiedad: string) {

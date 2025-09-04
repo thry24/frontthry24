@@ -3,6 +3,8 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AgenteGuard } from './guards/agente.guard';
 import { InmobiliariaGuard } from './guards/inmobiliaria.guard';
+import { CrmLayoutComponent } from './components/crm-layout/crm-layout.component';
+import { CrmLayoutInmobiliariaComponent } from './layouts/crm-layout-inmobiliaria/crm-layout-inmobiliaria.component';
 
 const routes: Routes = [
   {
@@ -98,7 +100,6 @@ const routes: Routes = [
   {
     path: 'favoritos',
     loadChildren: () => import('./pages/favoritos/favoritos.module').then( m => m.FavoritosPageModule),
-    // canActivate: [AuthGuard]
   },
   {
     path: 'propiedades/busqueda-rentas',
@@ -128,6 +129,60 @@ const routes: Routes = [
     path: 'propiedades/comparar',
     loadChildren: () => import('./pages/propiedades/comparar/comparar.module').then( m => m.CompararPageModule)
   },
+  {
+  path: 'agente',
+  component: CrmLayoutComponent,
+  children: [
+    { path: 'mensajes', loadComponent: () => import('./pages/mensajes/mensajes.page').then(m => m.MensajesPage) },
+    { path: 'mensajes-agentes', loadComponent: () => import('./pages/mensajes-agentes/mensajes-agentes.page').then(m => m.MensajesAgentesPage) },
+    { path: 'seguimiento', loadComponent: () => import('./pages/seguimiento/seguimiento.page').then(m => m.SeguimientoPage) },
+    { path: 'requerimientos', loadComponent: () => import('./pages/requerimientos/requerimientos.page').then(m => m.RequerimientosPage) },
+    // { path: 'directorio-propietarios', loadComponent: () => import('./pages/directorio/directorio.page').then(m => m.DirectorioPage) },
+    { path: 'colaboraciones', loadComponent: () => import('./pages/colaboraciones/colaboraciones.page').then(m => m.ColaboracionesPage) },
+    { path: 'editor-video', loadComponent: () => import('./pages/editor-video/editor-video.page').then(m => m.EditorVideoPage) },
+    { path: 'redes-sociales', loadComponent: () => import('./pages/redes-sociales/redes-sociales.page').then(m => m.RedesSocialesPage) },
+    { path: 'clientes', loadComponent: () => import('./pages/clientes/clientes.page').then(m => m.ClientesPage) },
+    { path: 'directorio-clientes', loadComponent: () => import('./pages/directorio-clientes/directorio-clientes.page').then(m => m.DirectorioClientesPage) },
+    { path: 'recorridos', loadComponent: () => import('./pages/recorridos/recorridos.page').then( m => m.RecorridosPage)},
+    { path: 'propiedades-colaboracion', loadComponent: () => import('./pages/propiedades-colaboracion/propiedades-colaboracion.page').then( m => m.PropiedadesColaboracionPage) },
+    { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.page').then( m => m.DashboardPage) },
+    { path: 'directorio-clientes', loadComponent: () => import('./pages/directorio-clientes/directorio-clientes.page').then( m => m.DirectorioClientesPage) },
+    { path: 'favoritos', loadComponent: () => import('./pages/favoritos/favoritos.page').then( m => m.FavoritosPage) },
+  ]
+  },
+  {
+  path: 'inmobiliaria',
+  component: CrmLayoutInmobiliariaComponent,
+  children: [
+    { path: 'grafica-cierres', loadComponent: () => import('./pages-inm/grafica-cierres/grafica-cierres.page').then(m => m.GraficaCierresPage) },
+    { path: 'grafica-propiedades', loadComponent: () => import('./pages-inm/grafica-propiedades/grafica-propiedades.page').then(m => m.GraficaPropiedadesPage) },
+    { path: 'panel-general', loadComponent: () => import('./pages-inm/panel-general/panel-general.page').then(m => m.PanelGeneralPage) },
+    { path: 'mensajes-clientes', loadComponent: () => import('./pages-inm/mensajes-clientes/mensajes-clientes.page').then(m => m.MensajesClientesPage) },
+    { path: 'mensajes-asesores', loadComponent: () => import('./pages-inm/mensajes-asesores/mensajes-asesores.page').then(m => m.MensajesAsesoresPage) },
+    { path: 'perfil-asesor', loadComponent: () => import('./pages-inm/perfil-asesor/perfil-asesor.page').then(m => m.PerfilAsesorPage) },
+    { path: 'citas-programadas', loadComponent: () => import('./pages-inm/citas-programadas/citas-programadas.page').then(m => m.CitasProgramadasPage) },
+    { path: 'seguimiento-cliente', loadComponent: () => import('./pages-inm/seguimiento-cliente/seguimiento-cliente.page').then(m => m.SeguimientoClientePage) },
+    { path: 'directorio-clientes', loadComponent: () => import('./pages-inm/directorio-clientes/directorio-clientes.page').then(m => m.DirectorioClientesPage) },
+    { path: 'favoritos-clientes', loadComponent: () => import('./pages-inm/favoritos-clientes/favoritos-clientes.page').then(m => m.FavoritosClientesPage) },
+      {
+    path: 'propiedad-seleccionada',
+    loadComponent: () => import('./pages-inm/propiedad-seleccionada/propiedad-seleccionada.page').then( m => m.PropiedadSeleccionadaPage)
+  },
+    { path: 'listado-propiedades', loadComponent: () => import('./pages-inm/listado-propiedades/listado-propiedades.page').then(m => m.ListadoPropiedadesPage) },
+    { path: 'kpis-lead', loadComponent: () => import('./pages-inm/kpis-lead/kpis-lead.page').then(m => m.KpisLeadPage) },
+    { path: 'propiedades-colaboracion', loadComponent: () => import('./pages-inm/propiedades-colaboracion/propiedades-colaboracion.page').then(m => m.PropiedadesColaboracionPage) },
+    { path: 'recorridos-programados', loadComponent: () => import('./pages-inm/recorridos-programados/recorridos-programados.page').then(m => m.RecorridosProgramadosPage) },
+    { path: 'requerimientos', loadComponent: () => import('./pages-inm/requerimientos/requerimientos.page').then(m => m.RequerimientosPage) },
+    { path: 'directorio-agentes', loadComponent: () => import('./pages-inm/directorio-agentes/directorio-agentes.page').then(m => m.DirectorioAgentesPage) },
+    { path: 'colaboracion-agentes', loadComponent: () => import('./pages-inm/colaboracion-agentes/colaboracion-agentes.page').then(m => m.ColaboracionAgentesPage) },
+    { path: 'all-media', loadComponent: () => import('./pages-inm/all-media/all-media.page').then(m => m.AllMediaPage) },
+    { path: 'actividad-agente', loadComponent: () => import('./pages-inm/actividad-agente/actividad-agente.page').then( m => m.ActividadAgentePage) },
+  ]
+  },
+  {
+    path: 'recomendaciones',
+    loadChildren: () => import('./pages/recomendaciones/recomendaciones.module').then( m => m.RecomendacionesPageModule)
+  }
 ];
 
 @NgModule({

@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@capacitor/android": "7.4.0",
     "@capacitor/app": "7.0.1",
     "@capacitor/core": "7.4.0",
     "@capacitor/haptics": "7.0.1",
@@ -30,6 +31,7 @@
     "ionicons": "^7.0.0",
     "pdfmake": "^0.2.20",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.8.1",
     "swiper": "^9.4.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

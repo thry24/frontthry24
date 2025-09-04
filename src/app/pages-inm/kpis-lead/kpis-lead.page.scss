@@ -1,0 +1,42 @@
+.tabla-wrapper {
+  overflow-x: auto;
+}
+
+.kpi-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+}
+
+.kpi-table thead {
+  background: #1c3d75;
+  color: white;
+  font-weight: 600;
+}
+
+.kpi-table th, .kpi-table td {
+  padding: 12px 10px;
+  text-align: center;
+}
+
+.kpi-table td {
+  color: #333;
+}
+
+.kpi-img {
+  width: 70px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.id-text {
+  font-size: 12px;
+  font-weight: bold;
+  color: #1c3d75;
+}

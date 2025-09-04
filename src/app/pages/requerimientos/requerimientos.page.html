@@ -1,0 +1,140 @@
+<!-- requerimientos.page.html -->
+<div class="requerimientos-wrapper">
+  <div class="encabezado">
+    <button class="btn-agregar" (click)="toggleFormulario()">
+      + Añadir Requerimiento
+    </button>
+  </div>
+
+  <!-- Formulario -->
+  <div *ngIf="mostrarFormulario" class="formulario-requerimiento">
+    <h2>Nuevo requerimiento</h2>
+
+
+    <!-- Tipo de propiedad -->
+    <ion-item>
+      <ion-label position="stacked">Tipo de propiedad</ion-label>
+      <ion-select [(ngModel)]="nuevoRequerimiento.tipoPropiedad">
+        <ion-select-option value="Casa">Casa</ion-select-option>
+        <ion-select-option value="Departamento">Departamento</ion-select-option>
+        <ion-select-option value="Local">Local</ion-select-option>
+        <ion-select-option value="Bodega">Bodega</ion-select-option>
+        <ion-select-option value="Rancho">Rancho</ion-select-option>
+        <ion-select-option value="Edificio">Edificio</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Tipo de operación -->
+    <ion-item>
+      <ion-label position="stacked">Tipo de operación</ion-label>
+      <ion-select [(ngModel)]="nuevoRequerimiento.tipoOperacion">
+        <ion-select-option value="venta">Venta</ion-select-option>
+        <ion-select-option value="renta">Renta</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Forma de pago (solo para venta) -->
+    <ion-item *ngIf="nuevoRequerimiento.tipoOperacion === 'venta'">
+      <ion-label position="stacked">Forma de pago</ion-label>
+      <ion-select [(ngModel)]="nuevoRequerimiento.formaPago">
+        <ion-select-option value="Contado">Contado</ion-select-option>
+        <ion-select-option value="Crédito hipotecario">Crédito hipotecario</ion-select-option>
+        <ion-select-option value="Infonavit">Infonavit</ion-select-option>
+        <ion-select-option value="Cofinavit">Cofinavit</ion-select-option>
+        <ion-select-option value="Fovissste">Fovissste</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Garantía (solo para renta - opción única entre aval o jurídica) -->
+    <ion-item *ngIf="nuevoRequerimiento.tipoOperacion === 'renta'">
+      <ion-label position="stacked">Selecciona una opción</ion-label>
+      <ion-select [(ngModel)]="nuevoRequerimiento.tipoGarantia">
+        <ion-select-option value="aval">Aval</ion-select-option>
+        <ion-select-option value="juridico">Póliza jurídica</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- ¿Cuentas con mascotas? (solo para renta) -->
+    <ion-item *ngIf="nuevoRequerimiento.tipoOperacion === 'renta'">
+      <ion-label position="stacked">¿Cuentas con mascotas?</ion-label>
+      <ion-input type="number" min="0" [(ngModel)]="nuevoRequerimiento.numeroMascotas"></ion-input>
+    </ion-item>
+
+    <!-- Características deseadas -->
+    <ion-item>
+      <ion-label position="stacked">Características deseadas</ion-label>
+      <ion-textarea [(ngModel)]="nuevoRequerimiento.caracteristicas"></ion-textarea>
+    </ion-item>
+
+    <!-- Zona con autocomplete -->
+    <div class="form-group">
+      <label for="autocomplete">Agregar zona (autocomplete)</label>
+      <input id="autocomplete" type="text" placeholder="Escribe una zona" class="form-control" />
+    </div>
+
+    <div *ngIf="zonasSeleccionadas.length > 0" class="zonas-lista">
+      <ion-chip *ngFor="let zona of zonasSeleccionadas">
+        {{ zona }}
+        <ion-icon name="close" (click)="eliminarZona(zona)"></ion-icon>
+      </ion-chip>
+    </div>
+
+    <!-- Presupuesto -->
+    <ion-item>
+      <ion-label position="stacked">Presupuesto</ion-label>
+      <ion-input type="text" [value]="formatearPresupuesto(nuevoRequerimiento.presupuesto)"
+                 (ionBlur)="formatearAlSalir()" (ionInput)="actualizarPresupuesto($event)">
+      </ion-input>
+    </ion-item>
+
+    <!-- Notas adicionales -->
+    <ion-item>
+      <ion-label position="stacked">Notas adicionales</ion-label>
+      <ion-textarea [(ngModel)]="nuevoRequerimiento.notaAdicional"></ion-textarea>
+    </ion-item>
+
+    <!-- Fecha estimada -->
+    <ion-item>
+      <ion-label position="stacked">Fecha estimada de operación</ion-label>
+      <ion-input type="date" [(ngModel)]="nuevoRequerimiento.fechaOperacion"></ion-input>
+    </ion-item>
+
+    <!-- Botón Guardar -->
+    <ion-button expand="block" color="success" (click)="agregarRequerimiento()">
+      Guardar 
+    </ion-button>
+  </div>
+
+
+  <!-- Tabla -->
+  <div class="tabla-requerimientos">
+    <table>
+      <thead>
+        <tr>
+          <th>Agente</th>
+          <th>Tipo</th>
+          <th>Operación</th>
+          <th>Características</th>
+          <th>Ciudad</th>
+          <th>Zonas</th>
+          <th>Presupuesto</th>
+          <th>Notas</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of requerimientos">
+          <td>{{ req.nombreAgente }}</td>
+          <td>{{ req.tipoPropiedad }}</td>
+          <td>{{ req.tipoOperacion }}</td>
+          <td>{{ req.caracteristicas }}</td>
+          <td>{{ req.ciudad }}</td>
+          <td>{{ req.zonas.join(', ') }}</td>
+          <td>{{ req.presupuesto | currency:'MXN':'symbol':'1.0-2' }}</td>
+          <td>{{ req.notaAdicional }}</td>
+          <td>{{ req.fechaOperacion }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

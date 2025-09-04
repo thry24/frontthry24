@@ -1,0 +1,448 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+app-crm-layout {
+  height: 100%;
+}
+
+.mensajes-container {
+  display: flex;
+  height: 100%;
+}
+
+.lista-contactos {
+  width: 30%;
+  max-width: 350px;
+  border-right: 1px solid #e0e0e0;
+  overflow-y: auto;
+  background-color: #fff;
+  padding: 10px;
+}
+
+.chat-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f8f8f8;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  background: #fff;
+
+  .chat-header-icons {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+
+    ion-icon {
+      font-size: 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+.icono-link:hover {
+  color: #d4af37;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mensaje {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  position: relative;
+  word-break: break-word;
+}
+
+.enviado {
+  align-self: flex-end;
+  background-color: #f3e5ab; // dorado opaco
+  color: #000;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 15px;
+  max-width: 70%;
+  position: relative;
+}
+
+.recibido {
+  align-self: flex-start;
+  background-color: #eee;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 15px;
+  max-width: 70%;
+  position: relative;
+}
+
+.adjuntar-icono {
+  font-size: 22px;
+  color: #555;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.clasificador-documento {
+  margin-left: auto;
+  width: 220px;
+  font-size: 13px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px;
+  margin-right: 8px;
+}
+
+.mensaje a {
+  display: flex;
+  align-items: center;
+  color: #1a73e8;
+  text-decoration: none;
+  gap: 4px;
+}
+
+.mensaje ion-icon {
+  font-size: 16px;
+}
+
+.chat-footer {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-top: 1px solid #ccc;
+  background-color: white;
+}
+
+.chat-footer ion-icon {
+  font-size: 22px;
+  margin-right: 10px;
+}
+
+.chat-footer input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+}
+
+.boton-enviar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  color: #d4af37;
+}
+
+/* Scroll minimalista */
+.chat-body::-webkit-scrollbar,
+.lista-contactos::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-body::-webkit-scrollbar-thumb,
+.lista-contactos::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.chat-body::-webkit-scrollbar-track,
+.lista-contactos::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Firefox */
+.chat-body,
+.lista-contactos {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* MODAL */
+.modal-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-contenido {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-contenido h3 {
+  margin-top: 0;
+  font-size: 20px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.modal-contenido input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.botones-modal {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-enviar {
+  background-color: #d4af37;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-cancelar {
+  background-color: #ccc;
+  color: #333;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tarjeta-propuesta {
+  background: #fff3cd;
+  padding: 12px 16px;
+  border-left: 4px solid #ffc107;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #856404;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 6px;
+
+  h4 {
+    margin: 0 0 6px;
+    font-weight: bold;
+  }
+
+  .btn-propuesta {
+    display: inline-block;
+    margin-top: 6px;
+    background: #ffc107;
+    color: black;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* Tablets (≤1024px) */
+@media (max-width: 1024px) {
+  .lista-contactos {
+    width: 35%;
+    max-width: 300px;
+    padding: 8px;
+  }
+
+  .chat-header {
+    font-size: 15px;
+
+    .chat-header-icons ion-icon {
+      font-size: 19px;
+    }
+  }
+
+  .mensaje {
+    font-size: 14px;
+  }
+
+  .chat-footer input {
+    font-size: 15px;
+  }
+}
+
+/* Móviles (≤768px) */
+@media (max-width: 768px) {
+  .mensajes-container {
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .lista-contactos {
+    width: 100%;
+    max-width: none;
+    height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 8px;
+  }
+
+  .chat-section {
+    height: 60vh; /* ocupa el resto */
+    background: #f8f8f8;
+  }
+
+  .chat-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 8px 10px;
+    font-size: 14px;
+
+    .chat-header-icons ion-icon {
+      font-size: 18px;
+    }
+  }
+
+  .chat-body {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .mensaje,
+  .enviado,
+  .recibido {
+    max-width: 85%;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .adjuntar-icono {
+    font-size: 20px;
+    margin-right: 6px;
+  }
+
+  .clasificador-documento {
+    width: 100%;
+    margin: 6px 0;
+  }
+
+  .chat-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    padding: 8px 10px;
+
+    ion-icon {
+      font-size: 20px;
+      margin-right: 8px;
+    }
+
+    input {
+      font-size: 15px;
+      padding: 8px 0;
+    }
+
+    .boton-enviar {
+      font-size: 20px;
+    }
+  }
+}
+
+/* Teléfonos pequeños (≤480px) */
+@media (max-width: 480px) {
+  .lista-contactos {
+    height: 42vh;
+    padding: 6px;
+  }
+
+  .chat-section {
+    height: 58vh;
+  }
+
+  .chat-header {
+    padding: 6px 8px;
+    font-size: 13.5px;
+
+    .chat-header-icons {
+      gap: 10px;
+
+      ion-icon {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .chat-body {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .mensaje,
+  .enviado,
+  .recibido {
+    max-width: 90%;
+    font-size: 13.5px;
+    padding: 7px 10px;
+    border-radius: 10px;
+  }
+
+  .chat-footer {
+    padding: 6px 8px;
+
+    ion-icon {
+      font-size: 18px;
+      margin-right: 6px;
+    }
+
+    input {
+      font-size: 14px;
+    }
+
+    .boton-enviar {
+      font-size: 18px;
+    }
+  }
+
+  .modal-contenido {
+    width: 92%;
+    padding: 18px;
+  }
+
+  .modal-contenido h3 {
+    font-size: 18px;
+  }
+
+  .modal-contenido input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .btn-enviar,
+  .btn-cancelar {
+    padding: 8px 14px;
+  }
+}

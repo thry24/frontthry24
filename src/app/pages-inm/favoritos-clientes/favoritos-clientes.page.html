@@ -1,0 +1,40 @@
+<ion-content class="ion-padding">
+  <div class="cliente-info">
+  </div>
+
+  <h2 class="section-title">Favoritos ❤️</h2>
+
+  <div class="favoritos-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Propiedad</th>
+          <th>Título Propiedad</th>
+          <th>Tipo de Operación</th>
+          <th>ID</th>
+          <th>Precio</th>
+          <th>Tipo de Propiedad</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let propiedad of propiedades">
+          <td><img [src]="propiedad.imagen" class="foto-propiedad" /></td>
+          <td>
+            <a href="#" class="prop-link">{{ propiedad.titulo }}</a><br />
+            <small>{{ propiedad.direccion }}</small>
+          </td>
+          <td>{{ propiedad.operacion }}</td>
+          <td>{{ propiedad.id }}</td>
+          <td>{{ propiedad.precio }}</td>
+          <td>{{ propiedad.tipo }}</td>
+          <td>
+            <ion-button size="small" fill="clear" (click)="programarRecorrido(propiedad)">
+              <ion-icon name="ellipsis-horizontal" slot="icon-only"></ion-icon>
+            </ion-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>

@@ -1,0 +1,206 @@
+<app-header></app-header>
+<app-loading></app-loading>
+
+<ion-content [fullscreen]="true">
+  <div class="wrapper-flex-contenido">
+    <section class="resultados-section">
+      <h1 class="titulo-seccion">Propiedades Recomendadas</h1>
+      <div class="propiedades-grid" *ngIf="propiedades.length > 0; else sinFavoritos">
+        <div class="card-propiedad" *ngFor="let propiedad of propiedades" [routerLink]="['/detalle-propiedad', propiedad._id]">
+          <div class="img-wrapper">
+            <img
+              [src]="propiedad.imagenPrincipal || 'assets/img/sin-imagen.jpg'"
+              alt="imagen"
+            />
+            <div class="etiqueta">
+              {{ propiedad.estadoPropiedad | uppercase }}
+            </div>
+            <div class="iconos-superiores">
+              <ion-icon
+                name="heart"
+                class="icono favorito-activo"
+                title="Quitar de favoritos"
+                (click)="toggleFavorito($event, propiedad._id)"
+              ></ion-icon>
+            </div>
+          </div>
+
+          <div class="card-content">
+            <div class="tipo">{{ propiedad.tipoPropiedad | uppercase }}</div>
+            <div class="precio">{{ propiedad.precio | currency: 'MXN' }}</div>
+            <div class="descripcion">
+              {{ propiedad.descripcion || 'Sin descripción' }}
+            </div>
+            <div class="ubicacion">
+              <ion-icon name="location-outline"></ion-icon>
+              {{ propiedad.direccion?.municipio }}, {{
+              propiedad.direccion?.estado }}
+            </div>
+
+            <div class="detalles">
+              <ng-container *ngIf="propiedad.caracteristicas?.casaDepto">
+                <span
+                  ><ion-icon name="bed-outline"></ion-icon> {{
+                  propiedad.caracteristicas.casaDepto.habitaciones || 0 }}
+                  recámaras</span
+                >
+                <span
+                  ><ion-icon name="water-outline"></ion-icon> {{
+                  propiedad.caracteristicas.casaDepto.banosCompletos || 0 }}
+                  baños</span
+                >
+                <span
+                  ><ion-icon name="car-outline"></ion-icon> {{
+                  propiedad.caracteristicas.casaDepto.estacionamiento || 0
+                  }}</span
+                >
+              </ng-container>
+
+              <ng-container *ngIf="propiedad.caracteristicas?.terreno">
+                <span
+                  *ngIf="propiedad.caracteristicas?.terreno?.m2Frente && propiedad.caracteristicas?.terreno?.m2Fondo"
+                >
+                  <ion-icon name="expand-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.terreno?.m2Frente }} x {{
+                  propiedad.caracteristicas?.terreno?.m2Fondo }} m (Frente x
+                  Fondo)
+                </span>
+                <span *ngIf="propiedad.caracteristicas?.terreno?.tipo">
+                  <ion-icon name="map-outline"></ion-icon>
+                  Tipo: {{ propiedad.caracteristicas?.terreno?.tipo }}
+                </span>
+                <span *ngIf="propiedad.caracteristicas?.terreno?.costoXM2">
+                  <ion-icon name="cash-outline"></ion-icon>
+                  ${{ propiedad.caracteristicas?.terreno?.costoXM2 }} por m²
+                </span>
+              </ng-container>
+
+              <ng-container *ngIf="propiedad.caracteristicas?.rancho">
+                <span *ngIf="propiedad.caracteristicas?.rancho?.hectareas">
+                  <ion-icon name="analytics-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.rancho?.hectareas }} hectáreas
+                </span>
+                <span *ngIf="propiedad.caracteristicas?.rancho?.uso">
+                  <ion-icon name="leaf-outline"></ion-icon>
+                  Uso: {{ propiedad.caracteristicas?.rancho?.uso }}
+                </span>
+                <span *ngIf="propiedad.caracteristicas?.rancho?.pozo">
+                  <ion-icon name="water-outline"></ion-icon>
+                  Cuenta con pozo
+                </span>
+              </ng-container>
+
+              <ng-container *ngIf="propiedad.caracteristicas?.oficina">
+                <span *ngIf="propiedad.caracteristicas?.oficina?.superficie">
+                  <ion-icon name="expand-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.oficina?.superficie }} m²
+                </span>
+                <span *ngIf="propiedad.caracteristicas?.oficina?.privados">
+                  <ion-icon name="people-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.oficina?.privados }} privados
+                </span>
+                <span *ngIf="propiedad.caracteristicas?.oficina?.salaJuntas">
+                  <ion-icon name="podium-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.oficina?.salaJuntas }} sala(s)
+                  de juntas
+                </span>
+              </ng-container>
+
+              <ng-container *ngIf="propiedad.caracteristicas?.local">
+                <span *ngIf="propiedad.caracteristicas?.local?.superficie">
+                  <ion-icon name="expand-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.local?.superficie }} m²
+                </span>
+                <span
+                  *ngIf="propiedad.caracteristicas?.local?.estacionamientos"
+                >
+                  <ion-icon name="car-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.local?.estacionamientos }}
+                  estacionamientos
+                </span>
+                <span *ngIf="propiedad.caracteristicas?.local?.frente">
+                  <ion-icon name="contract-outline"></ion-icon>
+                  Frente: {{ propiedad.caracteristicas?.local?.frente }} m
+                </span>
+              </ng-container>
+
+              <ng-container *ngIf="propiedad.caracteristicas?.bodega">
+                <span *ngIf="propiedad.caracteristicas?.bodega?.superficie">
+                  <ion-icon name="expand-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.bodega?.superficie }} m²
+                </span>
+                <span
+                  *ngIf="propiedad.caracteristicas?.bodega?.resistenciaPiso"
+                >
+                  <ion-icon name="construct-outline"></ion-icon>
+                  Piso: {{ propiedad.caracteristicas?.bodega?.resistenciaPiso }}
+                </span>
+                <span *ngIf="propiedad.caracteristicas?.bodega?.altura">
+                  <ion-icon name="trending-up-outline"></ion-icon>
+                  Altura: {{ propiedad.caracteristicas?.bodega?.altura }} m
+                </span>
+              </ng-container>
+
+              <ng-container *ngIf="propiedad.caracteristicas?.edificio">
+                <span *ngIf="propiedad.caracteristicas?.edificio?.niveles">
+                  <ion-icon name="layers-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.edificio?.niveles }} niveles
+                </span>
+                <span
+                  *ngIf="propiedad.caracteristicas?.edificio?.departamentos"
+                >
+                  <ion-icon name="business-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.edificio?.departamentos }}
+                  departamentos
+                </span>
+                <span
+                  *ngIf="propiedad.caracteristicas?.edificio?.estacionamientos"
+                >
+                  <ion-icon name="car-outline"></ion-icon>
+                  {{ propiedad.caracteristicas?.edificio?.estacionamientos }}
+                  estacionamientos
+                </span>
+              </ng-container>
+            </div>
+
+            <div class="acciones">
+              <a
+                *ngIf="propiedad.agente?.telefono"
+                [href]="'tel:' + propiedad.agente.telefono"
+                class="btn-contacto"
+              >
+                <ion-icon name="call-outline"></ion-icon> Llamar
+              </a>
+              <a
+                *ngIf="propiedad.agente?.correo"
+                [href]="'mailto:' + propiedad.agente.correo"
+                class="btn-contacto"
+              >
+                <ion-icon name="mail-outline"></ion-icon> Email
+              </a>
+              <a
+                *ngIf="propiedad.agente?.telefono"
+                [href]="'https://wa.me/52' + propiedad.agente.telefono"
+                target="_blank"
+                class="btn-contacto"
+              >
+                <ion-icon name="logo-whatsapp"></ion-icon> WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #sinFavoritos>
+        <section class="mensaje-vacio-section">
+          <div class="mensaje-vacio">
+            <ion-icon name="paper-plane-outline"></ion-icon>
+            <p>Ningun asesor te ha enviado propiedades recomendadas.</p>
+          </div>
+        </section>
+      </ng-template>
+    </section>
+
+    <app-footer></app-footer>
+  </div>
+</ion-content>

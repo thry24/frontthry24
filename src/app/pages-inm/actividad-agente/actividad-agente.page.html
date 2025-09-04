@@ -1,0 +1,41 @@
+<ion-content class="actividad-page">
+  <div *ngFor="let agente of agentes" class="agente-card">
+    <!-- Encabezado Azul -->
+    <div class="encabezado">
+      <div class="campo">Nombre Agente</div>
+      <div class="campo">Tipo de Operación</div>
+      <div class="campo">Propiedad en colaboración</div>
+      <div class="campo">Tipo de Propiedad</div>
+      <div class="campo">Fecha Inicio Actividad</div>
+      <div class="campo">Actividad</div>
+    </div>
+
+    <!-- Información Blanca -->
+    <div class="info">
+      <div class="dato-agente">
+        <img [src]="agente.foto" alt="Foto agente" class="avatar" />
+        <span>{{ agente.nombre }}</span>
+      </div>
+      <div>{{ agente.tipoOperacion }}</div>
+      <div>
+        <ion-checkbox [(ngModel)]="colaboracion" disabled></ion-checkbox>
+      </div>
+      <div>{{ agente.tipoPropiedad }}</div>
+      <div>{{ agente.fechaInicio | date: 'dd - MMMM - yyyy' }}</div>
+      <div class="actividad-en-curso" (click)="toggleDesglose(agente)">
+        {{ agente.actividadActual }}
+      </div>
+    </div>
+
+    <!-- Desglose Actividades -->
+    <div class="tabla" *ngIf="agente.mostrarDesglose">
+      <div
+        class="fila"
+        *ngFor="let paso of agente.actividades[agente.tipo]; let i = index"
+        [class.activo]="i === agente.pasoActual"
+      >
+        {{ paso }}
+      </div>
+    </div>
+  </div>
+</ion-content>

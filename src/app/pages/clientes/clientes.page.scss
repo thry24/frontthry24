@@ -1,0 +1,170 @@
+/* ====== Variables de color (ajusta a tu marca) ====== */
+:root {
+  --brand: #0057b8;
+  --text-strong: #2c2c2c;
+  --text: #444;
+  --bg-card: #ffffff;
+  --border: #e5e7eb;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-strong: #f3f4f6;
+    --text: #d1d5db;
+    --bg-card: #0f1115;
+    --border: #1f2937;
+    --shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+  }
+}
+
+/* ====== Formulario responsivo ====== */
+.formulario-clientes {
+  width: calc(100% - 2rem);
+  max-width: 640px;
+  margin: clamp(1rem, 2.5vh, 2rem) auto;
+  padding: clamp(1rem, 3.5vw, 2rem);
+  background: var(--bg-card);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  /* Respeta notch / barras */
+  padding-top: max(env(safe-area-inset-top), clamp(1rem, 3.5vw, 2rem));
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+
+  /* En pantallas grandes se ve más pro sin romper móvil */
+  @media (min-width: 768px) {
+    border-radius: 20px;
+  }
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem); /* 18–24px fluid */
+    font-weight: 700;
+    color: var(--text-strong);
+    margin-bottom: clamp(0.75rem, 2.5vw, 1.25rem);
+
+    ion-icon {
+      font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+      color: var(--brand);
+      flex-shrink: 0;
+    }
+  }
+
+  /* Grid adaptable: 1 columna en móvil, 2 en pantallas medianas */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+
+    @media (min-width: 560px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    /* Fuerza un campo a ocupar todo el ancho cuando lo necesites */
+    .full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  ion-item {
+    --background: transparent;
+    --highlight-color-focused: var(--brand);
+    --border-color: transparent;
+    --min-height: 52px;                 /* dedo feliz */
+    --inner-padding-end: 10px;
+    --inner-padding-start: 10px;
+    border-radius: 12px;
+    margin: 0;                          /* el grid maneja el gap */
+    border: 1px solid var(--border);
+    transition: box-shadow 160ms ease, border-color 160ms ease, transform 80ms ease;
+
+    &:focus-within {
+      border-color: color-mix(in oklab, var(--brand) 70%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand) 18%, transparent);
+    }
+
+    &:active {
+      transform: translateY(0.5px);
+    }
+
+    ion-label {
+      color: var(--text);
+      font-weight: 600;
+      font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+    }
+
+    ion-input,
+    ion-select,
+    ion-textarea {
+      color: var(--text-strong);
+      --placeholder-color: #9aa3af;
+      font-size: clamp(0.95rem, 2.8vw, 1rem);
+    }
+
+    /* Mejora click/tap en select */
+    ion-select {
+      --padding-start: 4px;
+      --padding-end: 4px;
+    }
+  }
+
+  /* Mensajes de error/ayuda */
+  .hint,
+  .error {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+  .hint { color: #6b7280; }
+  .error { color: #ef4444; }
+
+  /* Botón principal grande y táctil */
+  .btn-guardar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: var(--brand);
+    color: white;
+    font-weight: 700;
+    border-radius: 12px;
+    height: clamp(46px, 6.5vh, 52px);
+    margin-top: clamp(12px, 2.5vw, 20px);
+    box-shadow: 0 6px 15px rgba(0, 87, 184, 0.3);
+    letter-spacing: 0.2px;
+    transition: transform 120ms ease, filter 120ms ease;
+
+    ion-icon {
+      margin-right: 8px;
+      font-size: 20px;
+    }
+
+    &:active {
+      transform: translateY(1px);
+      filter: brightness(0.95);
+    }
+  }
+
+  /* Compacta aún más en móviles muy pequeños (≤360px) */
+  @media (max-width: 360px) {
+    border-radius: 12px;
+    padding: 0.9rem;
+    .form-grid { gap: 10px; }
+    ion-item { --min-height: 50px; border-radius: 10px; }
+  }
+
+  /* Respeta usuarios con “reducir movimiento” */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+}
+
+/* ====== Helpers opcionales ====== */
+/* separa verticalmente campos cuando no uses .form-grid */
+.form-spacing > * + * { margin-top: 12px; }
+
+/* Si usas ion-item con líneas, apágalas de fábrica */
+ion-item::part(native) { --inner-border-width: 0; }

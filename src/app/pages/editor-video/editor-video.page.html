@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editor de Video Promocional</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h3>Selecciona una Plantilla</h3>
+  <div class="plantillas">
+    <div
+      *ngFor="let p of plantillas"
+      [class.selected]="p === plantillaSeleccionada"
+      (click)="seleccionarPlantilla(p)"
+    >
+      <img [src]="p.preview" />
+      <p>{{ p.nombre }}</p>
+    </div>s
+  </div>
+
+  <h3>Selecciona Imágenes de tu Propiedad</h3>
+  <input type="file" accept="image/*" multiple (change)="onImagenesSeleccionadas($event)" />
+
+
+  <h3>Texto Personalizado</h3>
+  <ion-input [(ngModel)]="textoPersonalizado" placeholder="Ej. ¡Gran oportunidad en Cancún!"></ion-input>
+
+  <ion-button expand="block" (click)="generarVideoReal()">🎬 Generar</ion-button>
+
+  <div *ngIf="videoPreview" class="preview-container">
+    <img [src]="videoPreview" class="preview-video" />
+    <div class="acciones">
+      <ion-button fill="outline" (click)="compartir('facebook')">
+        <ion-icon name="logo-facebook"></ion-icon>
+      </ion-button>
+      <ion-button fill="outline" (click)="compartir('instagram')">
+        <ion-icon name="logo-instagram"></ion-icon>
+      </ion-button>
+      <ion-button fill="outline" (click)="compartir('tiktok')">
+        <ion-icon name="logo-tiktok"></ion-icon>
+      </ion-button>
+      <ion-button color="success" (click)="descargarVideo()">Descargar</ion-button>
+    </div>
+  </div>
+</ion-content>

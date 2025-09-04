@@ -1,0 +1,128 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="aniadir-btn" (click)="abrirFormulario()">
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+        Añadir Recorrido
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="recorridos-content">
+
+  <!-- FORMULARIO DESPLEGABLE -->
+  <div class="formulario-recorrido" *ngIf="formularioAbierto">
+    <h2>Nuevo Recorrido</h2>
+    <ion-list>
+<ion-item class="campo-fecha">
+  <ion-label position="stacked">Fecha</ion-label>
+  <ion-datetime
+    presentation="date"
+    [(ngModel)]="nuevoRecorrido.fecha"
+    size="cover"
+    preferWheel="false"
+    display-format="DD/MM/YYYY">
+  </ion-datetime>
+</ion-item>
+
+
+      <ion-item>
+        <ion-label position="stacked">Nombre del Cliente</ion-label>
+        <ion-input [(ngModel)]="nuevoRecorrido.nombreCliente"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Tipo</ion-label>
+        <ion-input [(ngModel)]="nuevoRecorrido.tipo"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Asesor</ion-label>
+        <ion-input [(ngModel)]="nuevoRecorrido.asesor"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Dirección</ion-label>
+        <ion-textarea [(ngModel)]="nuevoRecorrido.direccion"></ion-textarea>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">% Comisión</ion-label>
+        <ion-input type="number" [(ngModel)]="nuevoRecorrido.comision"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">ID Propiedad</ion-label>
+        <ion-input [(ngModel)]="nuevoRecorrido.idPropiedad"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label>Confirmado</ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="nuevoRecorrido.confirmado"></ion-checkbox>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Nota</ion-label>
+        <ion-textarea [(ngModel)]="nuevoRecorrido.nota"></ion-textarea>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label>Elegida</ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="nuevoRecorrido.elegida"></ion-checkbox>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">URL Imagen (opcional)</ion-label>
+        <ion-input [(ngModel)]="nuevoRecorrido.imagen"></ion-input>
+      </ion-item>
+
+      <div class="acciones-formulario">
+        <ion-button color="primary" expand="block" (click)="guardarRecorrido()">Guardar Recorrido</ion-button>
+        <ion-button fill="clear" color="medium" expand="block" (click)="formularioAbierto = false">Cancelar</ion-button>
+      </div>
+    </ion-list>
+  </div>
+
+  <!-- TABLA -->
+  <div class="tabla-scroll">
+    <table class="tabla-recorridos">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Nombre cliente</th>
+          <th>Tipo</th>
+          <th>Asesor</th>
+          <th>Dirección del inmueble</th>
+          <th>% Comisión</th>
+          <th>ID Propiedad</th>
+          <th>Confirmado</th>
+          <th>Nota adicional</th>
+          <th>Elegida</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let recorrido of recorridos">
+          <td>{{ recorrido.fecha | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ recorrido.nombreCliente }}</td>
+          <td>{{ recorrido.tipo }}</td>
+          <td>{{ recorrido.asesor }}</td>
+          <td>{{ recorrido.direccion }}</td>
+          <td>{{ recorrido.comision }}%</td>
+          <td>
+            <img *ngIf="recorrido.imagen" [src]="recorrido.imagen" alt="img" class="imagen-propiedad" />
+          </td>
+          <td>
+            <ion-icon name="checkmark-outline" *ngIf="recorrido.confirmado" class="verde"></ion-icon>
+            <ion-icon name="close-outline" *ngIf="!recorrido.confirmado" class="rojo"></ion-icon>
+          </td>
+          <td>{{ recorrido.nota }}</td>
+          <td>
+            <ion-icon name="checkmark-circle-outline" *ngIf="recorrido.elegida" class="verde"></ion-icon>
+            <ion-icon name="close-circle-outline" *ngIf="!recorrido.elegida" class="rojo"></ion-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>

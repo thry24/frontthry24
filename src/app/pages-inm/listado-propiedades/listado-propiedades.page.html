@@ -1,0 +1,50 @@
+<ion-content class="listado-bg">
+  <div class="filters-bar">
+    <input type="text" placeholder="palabras claves" [(ngModel)]="palabraClave" />
+    <select [(ngModel)]="filtroTipo">
+      <option value="">Tipo</option>
+      <option value="departamento">Departamento</option>
+      <option value="casa">Casa</option>
+      <option value="casa">Local Comercial</option>
+      <option value="casa">Bodega</option>
+      <option value="casa">Rancho</option>
+      <option value="casa">Edificio</option>
+    </select>
+    <select [(ngModel)]="filtroEstatus">
+      <option value="">Estatus</option>
+      <option value="nuevo">Nuevo</option>
+      <option value="oportunidad">Oportunidad</option>
+    </select>
+    <button class="buscar-btn" (click)="buscar()">Buscar</button>
+    <button class="limpiar-btn" (click)="limpiar()">Limpiar</button>
+  </div>
+
+  <h2 class="section-title">Listado de Propiedades</h2>
+  <div class="prop-count">{{ propiedades.length }} Propiedades</div>
+
+  <div class="prop-list">
+    <div class="prop-card" *ngFor="let prop of propiedades">
+      <img [src]="prop.imagen" alt="propiedad" />
+      <div class="prop-info">
+        <div class="tags">
+          <span class="tag tipo">{{ prop.tipoOperacion }}</span>
+          <span *ngIf="prop.estado" class="tag estado">{{ prop.estado }}</span>
+        </div>
+        <h3>{{ prop.titulo }}</h3>
+        <p>{{ prop.descripcion | uppercase }}</p>
+        <div class="details">
+          <span>🛏 {{ prop.habitaciones }}</span>
+          <span>🚿 {{ prop.banos }}</span>
+          <span>🚗 {{ prop.estacionamientos }}</span>
+          <span>📐 {{ prop.sqft }} sqft</span>
+        </div>
+        <div class="agente">👤 {{ prop.agente }}</div>
+      </div>
+      <div class="precio">
+        <strong>{{ prop.precio }}</strong>
+        <div>{{ prop.precioSqft }}</div>
+        <button class="detalles-btn">Detalles</button>
+      </div>
+    </div>
+  </div>
+</ion-content>

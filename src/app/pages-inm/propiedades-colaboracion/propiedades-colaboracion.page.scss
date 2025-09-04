@@ -1,0 +1,77 @@
+.tabla-colaboracion {
+  padding: 2rem;
+  background-color: #f9f9f9;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+
+    thead {
+      background-color: #123a7f;
+
+      th {
+        color: #ffffff;
+        padding: 1rem;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: background 0.3s;
+
+        &:hover {
+          background-color: #f0f4ff;
+        }
+
+        td {
+          text-align: center;
+          padding: 1.2rem;
+          font-size: 0.95rem;
+          vertical-align: middle;
+          color: #333;
+        }
+
+        .perfil,
+        .perfil-nombre,
+        .logo-inm {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin: 0.3rem auto;
+          display: block;
+        }
+
+        .perfil-nombre {
+          border: 3px solid #123a7f;
+        }
+
+        .logo-inm {
+          width: 42px;
+          height: 42px;
+        }
+
+        .imagen-propiedad {
+          width: 90px;
+          height: 65px;
+          object-fit: cover;
+          border-radius: 8px;
+          display: block;
+          margin: 0 auto 0.3rem auto;
+        }
+
+        .id {
+          font-size: 0.85rem;
+          color: #777;
+        }
+      }
+    }
+  }
+}

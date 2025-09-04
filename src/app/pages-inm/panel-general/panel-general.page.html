@@ -1,0 +1,77 @@
+<ion-content class="dashboard">
+
+  <div class="kpi-section">
+    <div class="kpi-card" *ngFor="let kpi of kpis">
+      <div class="kpi-title">{{ kpi.titulo }}</div>
+      <div class="kpi-value">{{ kpi.valor }}</div>
+      <div class="kpi-bar">
+        <div class="kpi-fill" [style.width.%]="kpi.porcentaje"></div>
+      </div>
+      <div class="kpi-percent">{{ kpi.porcentaje }}%</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="card wide">
+      <h3>Asesores Inmobiliarios <span>This Month</span></h3>
+      <div class="agent" *ngFor="let a of asesores">
+        <img [src]="a.img" alt="foto">
+        <div class="agent-data">
+          <strong>{{ a.nombre }}</strong>
+          <p>{{ a.ventas }} sold - {{ a.rentas }} rented</p>
+        </div>
+        <div class="agent-total">{{ a.total }}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Tipos de Propiedad</h3>
+      <div class="property-type" *ngFor="let t of tiposProp">
+        <div class="type-label">{{ t.tipo }} ({{ t.cantidad }})</div>
+        <div class="progress-bar">
+          <div class="bar-fill" [style.width.%]="t.porcentaje"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card chart">
+      <h3>Grafico de LEADS perdidos y ganados, totales</h3>
+      <img src="https://via.placeholder.com/260x180/000000/FFFFFF?text=FUNNEL" />
+    </div>
+
+    <div class="card chart">
+      <h3>Grafico total comisiones</h3>
+      <img src="https://via.placeholder.com/260x180/000000/FFFFFF?text=COMISIONES" />
+    </div>
+
+    <div class="card chart">
+      <h3>Propiedades cerradas</h3>
+      <img src="https://via.placeholder.com/260x180/000000/FFFFFF?text=CERRADAS" />
+    </div>
+
+    <div class="card chart">
+      <h3>Actividad Agente</h3>
+      <img src="https://via.placeholder.com/260x180/000000/FFFFFF?text=ACTIVIDAD" />
+    </div>
+
+    <div class="card chart">
+      <h3>Propiedades Ingresadas</h3>
+      <img src="https://via.placeholder.com/260x180/000000/FFFFFF?text=INGRESADAS" />
+    </div>
+
+    <div class="card chart">
+      <h3>Propiedades por mapa</h3>
+      <img src="https://via.placeholder.com/260x180/000000/FFFFFF?text=MAPA" />
+    </div>
+
+    <div class="card banner" *ngFor="let b of banners">
+      <img [src]="b.img" alt="Banner">
+      <div class="banner-info">
+        <strong>{{ b.precio }}</strong>
+        <h4>{{ b.titulo }}</h4>
+        <p>{{ b.ubicacion }}</p>
+        <p>{{ b.rating }} - {{ b.vistas }}+ impressions</p>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,32 @@
+.requerimientos-page {
+  padding: 16px;
+
+  .tabla-container {
+    overflow-x: auto;
+  }
+
+  .tabla-requerimientos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+
+    thead th {
+      background-color: #103a74;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    tbody td {
+      padding: 10px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .agente {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

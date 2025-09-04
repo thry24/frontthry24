@@ -1,0 +1,36 @@
+<ion-content class="requerimientos-page">
+  <div class="tabla-container">
+    <table class="tabla-requerimientos">
+      <thead>
+        <tr>
+          <th>Agente</th>
+          <th>Tipo de Operacion</th>
+          <th>Tipo de Propiedad</th>
+          <th>características generales</th>
+          <th>Presupuesto</th>
+          <th>Forma de Pago</th>
+          <th>Fecha para cierre operacion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of requerimientos">
+          <td>
+            <ion-avatar>
+              <img [src]="req.fotoAgente" />
+            </ion-avatar>
+          </td>
+          <td>{{ req.tipoOperacion }}</td>
+          <td>{{ req.tipoPropiedad }}</td>
+          <td class="caracteristicas">
+            <pre>{{ req.caracteristicas }}</pre>
+          </td>
+          <td>{{ req.presupuesto }}</td>
+          <td>
+            {{ req.tipoOperacion === 'VENTA' ? req.pagoVenta : req.pagoRenta }}
+          </td>
+          <td>{{ req.fechaCierre | date: 'dd - MMMM - yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>

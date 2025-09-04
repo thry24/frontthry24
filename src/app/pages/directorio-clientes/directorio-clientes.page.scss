@@ -1,0 +1,206 @@
+:host {
+  --ion-background-color: #fefefe;
+  font-family: 'Poppins', sans-serif;
+  display: block;
+  padding: 0 24px 32px;
+  color: #333;
+}
+
+ion-header {
+  box-shadow: none;
+  ion-toolbar {
+    --background: #fff;
+    ion-title {
+      font-weight: 600;
+      font-size: 20px;
+      color: #222;
+    }
+  }
+}
+
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  margin-bottom: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  .search-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 8px 16px;
+    border-radius: 32px;
+    max-width: 400px;
+
+    ion-icon {
+      font-size: 18px;
+      color: #999;
+      margin-right: 10px;
+    }
+
+    input {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      width: 100%;
+      outline: none;
+      color: #333;
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    ion-button {
+      --background: #e5c765;
+      --color: #222;
+      --border-radius: 20px;
+      font-weight: 600;
+      text-transform: none;
+      padding: 0 16px;
+      height: 40px;
+      font-size: 14px;
+    }
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+
+  ion-select {
+    --min-width: 180px;
+    --border-radius: 16px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --placeholder-color: #888;
+    --placeholder-opacity: 1;
+    font-size: 14px;
+    background-color: #f8f8f8;
+    border-radius: 16px;
+    box-shadow: none;
+  }
+}
+
+.formulario-cliente {
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.03);
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #444;
+  }
+
+  ion-item {
+    --background: transparent;
+    margin-bottom: 12px;
+  }
+
+  ion-button {
+    margin-top: 16px;
+  }
+}
+
+.tabla-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-top: 1rem;
+}
+
+.tabla {
+  width: 100%;
+  min-width: 1200px;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: left;
+    padding: 14px 16px;
+    white-space: nowrap;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+
+  thead {
+    background: #f4f4f4;
+
+    th {
+      font-weight: 600;
+      color: #444;
+    }
+  }
+
+  tbody tr:hover {
+    background-color: #fcfcfc;
+  }
+
+  .nombre {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: #111;
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .telefono {
+    color: #d4aa00;
+    font-weight: 500;
+  }
+
+  .estatus {
+    background: #eee5c2;
+    color: #444;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    text-transform: capitalize;
+    display: inline-block;
+  }
+
+  .acciones {
+    display: flex;
+    gap: 10px;
+
+    ion-icon {
+      font-size: 18px;
+      color: #777;
+      cursor: pointer;
+
+      &:hover {
+        color: #222;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .tabla {
+    min-width: 1000px;
+  }
+}

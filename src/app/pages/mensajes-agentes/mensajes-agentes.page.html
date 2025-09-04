@@ -1,0 +1,116 @@
+<div class="mensajes-agentes-wrapper">
+  <div class="encabezado-bar">
+    <div class="acciones-filtros">
+      <ion-button class="btn-redactar">+ Redactar</ion-button>
+      <ion-select class="select-filtro" placeholder="Activas">
+        <ion-select-option value="activas">Activas</ion-select-option>
+        <ion-select-option value="sin-atender">Sin atender</ion-select-option>
+        <ion-select-option value="atendidas">Atendidas</ion-select-option>
+      </ion-select>
+      <ion-select class="select-filtro" placeholder="Asignada a">
+        <ion-select-option value="Erika Kanafany">Erika Kanafany</ion-select-option>
+        <ion-select-option value="Jessica Thompson">Jessica Thompson</ion-select-option>
+        <ion-select-option value="Carlos Méndez">Carlos Méndez</ion-select-option>
+      </ion-select>
+    </div>
+  </div>
+
+  <div class="barra-filtros-mensajes">
+    <p class="contador-conversaciones">Mostrando {{ mensajesAgentes.length }} conversaciones</p>
+  </div>
+
+  <div class="conversaciones-layout" [class.expandida]="!mensajeSeleccionado">
+    <div class="conversaciones-lista" [class.completa]="!mensajeSeleccionado">
+      <div *ngFor="let mensaje of mensajesAgentes" class="conversacion-item" (click)="seleccionarMensaje(mensaje)">
+        <div class="avatar-msg">
+          <img [src]="mensaje.fotoAgente" />
+        </div>
+        <div class="mensaje-preview">
+          <div class="top-line">
+            <span class="name">{{ mensaje.nombreAgente }}</span>
+            <span class="hora">{{ mensaje.fecha | date: 'medium' }}</span>
+
+          </div>
+          <div class="texto">
+            {{ mensaje.texto }}
+            <span class="id-propiedad">{{ mensaje.idPropiedad }}</span>
+          </div>
+        </div>
+        <img [src]="mensaje.imagenPropiedad" class="img-mini-prop" />
+      </div>
+    </div>
+
+    <div class="detalle-mensaje" *ngIf="mensajeSeleccionado">
+      <div class="cerrar-panel" (click)="mensajeSeleccionado = null">
+        <ion-icon name="close-outline"></ion-icon>
+      </div>
+
+      <div class="acciones-top">
+        <ion-button class="btn-responder">
+          <ion-icon name="arrow-undo-outline"></ion-icon>
+          Responder
+        </ion-button>
+
+        <ion-button class="btn-ws">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+          Enviar WhatsApp
+        </ion-button>
+
+        <ion-button class="btn-nota" (click)="abrirModalNota()">
+          <ion-icon name="document-text-outline"></ion-icon>
+          Agregar nota
+        </ion-button>
+
+
+        <ion-select [(ngModel)]="mensajeSeleccionado.asignadoA" placeholder="Asignada a">
+          <ion-select-option *ngFor="let asesor of asesores" [value]="asesor">{{ asesor }}</ion-select-option>
+        </ion-select>
+
+        <ion-select [(ngModel)]="mensajeSeleccionado.estado" placeholder="Estado">
+          <ion-select-option value="sin-atender">Sin atender</ion-select-option>
+          <ion-select-option value="atendida">Atendida</ion-select-option>
+          <ion-select-option value="recorrido">Recorrido programado</ion-select-option>
+        </ion-select>
+      </div>
+
+      <div class="mensaje-completo">
+        <div class="mensaje-texto">
+          <p>{{ mensajeSeleccionado.texto }}</p>
+
+          <div class="tarjeta-propiedad">
+            <img [src]="mensajeSeleccionado.imagenPropiedad" />
+            <div>
+              <h4>{{ mensajeSeleccionado.tituloPropiedad }}</h4>
+              <p>{{ mensajeSeleccionado.tipoOperacion }} - {{ mensajeSeleccionado.precio | currency:'USD' }}</p>
+              <small>{{ mensajeSeleccionado.ubicacion }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-cliente">
+          <h4>{{ mensajeSeleccionado.nombreCliente }}</h4>
+          <div class="etiqueta">{{ mensajeSeleccionado.tipoOperacion }}</div>
+          <p>{{ mensajeSeleccionado.email }}</p>
+          <p>{{ mensajeSeleccionado.telefono }}</p>
+
+          <div class="acciones-contacto">
+            <ion-icon name="logo-whatsapp" (click)="llamarWhatsApp()"></ion-icon>
+            <ion-icon name="mail-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal para agregar nota -->
+<div class="modal-nota" *ngIf="mostrarModalNota">
+  <div class="modal-contenido-nota">
+    <h3>Agregar Nota</h3>
+    <textarea [(ngModel)]="nuevaNota" placeholder="Escribe una nota..." rows="4"></textarea>
+
+    <div class="acciones-modal-nota">
+      <ion-button color="primary" (click)="guardarNota()">Guardar</ion-button>
+      <ion-button color="light" (click)="cerrarModalNota()">Cancelar</ion-button>
+    </div>
+  </div>
+</div>

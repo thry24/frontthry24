@@ -1,0 +1,70 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 100vh; // ✅ para centrar aunque no haya scroll
+  background: #f8f8f8;
+}
+
+.checkout-box {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+
+
+  .checkout-header {
+    text-align: center;
+    margin-bottom: 20px;
+
+    ion-icon {
+      font-size: 36px;
+      color: #2d89ff;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    p {
+      font-size: 14px;
+      color: #555;
+      margin-top: 4px;
+    }
+  }
+
+  ion-item {
+    --background: #f4f4f4;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    padding: 6px 12px;
+  }
+
+  ion-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  ion-input {
+    font-size: 16px;
+  }
+
+  ion-button {
+    margin-top: 16px;
+    border-radius: 12px;
+    height: 48px;
+    font-weight: 600;
+    font-size: 16px;
+    --background: #2d89ff;
+    --color: white;
+    box-shadow: 0 4px 12px rgba(45, 137, 255, 0.4);
+  }
+}

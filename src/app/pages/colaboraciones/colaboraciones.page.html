@@ -1,0 +1,48 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+
+<div class="colaboraciones-wrapper">
+  <div class="header-bar">
+    <h2>Añadir Colaboración</h2>
+    <ion-button (click)="agregarColaboracion()">+ Añadir</ion-button>
+  </div>
+
+  <div class="tabla-scroll">
+    <ion-grid class="tabla">
+      <ion-row class="encabezado">
+        <ion-col>Fecha contacto</ion-col>
+        <ion-col>Nombre asesor Externo</ion-col>
+        <ion-col>Operación</ion-col>
+        <ion-col>Propiedad o Cliente</ion-col>
+        <ion-col>Registro de cliente</ion-col>
+        <ion-col>% Comisión</ion-col>
+        <ion-col>Imagen</ion-col>
+        <ion-col>Activar seguimiento</ion-col>
+        <ion-col>Nota adicional</ion-col>
+        <ion-col>Propiedad elegida</ion-col>
+      </ion-row>
+
+      <ion-row *ngFor="let c of colaboraciones" class="contenido">
+        <ion-col>{{ c.fecha }}</ion-col>
+        <ion-col>{{ c.asesor }}</ion-col>
+        <ion-col>{{ c.operacion }}</ion-col>
+        <ion-col>{{ c.tipo }}</ion-col>
+        <ion-col>{{ c.registro }}</ion-col>
+        <ion-col>{{ c.comision || '—' }}</ion-col>
+        <ion-col>
+          <img [src]="c.imagen" class="imagen-propiedad" />
+        </ion-col>
+        <ion-col>
+          <ion-checkbox [(ngModel)]="c.seguimiento"></ion-checkbox>
+        </ion-col>
+        <ion-col>
+          <ion-textarea [(ngModel)]="c.nota" placeholder="Escribir nota..."></ion-textarea>
+        </ion-col>
+        <ion-col>
+          <ion-checkbox [(ngModel)]="c.propiedadElegida"></ion-checkbox>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</div>
+
+</ion-content>

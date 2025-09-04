@@ -416,6 +416,24 @@
   </select>
 </div>
 
+<!-- Solo mostrar si soy cliente comprador -->
+<div *ngIf="formData.soy === 'cliente-comprador'" class="input-group">
+  <label for="cuandoComprar">¿Cuándo quieres comprar?</label>
+  <select
+    id="cuandoComprar"
+    [(ngModel)]="formData.cuandoComprar"
+    name="cuandoComprar"
+    required
+  >
+    <option value="" disabled>Selecciona una opción</option>
+    <option value="inmediato">De inmediato</option>
+    <option value="1-2">En 1 a 2 meses</option>
+    <option value="3">En 3 meses</option>
+    <option value="4+">En 4 meses o más</option>
+  </select>
+</div>
+
+
 
       <select
         required

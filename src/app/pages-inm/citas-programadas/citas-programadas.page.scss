@@ -1,0 +1,75 @@
+.citas-page {
+  padding: 16px;
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+    align-items: center;
+
+    ion-select {
+      min-width: 100px;
+    }
+
+    ion-button {
+      height: 40px;
+    }
+  }
+
+  .citas-container {
+    overflow-x: auto;
+  }
+
+  .citas-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+
+    thead {
+      background-color: #143d81;
+      color: white;
+
+      th {
+        padding: 10px;
+        text-align: left;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #e0e0e0;
+
+        td {
+          padding: 10px;
+          vertical-align: middle;
+
+          &.agente {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            ion-avatar {
+              width: 40px;
+              height: 40px;
+            }
+
+            span {
+              font-weight: 500;
+            }
+          }
+
+          .prop-img {
+            width: 60px;
+            height: 40px;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 4px;
+          }
+        }
+      }
+    }
+  }
+}

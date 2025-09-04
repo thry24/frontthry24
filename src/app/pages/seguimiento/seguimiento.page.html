@@ -1,0 +1,70 @@
+<ion-content class="chat-crm-bg">
+  <div class="seguimiento-container" [class.estado-cerrado]="!mostrarLineaTiempo">
+
+    <!-- Encabezado -->
+    <div class="seguimiento-header-azul">
+      <div class="col">Nombre Cliente</div>
+      <div class="col">Tipo de Cliente</div>
+      <div class="col">Tipo de Operación</div>
+      <div class="col">Estatus de operación</div>
+      <div class="col">Detalles del proceso</div>
+      <div class="col">Fecha de Finalización</div>
+    </div>
+
+    <!-- Fila de datos -->
+    <div class="seguimiento-datos">
+      <div class="col">{{ seguimientoCliente.nombre }}</div>
+      <div class="col">{{ seguimientoCliente.tipoCliente }}</div>
+      <div class="col">{{ tipoOperacionCliente }}</div>
+            <!-- Estatus de operación -->
+      <div class="col">
+        <select [(ngModel)]="estatusSeleccionado">
+          <option value="">Seleccionar opción</option>
+          <option *ngFor="let opcion of estatusOperacionOpciones" [value]="opcion">
+            {{ opcion }}
+          </option>
+        </select>
+        <div *ngIf="mostrarCampoOtra()">
+          <input
+            type="text"
+            [(ngModel)]="estatusOtraMotivo"
+            placeholder="Especifica el motivo"
+          />
+        </div>
+      </div>
+      <!-- Botón ver línea -->
+      <div class="col">
+        <a class="clickable" (click)="mostrarLineaTiempo = !mostrarLineaTiempo">
+          Ver línea
+        </a>
+      </div>
+
+      <div class="col">{{ seguimientoCliente.fechaFinalizacion }}</div>
+    </div>
+
+    <!-- Línea del tiempo -->
+    <div class="timeline-wrapper" *ngIf="mostrarLineaTiempo">
+      <div class="timeline-inner">
+        <div
+          class="timeline-step"
+          *ngFor="let paso of tipoOperacionCliente === 'VENTA' ? timelineVenta : timelineRenta; let i = index"
+        >
+          <div class="dot color-{{ i + 1 }}"></div>
+          <div class="info">
+            <h4>{{ paso.paso }}</h4>
+            <ng-container [ngSwitch]="paso.tipo">
+              <p *ngSwitchCase="'fecha'">
+                Fecha: <input type="date" [(ngModel)]="seguimientoCliente[paso.campo!]" />
+              </p>
+              <label *ngSwitchCase="'check'">
+                <input type="checkbox" [(ngModel)]="seguimientoCliente[paso.campo!]" />
+                Documentos completos
+              </label>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

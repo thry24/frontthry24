@@ -8,13 +8,14 @@ import { WishlistService } from 'src/app/services/wishlist.service';
 import { CompararService } from 'src/app/services/comparar.service';
 import { AlertController } from '@ionic/angular';
 import { PdfPropiedadService } from 'src/app/services/pdf-propiedad.service';
+
 @Component({
   selector: 'app-detalle-propiedad',
   templateUrl: './detalle-propiedad.page.html',
   styleUrls: ['./detalle-propiedad.page.scss'],
   standalone: false,
 })
-export class DetallePropiedadPage implements OnInit {
+export class DetallePropiedadPage implements OnInit, AfterViewInit {
   propiedad: any = null;
   citaAgendada: boolean = false;
   hoy: string = '';
@@ -24,6 +25,7 @@ export class DetallePropiedadPage implements OnInit {
   comparadas: string[] = [];
   verMas: boolean = false;
   usuarioActivo: any = null;
+
   cita = {
     nombre: '',
     email: '',
@@ -40,7 +42,8 @@ export class DetallePropiedadPage implements OnInit {
     'school',
     'park',
     'church',
-    'bus_stop',
+    // Alineado con iconoCategoria:
+    'bus_station',
   ];
 
   constructor(
@@ -84,8 +87,6 @@ export class DetallePropiedadPage implements OnInit {
 
     const usuario = this.authService.obtenerUsuario();
     this.usuarioActivo = usuario || null;
-    console.log('Usuario activo:', this.usuarioActivo);
-
     if (usuario) {
       this.cita.nombre = usuario.nombre || '';
       this.cita.email = usuario.correo || '';
@@ -103,7 +104,9 @@ export class DetallePropiedadPage implements OnInit {
           next: (res) => {
             this.propiedad = res;
             this.imagenActual = this.propiedad.imagenPrincipal || '';
-            console.log('Propiedad recibida:', res);
+            if (this.propiedad?._id) {
+              this.registrarVisitaSiNoContada(this.propiedad._id);
+            }
             this.loadingService.ocultar();
 
             setTimeout(() => {
@@ -130,26 +133,90 @@ export class DetallePropiedadPage implements OnInit {
       }
     });
   }
-private async convertirImagenesABase64(urls: string[]): Promise<string[]> {
-  const resultados: string[] = [];
-
-  for (const url of urls) {
-    try {
-      const base64 = await this.convertirImagenABase64(url);
-      if (base64) resultados.push(base64);
-    } catch (error) {
-      console.warn(`Error al convertir imagen ${url} a base64`, error);
-    }
-  }
-
-  return resultados;
-}
 
   ngAfterViewInit() {}
 
+  // ---------------------------
+  // Helpers de visitas/contacto
+  // ---------------------------
+  private keyVisita(id: string) {
+    return `visita_${id}`;
+  }
+
+  private registrarVisitaSiNoContada(propId: string) {
+    try {
+      const k = this.keyVisita(propId);
+      if (sessionStorage.getItem(k)) return; // ya contada en esta sesión
+      this.propiedadService.registrarVisita(propId).subscribe({
+        next: () => sessionStorage.setItem(k, '1'),
+        error: (e) => console.warn('No se pudo registrar visita:', e),
+      });
+    } catch (e) {
+      console.warn('SessionStorage no disponible, skip visita.');
+    }
+  }
+
+  /**
+   * Construye el texto que se guardará en BD (y que coincide con el que envías por mail/wa).
+   */
+  private buildTextoInteres(canal: 'email' | 'whatsapp'): string {
+    return `
+Hola ${this.propiedad?.agente?.nombre || ''}, soy ${this.cita.nombre} y quiero agendar una cita para la propiedad "${this.propiedad?.clave}".
+
+📅 Fecha: ${this.cita.fecha}
+⏰ Hora: ${this.cita.hora}
+📧 Correo: ${this.cita.email}
+📝 Mensaje: ${this.cita.mensaje || 'Ninguno'}
+(Canal: ${canal})
+    `.trim();
+  }
+
+  /**
+   * Envía al backend el "contacto" con canal y datos de cita.
+   * No bloquea la UI; si responde ok, muestra un toast.
+   */
+  private enviarContacto(propId: string, canal: 'email' | 'whatsapp') {
+    const payload = {
+      canal,
+      citaNombre: this.cita.nombre,
+      citaEmail: this.cita.email,
+      citaFecha: this.cita.fecha,
+      citaHora: this.cita.hora,
+      citaMensaje: this.cita.mensaje,
+      textoFinal: this.buildTextoInteres(canal),
+    };
+
+    this.propiedadService.registrarContacto(propId, payload as any).subscribe({
+      next: (resp: any) => {
+        if (resp?.chatAuto?.ok) {
+          this.alertaService.mostrar(
+            'Se notificó tu interés al asesor. 👌',
+            'success'
+          );
+        }
+      },
+      error: (e) => console.warn('No se pudo registrar contacto:', e),
+    });
+  }
+
+  // ---------------------------
+  // PDF / imágenes
+  // ---------------------------
+  private async convertirImagenesABase64(urls: string[]): Promise<string[]> {
+    const resultados: string[] = [];
+    for (const url of urls) {
+      try {
+        const base64 = await this.convertirImagenABase64(url);
+        if (base64) resultados.push(base64);
+      } catch (error) {
+        console.warn(`Error al convertir imagen ${url} a base64`, error);
+      }
+    }
+    return resultados;
+  }
+
   private async convertirImagenABase64(url: string): Promise<string | null> {
     if (!url) return null;
-
     try {
       const response = await fetch(url);
       const blob = await response.blob();
@@ -165,137 +232,140 @@ private async convertirImagenesABase64(urls: string[]): Promise<string[]> {
     }
   }
 
-  private obtenerConteoLugares(lat: number, lng: number): Promise<{ [key: string]: number }> {
-  return new Promise((resolve) => {
-    const service = new google.maps.places.PlacesService(document.createElement('div'));
-    const tipos = this.tiposLugares;
-    const conteo: { [key: string]: number } = {};
-    let completados = 0;
+  private obtenerConteoLugares(
+    lat: number,
+    lng: number
+  ): Promise<{ [key: string]: number }> {
+    return new Promise((resolve) => {
+      const service = new google.maps.places.PlacesService(
+        document.createElement('div')
+      );
+      const tipos = this.tiposLugares;
+      const conteo: { [key: string]: number } = {};
+      let completados = 0;
 
-    tipos.forEach((tipo) => {
-      const request: google.maps.places.PlaceSearchRequest = {
-        location: new google.maps.LatLng(lat, lng),
-        radius: 500,
-        type: tipo,
-      };
+      tipos.forEach((tipo) => {
+        const request: google.maps.places.PlaceSearchRequest = {
+          location: new google.maps.LatLng(lat, lng),
+          radius: 500,
+          type: tipo as any,
+        };
 
-      service.nearbySearch(request, (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-          conteo[tipo] = results.length;
-        } else {
-          conteo[tipo] = 0;
-        }
+        service.nearbySearch(request, (results, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+            conteo[tipo] = results.length;
+          } else {
+            conteo[tipo] = 0;
+          }
 
-        completados++;
-        if (completados === tipos.length) {
-          resolve(conteo);
-        }
+          completados++;
+          if (completados === tipos.length) {
+            resolve(conteo);
+          }
+        });
       });
     });
-  });
-}
+  }
 
-
- async mostrarOpcionesPDF() {
-  const alert = await this.alertCtrl.create({
-  header: '¿Cómo deseas generar la ficha?',
-  message: 'Elige cómo mostrar los datos de contacto en el PDF:',
-  cssClass: 'alert-opciones-ficha',
-  buttons: [
-    {
-      text: 'CON DATOS DEL ASESOR',
-      handler: () => this.generarPDF('asesor'),
-      cssClass: 'btn-opcion',
-    },
-    {
-      text: 'CON MIS DATOS',
-      handler: () => this.generarPDF('usuario'),
-      cssClass: 'btn-opcion',
-    },
-    {
-      text: 'SIN DATOS DE CONTACTO',
-      handler: () => this.generarPDF('ninguno'),
-      cssClass: 'btn-opcion',
-    },
-    {
-      text: 'CANCELAR',
-      role: 'cancel',
-      cssClass: 'btn-cancelar',
-    },
-  ],
-});
-await alert.present();
-
-}
-
-
+  async mostrarOpcionesPDF() {
+    const alert = await this.alertCtrl.create({
+      header: '¿Cómo deseas generar la ficha?',
+      message: 'Elige cómo mostrar los datos de contacto en el PDF:',
+      cssClass: 'alert-opciones-ficha',
+      buttons: [
+        {
+          text: 'CON DATOS DEL ASESOR',
+          handler: () => this.generarPDF('asesor'),
+          cssClass: 'btn-opcion',
+        },
+        {
+          text: 'CON MIS DATOS',
+          handler: () => this.generarPDF('usuario'),
+          cssClass: 'btn-opcion',
+        },
+        {
+          text: 'SIN DATOS DE CONTACTO',
+          handler: () => this.generarPDF('ninguno'),
+          cssClass: 'btn-opcion',
+        },
+        {
+          text: 'CANCELAR',
+          role: 'cancel',
+          cssClass: 'btn-cancelar',
+        },
+      ],
+    });
+    await alert.present();
+  }
 
   async generarPDF(opcion: 'asesor' | 'usuario' | 'ninguno') {
-  if (!this.propiedad) return;
+    if (!this.propiedad) return;
+    this.loadingService.mostrar();
+    try {
+      const imagenPrincipalBase64 =
+        this.propiedad.imagenPrincipalBase64 ||
+        (await this.convertirImagenABase64(this.propiedad.imagenPrincipal));
 
-  this.loadingService.mostrar();
+      let logoBase64 = '';
+      if (opcion === 'usuario') {
+        logoBase64 =
+          (await this.convertirImagenABase64(
+            this.usuarioActivo?.fotoPerfil || this.usuarioActivo?.logo
+          )) ?? '';
+      } else if (opcion === 'asesor') {
+        logoBase64 =
+          (await this.convertirImagenABase64(
+            this.propiedad.agente?.fotoPerfil || this.propiedad.agente?.logo
+          )) ?? '';
+      }
 
-  try {
-    const imagenPrincipalBase64 =
-      this.propiedad.imagenPrincipalBase64 ||
-      (await this.convertirImagenABase64(this.propiedad.imagenPrincipal));
+      const mapaBase64 =
+        this.propiedad.mapaBase64 ||
+        (await this.pdfService.obtenerMapaBase64(
+          this.propiedad.direccion?.lat,
+          this.propiedad.direccion?.lng
+        ));
 
-    let logoBase64 = '';
+      const logoAi24Path = 'assets/logo-ai24.jpeg';
+      const logoAi24Base64 = await this.convertirImagenABase64(logoAi24Path);
 
-if (opcion === 'usuario') {
-  logoBase64 = (await this.convertirImagenABase64(
-  this.usuarioActivo?.fotoPerfil || this.usuarioActivo?.logo
-)) ?? '';
+      const imagenesBase64 = await this.convertirImagenesABase64(
+        this.propiedad.imagenes || []
+      );
 
-} else if (opcion === 'asesor') {
-  logoBase64 = (await this.convertirImagenABase64(
-  this.propiedad.agente?.fotoPerfil || this.propiedad.agente?.logo
-)) ?? '';
+      const conteoLugares =
+        (await this.obtenerConteoLugares(
+          this.propiedad.direccion?.lat,
+          this.propiedad.direccion?.lng
+        ).catch(() => ({} as any))) || {};
 
-}
+      const propiedadConBase64 = {
+        ...this.propiedad,
+        imagenPrincipalBase64,
+        logoBase64,
+        logoAi24Base64,
+        imagenesBase64,
+        mapaBase64,
+        conteoLugares,
+      };
 
-
-
-    const mapaBase64 =
-      this.propiedad.mapaBase64 ||
-      (await this.pdfService.obtenerMapaBase64(
-        this.propiedad.direccion?.lat,
-        this.propiedad.direccion?.lng
-      ));
-
-    const logoAi24Path = 'assets/logo-ai24.jpeg';
-    const logoAi24Base64 = await this.convertirImagenABase64(logoAi24Path);
-
-    const imagenesBase64 = await this.convertirImagenesABase64(this.propiedad.imagenes || []);
-
-    const conteoLugares = await this.obtenerConteoLugares(
-      this.propiedad.direccion?.lat,
-      this.propiedad.direccion?.lng
-    );
-
-    const propiedadConBase64 = {
-      ...this.propiedad,
-      imagenPrincipalBase64,
-      logoBase64,
-      logoAi24Base64,
-      imagenesBase64,
-      mapaBase64,
-      conteoLugares,
-    };
-
-    await this.pdfService.generarPDF(propiedadConBase64, opcion, this.usuarioActivo);
-    this.alertaService.mostrar('PDF generado con éxito.', 'success');
-
-  } catch (error) {
-    console.error('Error generando PDF:', error);
-    this.alertaService.mostrar('Error al generar el PDF.', 'error');
-  } finally {
-    this.loadingService.ocultar();
+      await this.pdfService.generarPDF(
+        propiedadConBase64,
+        opcion,
+        this.usuarioActivo
+      );
+      this.alertaService.mostrar('PDF generado con éxito.', 'success');
+    } catch (error) {
+      console.error('Error generando PDF:', error);
+      this.alertaService.mostrar('Error al generar el PDF.', 'error');
+    } finally {
+      this.loadingService.ocultar();
+    }
   }
-}
 
-  
-
+  // ---------------------------
+  // Favoritos / Comparar
+  // ---------------------------
   esFavorito(id: string): boolean {
     return this.favoritos.includes(id);
   }
@@ -303,7 +373,6 @@ if (opcion === 'usuario') {
   toggleFavorito(propiedadId: string) {
     if (!this.authService.estaAutenticado()) {
       this.alertaService.mostrar('Debes iniciar sesión para guardar favoritos');
-
       setTimeout(() => {
         window.location.href = '/login';
       }, 3000);
@@ -347,6 +416,7 @@ if (opcion === 'usuario') {
       },
     });
   }
+
   cargarComparadas() {
     this.loadingService.mostrar();
     this.comparar.obtenerComparaciones().subscribe({
@@ -368,11 +438,9 @@ if (opcion === 'usuario') {
       this.alertaService.mostrar(
         'Debes iniciar sesión para comparar propiedades'
       );
-
       setTimeout(() => {
         window.location.href = '/login';
       }, 3000);
-
       return;
     }
 
@@ -382,9 +450,7 @@ if (opcion === 'usuario') {
       this.comparar.eliminarDeComparacion(propiedadId).subscribe({
         next: (res: any) => {
           this.comparadas = this.comparadas.filter((id) => id !== propiedadId);
-          if (res?.msg) {
-            this.alertaService.mostrar(res.msg);
-          }
+          if (res?.msg) this.alertaService.mostrar(res.msg);
           this.loadingService.ocultar();
         },
         error: (err) => {
@@ -399,12 +465,8 @@ if (opcion === 'usuario') {
       this.comparar.agregarAComparacion(propiedadId, tipoPropiedad).subscribe({
         next: (res: any) => {
           this.comparadas.push(propiedadId);
-          if (res?.msg) {
-            this.alertaService.mostrar(res.msg);
-          }
-          if (res?.advertencia) {
-            this.alertaService.mostrar(res.advertencia);
-          }
+          if (res?.msg) this.alertaService.mostrar(res.msg);
+          if (res?.advertencia) this.alertaService.mostrar(res.advertencia);
           this.loadingService.ocultar();
         },
         error: (err) => {
@@ -422,6 +484,9 @@ if (opcion === 'usuario') {
     return this.comparadas.includes(propiedadId);
   }
 
+  // ---------------------------
+  // Mapa / lugares
+  // ---------------------------
   cargarMapa(lat: number, lng: number) {
     const map = new google.maps.Map(
       document.getElementById('map') as HTMLElement,
@@ -457,7 +522,7 @@ if (opcion === 'usuario') {
       const request: google.maps.places.PlaceSearchRequest = {
         location: new google.maps.LatLng(lat, lng),
         radius: 500,
-        type: tipo,
+        type: tipo as any,
       };
 
       service.nearbySearch(request, (results, status) => {
@@ -498,6 +563,9 @@ if (opcion === 'usuario') {
     }
   }
 
+  // ---------------------------
+  // Validaciones cita / enlaces
+  // ---------------------------
   get keywordsLimpios(): string[] {
     return (this.propiedad?.keywords || [])
       .filter((k: any) => typeof k === 'string' && !/\[object Object\]/.test(k))
@@ -518,9 +586,7 @@ if (opcion === 'usuario') {
     const cuerpo = encodeURIComponent(`
 Hola ${this.propiedad.agente?.nombre},
 
-Estoy interesado en agendar una cita para visitar la propiedad "${
-      this.propiedad.clave
-    }".
+Estoy interesado en agendar una cita para visitar la propiedad "${this.propiedad.clave}".
 
 Datos de la cita:
 - Nombre: ${this.cita.nombre}
@@ -531,37 +597,64 @@ Datos de la cita:
 
 Saludos.
     `);
-
     return `mailto:${this.propiedad.agente?.correo}?subject=${asunto}&body=${cuerpo}`;
   }
 
   generarWhatsAppLink(): string {
-    const mensaje = encodeURIComponent(`
-Hola ${this.propiedad.agente?.nombre}, soy ${
-      this.cita.nombre
-    } y quiero agendar una cita para la propiedad "${this.propiedad.clave}".
-
-📅 Fecha: ${this.cita.fecha}
-⏰ Hora: ${this.cita.hora}
-📧 Correo: ${this.cita.email}
-📝 Mensaje: ${this.cita.mensaje || 'Ninguno'}
-    `);
-
+    const mensaje = encodeURIComponent(this.buildTextoInteres('whatsapp'));
     return `https://wa.me/52${this.propiedad.agente?.telefono}?text=${mensaje}`;
   }
 
   abrirMailto() {
-    if (this.citaValida) {
-      const mailto = this.generarMailto();
-      window.open(mailto, '_blank');
+    if (!this.citaValida || !this.propiedad?._id) return;
+
+    // Requerir sesión para trazabilidad (opcional; quítalo si permites contacto sin login)
+    if (!this.authService.estaAutenticado()) {
+      this.alertaService.mostrar('Debes iniciar sesión para contactar al asesor');
+      setTimeout(() => (window.location.href = '/login'), 2500);
+      return;
     }
+
+    // 1) Guarda el contacto (no bloquea la UI)
+    this.enviarContacto(this.propiedad._id, 'email');
+
+    // 2) Abre el mailto
+    const mailto = this.generarMailto();
+    window.open(mailto, '_blank');
   }
 
   abrirWhatsApp() {
-    if (this.citaValida) {
-      const wa = this.generarWhatsAppLink();
-      window.open(wa, '_blank');
+    if (!this.citaValida || !this.propiedad?._id) return;
+
+    if (!this.authService.estaAutenticado()) {
+      this.alertaService.mostrar('Debes iniciar sesión para contactar al asesor');
+      setTimeout(() => (window.location.href = '/login'), 2500);
+      return;
     }
+
+    // 1) Guarda el contacto (no bloquea la UI)
+    this.enviarContacto(this.propiedad._id, 'whatsapp');
+
+    // 2) Abre WhatsApp
+    const wa = this.generarWhatsAppLink();
+    window.open(wa, '_blank');
+  }
+
+  contactarAhora() {
+    if (!this.propiedad?._id) return;
+
+    if (!this.authService.estaAutenticado()) {
+      this.alertaService.mostrar('Debes iniciar sesión para contactar al asesor');
+      setTimeout(() => (window.location.href = '/login'), 2500);
+      return;
+    }
+
+    // Por si quieres un botón que solo dispare el interés sin abrir enlaces:
+    this.enviarContacto(this.propiedad._id, 'email'); // o 'whatsapp', como prefieras por default
+    this.alertaService.mostrar(
+      'Interés enviado al asesor. Te responderán pronto.',
+      'success'
+    );
   }
 
   abrirFecha(event: any) {

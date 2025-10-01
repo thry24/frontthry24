@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service'; // ajusta la ruta según tu estructura
 
 @Component({
   selector: 'app-crm-layout',
@@ -10,8 +11,34 @@ import { RouterModule } from '@angular/router';
   templateUrl: './crm-layout.component.html',
   styleUrls: ['./crm-layout.component.scss']
 })
-export class CrmLayoutComponent {
-  nombreUsuario = 'Juan Pérez';
-  rolUsuario = 'Agente Inmobiliario';
-  fotoPerfil = 'https://randomuser.me/api/portraits/men/32.jpg';
+export class CrmLayoutComponent implements OnInit {
+  nombreUsuario: string | null = null;
+  rolUsuario: string | null = null;
+  fotoPerfil: string | null = null;
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.authService.isLogged$.subscribe((estado) => {
+      if (estado) {
+        const user = this.authService.obtenerUsuario();
+        this.nombreUsuario = user?.nombre || '';
+        this.rolUsuario = user?.rol || '';
+        this.fotoPerfil = user?.fotoPerfil || 'assets/default-avatar.png';
+      } else {
+        this.nombreUsuario = null;
+        this.rolUsuario = null;
+        this.fotoPerfil = null;
+      }
+    });
+
+    try {
+      const user = this.authService.obtenerUsuario();
+      this.nombreUsuario = user?.nombre || '';
+      this.rolUsuario = user?.rol || '';
+      this.fotoPerfil = user?.fotoPerfil || 'assets/default-avatar.png';
+    } catch (err) {
+      console.error('Error obteniendo usuario en CRM layout:', err);
+    }
+  }
 }

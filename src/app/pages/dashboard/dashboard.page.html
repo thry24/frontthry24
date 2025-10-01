@@ -1,78 +1,167 @@
-<div class="panel-container">
+<!-- src/app/pages/dashboard/dashboard.page.html -->
+<div class="panel-container" *ngIf="!loading; else cargando">
   <!-- Panel principal -->
   <div class="main-panel">
     <!-- Objetivos -->
     <div class="objetivos-card">
       <div class="tabs">
-        <button class="active">
-          <ion-icon name="target-outline"></ion-icon> Objetivo del mes
+        <button
+          [class.active]="activeTab === 'mensual'"
+          (click)="setTab('mensual')"
+        >
+          <ion-icon name="target-outline"></ion-icon>
+          Objetivo del mes
         </button>
-        <button>
-          <ion-icon name="trophy-outline"></ion-icon> Objetivo Anual
+
+        <button
+          [class.active]="activeTab === 'anual'"
+          (click)="setTab('anual')"
+        >
+          <ion-icon name="trophy-outline"></ion-icon>
+          Objetivo Anual
         </button>
       </div>
 
-      <div class="objetivos-form">
+      <!-- MENSUAL -->
+      <div class="objetivos-form" *ngIf="activeTab === 'mensual'">
         <div class="objetivo-row">
           <ion-icon name="checkmark-circle-outline"></ion-icon>
-          <label>Objetivo comisiones</label>
-          <input type="text" value="$1,000,000" />
-          <input type="text" value="$4,000,000" />
+          <label>Objetivo comisiones (mes)</label>
+
+          <!-- logrado este mes (solo lectura) -->
+          <input
+            type="text"
+            [value]="
+              objetivoMesActual | currency : 'MXN' : 'symbol-narrow' : '1.0-0'
+            "
+            readonly
+          />
+
+          <!-- target mensual (editable) -->
+          <input
+            type="number"
+            [(ngModel)]="inputComisionesMes"
+            min="0"
+            step="1000"
+            [disabled]="saving"
+          />
         </div>
 
         <div class="objetivo-row">
           <ion-icon name="checkmark-circle-outline"></ion-icon>
           <label>Objetivo Propiedades Añadidas</label>
-          <input type="number" value="10" />
-          <input type="number" value="120" />
+          <input
+            type="number"
+            [(ngModel)]="inputPropsMes"
+            min="0"
+            [disabled]="saving"
+          />
+          <input type="number" [value]="propiedadesTotal" readonly />
         </div>
 
         <div class="objetivo-row">
           <ion-icon name="checkmark-circle-outline"></ion-icon>
           <label>Objetivo Leads</label>
-          <input type="number" value="23" />
+          <input
+            type="number"
+            [(ngModel)]="inputLeadsMes"
+            min="0"
+            [disabled]="saving"
+          />
+          <div class="mini">
+            <small>Total mes: {{ leadsMesTotales }}</small>
+          </div>
+        </div>
+
+        <div class="acciones">
+          <button class="guardar" (click)="guardarMensual()" [disabled]="saving">
+            {{ saving ? 'Guardando...' : 'Guardar objetivo mensual' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- ANUAL -->
+      <div class="objetivos-form" *ngIf="activeTab === 'anual'">
+        <div class="objetivo-row">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <label>Objetivo comisiones (anual)</label>
+          <input
+            type="number"
+            [(ngModel)]="inputComisionesAnual"
+            min="0"
+            step="10000"
+            [disabled]="saving"
+          />
+          <div class="mini">
+            <small
+              >YTD:
+              {{
+                comisionesYTD | currency : 'MXN' : 'symbol-narrow' : '1.0-0'
+              }}</small
+            >
+          </div>
+        </div>
+
+        <div class="acciones">
+          <button class="guardar" (click)="guardarAnual()" [disabled]="saving">
+            {{ saving ? 'Guardando...' : 'Guardar objetivo anual' }}
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Métricas -->
+    <!-- Métricas resumen -->
     <div class="metricas">
       <div class="card">
         <h3>Objetivo</h3>
-        <strong>5,250</strong>
-        <span>Target: 6,500</span>
+        <strong>
+          {{ objetivoMesActual | currency : 'MXN' : 'symbol-narrow' : '1.0-0' }}
+        </strong>
+        <span>
+          Target:
+          {{ targetMes | currency : 'MXN' : 'symbol-narrow' : '1.0-0' }}
+        </span>
       </div>
       <div class="card">
         <h3>Mes Anterior</h3>
-        <strong>175</strong>
-        <span>Last Month: 196</span>
+        <strong>
+          {{ mesAnterior | currency : 'MXN' : 'symbol-narrow' : '1.0-0' }}
+        </strong>
+        <span>Last Month</span>
       </div>
       <div class="card">
         <h3>Propiedades Total</h3>
-        <strong>10,500</strong>
-        <span>Target: 12,000</span>
+        <strong>{{ propiedadesTotal }}</strong>
       </div>
       <div class="card">
-        <h3>Comisiones</h3>
-        <strong>$135M</strong>
+        <h3>Comisiones YTD</h3>
+        <strong>
+          {{ comisionesYTD | currency : 'MXN' : 'symbol-narrow' : '1.0-0' }}
+        </strong>
       </div>
     </div>
 
-    <!-- Placeholder para gráficas -->
+    <!-- Gráficas -->
     <div class="graficas">
-      <div class="grafica">grafico total comisiones</div>
-      <div class="grafica">grafica de Propiedades cerradas</div>
-      <div class="grafica">Tipo de Propiedad</div>
-      <div class="grafica">Propiedades Ingresadas</div>
-      <div class="grafica">Propiedades por mapa</div>
-      <div class="grafica">Grafico de LEADS perdidos y ganados, totales</div>
+      <div class="grafica"><div #elComisiones></div></div>
+      <div class="grafica"><div #elCerradas></div></div>
+      <div class="grafica"><div #elTipos></div></div>
+      <div class="grafica"><div #elIngresadas></div></div>
+
+      <div class="grafica">
+        Leads mes: Totales {{ leadsMesTotales }}, Ganados
+        {{ leadsMesGanados }}, Perdidos {{ leadsMesPerdidos }}
+      </div>
     </div>
   </div>
 
   <!-- Panel de banners publicitarios -->
   <div class="banners-panel">
     <div class="banner">
-      <img src="https://img.freepik.com/premium-psd/real-estate-facebook-cover-social-media-instagram-post-web-banner-template_542922-470.jpg" alt="Banner 1" />
+      <img
+        src="https://img.freepik.com/premium-psd/real-estate-facebook-cover-social-media-instagram-post-web-banner-template_542922-470.jpg"
+        alt="Banner 1"
+      />
       <div class="info">
         <strong>$1.2M</strong>
         <p>Parkside Residence<br />Brooklyn, New York</p>
@@ -81,7 +170,10 @@
     </div>
 
     <div class="banner">
-      <img src="https://tse1.mm.bing.net/th/id/OIP.hrFUjBVLSb863YVM1sC_rAHaHa?r=0&w=740&h=740&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Banner 2" />
+      <img
+        src="https://tse1.mm.bing.net/th/id/OIP.hrFUjBVLSb863YVM1sC_rAHaHa?r=0&w=740&h=740&rs=1&pid=ImgDetMain&o=7&rm=3"
+        alt="Banner 2"
+      />
       <div class="info">
         <strong>$3,200</strong> <span>/month</span>
         <p>Downtown Loft Apartment<br />Seattle, Washington</p>
@@ -92,3 +184,9 @@
     <button class="ver-mas">View More Properties</button>
   </div>
 </div>
+
+<ng-template #cargando>
+  <ion-spinner name="crescent"></ion-spinner>
+</ng-template>
+
+<div *ngIf="error" class="error">{{ error }}</div>

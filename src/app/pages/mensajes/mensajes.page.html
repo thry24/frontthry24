@@ -1,11 +1,9 @@
 <div class="mensajes-container">
-  <!-- Lista de contactos -->
   <div class="lista-contactos">
     <ion-searchbar placeholder="Buscar contacto..."></ion-searchbar>
     <div *ngFor="let usuario of usuariosDisponibles" (click)="abrirChat(usuario)">
       <div style="display: flex; align-items: center; padding: 8px; cursor: pointer;">
-        <img [src]="usuario.fotoPerfil || 'assets/img/default-user.png'" width="40" height="40"
-          style="border-radius: 50%; margin-right: 10px;" />
+        <img [src]="usuario.fotoPerfil || 'assets/img/default-user.png'" width="40" height="40" style="border-radius: 50%; margin-right: 10px;" />
         <div>
           <strong>{{ usuario.username }}</strong>
           <div style="font-size: 12px; color: gray;">{{ usuario.role }}</div>
@@ -14,11 +12,9 @@
     </div>
   </div>
 
-  <!-- Sección de chat -->
   <div class="chat-section" *ngIf="chatActivo">
     <div class="chat-header">
       {{ chatActivo.username }}
-
       <div class="chat-header-icons">
         <ion-icon name="call-outline"></ion-icon>
         <ion-icon name="videocam-outline"></ion-icon>
@@ -27,52 +23,43 @@
     </div>
 
     <div class="chat-body">
-      <div *ngFor="let msg of mensajes"
-        [ngClass]="{ 'enviado': msg.emisorEmail === usuarioActual.email, 'mensaje': true, 'recibido': msg.emisorEmail !== usuarioActual.email }">
-
-        <!-- 1. 📄 Archivo adjunto -->
+      <div *ngFor="let msg of mensajes" [ngClass]="{ 'enviado': msg.emisorEmail === usuarioActual.email, 'mensaje': true, 'recibido': msg.emisorEmail !== usuarioActual.email }">
         <div *ngIf="msg.archivoUrl">
-          <a [href]="'http://localhost:5000/' + msg.archivoUrl" target="_blank">
+          <a [href]="msg.archivoUrl" target="_blank" rel="noopener noreferrer">
             <ion-icon name="attach-outline"></ion-icon>
             {{ msg.tipoDocumento || 'Ver documento' }}
           </a>
         </div>
 
-        <!-- 2. 🔗 Propuesta de propiedades -->
         <ng-container *ngIf="esPropuestaPropiedades(msg.mensaje); else mensajeTexto">
           <div class="tarjeta-propuesta">
             <h4>🏠 Propuesta de propiedades</h4>
             <p>Haz clic para ver las propiedades sugeridas:</p>
-            <a [href]="obtenerUrlPropuesta(msg.mensaje)" target="_blank" class="btn-propuesta">Ver propuesta</a>
+            <a [href]="obtenerUrlPropuesta(msg.mensaje)" target="_blank" rel="noopener noreferrer" class="btn-propuesta">Ver propuesta</a>
           </div>
         </ng-container>
 
-        <!-- 3. 💬 Mensaje de texto simple -->
         <ng-template #mensajeTexto>
           <div [innerHTML]="msg.mensaje"></div>
         </ng-template>
 
-        <div style="text-align: right; font-size: 11px; margin-top: 4px;">{{ formatearHora(msg.fecha) }}</div>
+        <div style="text-align: right; font-size: 11px; margin-top: 4px;">
+          {{ formatearHora(msg.fecha) }}
+        </div>
       </div>
     </div>
 
     <div class="chat-footer">
       <ion-icon name="happy-outline"></ion-icon>
-
       <input [(ngModel)]="nuevoMensaje" placeholder="Escribe un mensaje..." />
-
-      <!-- Ícono de adjuntar archivo -->
       <label for="fileInput">
         <ion-icon name="attach-outline" class="adjuntar-icono"></ion-icon>
       </label>
       <input type="file" id="fileInput" (change)="onArchivoSeleccionado($event)" hidden />
-
-      <!-- Clasificador de tipo de documento -->
       <select *ngIf="archivoSeleccionado" [(ngModel)]="tipoDocumento" class="clasificador-documento">
         <option value="">Tipo de documento</option>
         <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</option>
       </select>
-
       <button class="boton-enviar" (click)="enviarMensaje()">
         <ion-icon name="send-outline"></ion-icon>
       </button>
@@ -80,7 +67,6 @@
   </div>
 </div>
 
-<!-- 🔗 Modal para compartir enlace -->
 <div class="modal-link" *ngIf="mostrarModalLink">
   <div class="modal-contenido">
     <h3>Compartir enlace</h3>

@@ -73,4 +73,32 @@ export class PropiedadService {
       headers: this.getHeaders(),
     });
   }
+
+registrarVisita(id: string) {
+  return this.http.patch(
+    `${this.apiUrl}/propiedades/${id}/visita`,
+    {},
+    { headers: this.getHeaders() }
+  );
 }
+
+// propiedad.service.ts
+registrarContacto(propId: string, payload: {
+  canal: 'email' | 'whatsapp',
+  citaNombre?: string,
+  citaEmail?: string,
+  citaFecha?: string,
+  citaHora?: string,
+  citaMensaje?: string,
+  textoFinal?: string
+}) {
+  return this.http.post(
+    `${this.apiUrl}/propiedades/${propId}/contacto`,
+    payload,
+    { headers: this.getHeaders() }
+  );
+}
+
+
+}
+

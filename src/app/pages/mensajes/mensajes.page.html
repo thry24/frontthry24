@@ -1,20 +1,80 @@
 <div class="mensajes-container">
+
   <div class="lista-contactos">
     <ion-searchbar placeholder="Buscar contacto..."></ion-searchbar>
-    <div *ngFor="let usuario of usuariosDisponibles" (click)="abrirChat(usuario)">
-      <div style="display: flex; align-items: center; padding: 8px; cursor: pointer;">
-        <img [src]="usuario.fotoPerfil || 'assets/img/default-user.png'" width="40" height="40" style="border-radius: 50%; margin-right: 10px;" />
-        <div>
-          <strong>{{ usuario.username }}</strong>
-          <div style="font-size: 12px; color: gray;">{{ usuario.role }}</div>
+
+    <!-- 🔹 Loader mientras carga -->
+    <div *ngIf="cargandoContactos" class="loader-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando contactos...</p>
+    </div>
+
+    <!-- 🔹 Lista de contactos -->
+    <div *ngIf="!cargandoContactos && !sinContactos">
+      <div *ngFor="let usuario of usuariosDisponibles" (click)="abrirChat(usuario)">
+        <div style="display: flex; align-items: center; padding: 8px; cursor: pointer;">
+          <img
+            [src]="usuario.fotoPerfil || 'assets/img/default-user.png'"
+            width="40"
+            height="40"
+            style="border-radius: 50%; margin-right: 10px;"
+          />
+          <div>
+            <strong>{{ usuario.username }}</strong>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <!-- 🔹 Si tiene tipoCliente (desde la relaciónCliente) -->
+              <ion-badge
+                *ngIf="usuario.tipoCliente"
+                [color]="colorTipo(usuario.tipoCliente)"
+                style="font-size: 10px; text-transform: capitalize; padding: 4px 8px;"
+              >
+                {{ usuario.tipoCliente }}
+              </ion-badge>
+
+              <!-- 🔹 Si no tiene tipoCliente registrado aún -->
+              <span
+                *ngIf="!usuario.tipoCliente"
+                style="font-size: 12px; color: gray;"
+              >
+                Sin tipo de cliente
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- 🔹 Sección de chat -->
   <div class="chat-section" *ngIf="chatActivo">
     <div class="chat-header">
-      {{ chatActivo.username }}
+      <div class="chat-info">
+        <h3>{{ chatActivo.username }}</h3>
+        <p class="chat-sub">{{ chatActivo.email }}</p>
+      </div>
+
+      <div class="tipo-cliente-selector">
+        <ion-select
+          [(ngModel)]="chatActivo.tipoCliente"
+          (ionChange)="actualizarTipoCliente(chatActivo)"
+          interface="popover"
+          placeholder="Tipo de cliente"
+        >
+          <ion-select-option value="comprador">Comprador</ion-select-option>
+          <ion-select-option value="arrendatario">Arrendatario</ion-select-option>
+          <ion-select-option value="propietario">Propietario</ion-select-option>
+        </ion-select>
+
+
+        <ion-badge
+          *ngIf="chatActivo?.tipoCliente"
+          [color]="colorTipo(chatActivo.tipoCliente ?? '')"
+        >
+          {{ chatActivo.tipoCliente | titlecase }}
+        </ion-badge>
+
+      </div>
+
       <div class="chat-header-icons">
         <ion-icon name="call-outline"></ion-icon>
         <ion-icon name="videocam-outline"></ion-icon>
@@ -22,8 +82,16 @@
       </div>
     </div>
 
+
     <div class="chat-body">
-      <div *ngFor="let msg of mensajes" [ngClass]="{ 'enviado': msg.emisorEmail === usuarioActual.email, 'mensaje': true, 'recibido': msg.emisorEmail !== usuarioActual.email }">
+      <div
+        *ngFor="let msg of mensajes"
+        [ngClass]="{
+          'enviado': msg.emisorEmail === usuarioActual.email,
+          'mensaje': true,
+          'recibido': msg.emisorEmail !== usuarioActual.email
+        }"
+      >
         <div *ngIf="msg.archivoUrl">
           <a [href]="msg.archivoUrl" target="_blank" rel="noopener noreferrer">
             <ion-icon name="attach-outline"></ion-icon>
@@ -35,7 +103,12 @@
           <div class="tarjeta-propuesta">
             <h4>🏠 Propuesta de propiedades</h4>
             <p>Haz clic para ver las propiedades sugeridas:</p>
-            <a [href]="obtenerUrlPropuesta(msg.mensaje)" target="_blank" rel="noopener noreferrer" class="btn-propuesta">Ver propuesta</a>
+            <a
+              [href]="obtenerUrlPropuesta(msg.mensaje)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-propuesta"
+            >Ver propuesta</a>
           </div>
         </ng-container>
 
@@ -65,15 +138,15 @@
       </button>
     </div>
   </div>
-</div>
-
-<div class="modal-link" *ngIf="mostrarModalLink">
-  <div class="modal-contenido">
-    <h3>Compartir enlace</h3>
-    <input [(ngModel)]="enlaceACompartir" placeholder="https://ejemplo.com..." />
-    <div class="botones-modal">
-      <button (click)="enviarLink()" class="btn-enviar">Enviar</button>
-      <button (click)="cerrarModalLink()" class="btn-cancelar">Cancelar</button>
+  <!-- 🔹 Modal para compartir enlace -->
+  <div class="modal-link" *ngIf="mostrarModalLink">
+    <div class="modal-contenido">
+      <h3>Compartir enlace</h3>
+      <input [(ngModel)]="enlaceACompartir" placeholder="https://ejemplo.com..." />
+      <div class="botones-modal">
+        <button (click)="enviarLink()" class="btn-enviar">Enviar</button>
+        <button (click)="cerrarModalLink()" class="btn-cancelar">Cancelar</button>
+      </div>
     </div>
-  </div>
+    <!-- 🔹 Botón generar seguimiento -->
 </div>

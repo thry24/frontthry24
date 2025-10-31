@@ -1,4 +1,3 @@
-<!-- requerimientos.page.html -->
 <div class="requerimientos-wrapper">
   <div class="encabezado">
     <button class="btn-agregar" (click)="toggleFormulario()">
@@ -6,10 +5,9 @@
     </button>
   </div>
 
-  <!-- Formulario -->
+  <!-- ===== Formulario ===== -->
   <div *ngIf="mostrarFormulario" class="formulario-requerimiento">
     <h2>Nuevo requerimiento</h2>
-
 
     <!-- Tipo de propiedad -->
     <ion-item>
@@ -33,7 +31,7 @@
       </ion-select>
     </ion-item>
 
-    <!-- Forma de pago (solo para venta) -->
+    <!-- Forma de pago (solo venta) -->
     <ion-item *ngIf="nuevoRequerimiento.tipoOperacion === 'venta'">
       <ion-label position="stacked">Forma de pago</ion-label>
       <ion-select [(ngModel)]="nuevoRequerimiento.formaPago">
@@ -42,10 +40,11 @@
         <ion-select-option value="Infonavit">Infonavit</ion-select-option>
         <ion-select-option value="Cofinavit">Cofinavit</ion-select-option>
         <ion-select-option value="Fovissste">Fovissste</ion-select-option>
+        <ion-select-option value="Fovissste">Mixto</ion-select-option>
       </ion-select>
     </ion-item>
 
-    <!-- Garantía (solo para renta - opción única entre aval o jurídica) -->
+    <!-- Garantía (solo renta) -->
     <ion-item *ngIf="nuevoRequerimiento.tipoOperacion === 'renta'">
       <ion-label position="stacked">Selecciona una opción</ion-label>
       <ion-select [(ngModel)]="nuevoRequerimiento.tipoGarantia">
@@ -54,7 +53,7 @@
       </ion-select>
     </ion-item>
 
-    <!-- ¿Cuentas con mascotas? (solo para renta) -->
+    <!-- ¿Cuentas con mascotas? (solo renta) -->
     <ion-item *ngIf="nuevoRequerimiento.tipoOperacion === 'renta'">
       <ion-label position="stacked">¿Cuentas con mascotas?</ion-label>
       <ion-input type="number" min="0" [(ngModel)]="nuevoRequerimiento.numeroMascotas"></ion-input>
@@ -66,12 +65,45 @@
       <ion-textarea [(ngModel)]="nuevoRequerimiento.caracteristicas"></ion-textarea>
     </ion-item>
 
-    <!-- Zona con autocomplete -->
+    <!-- Ciudad (sugerencias propias) -->
     <div class="form-group">
-      <label for="autocomplete">Agregar zona (autocomplete)</label>
-      <input id="autocomplete" type="text" placeholder="Escribe una zona" class="form-control" />
+      <label for="ciudadInput">Ciudad</label>
+      <input
+        id="ciudadInput"
+        type="text"
+        placeholder="Escribe la ciudad..."
+        class="google-input"
+        autocomplete="off"
+        [(ngModel)]="ciudadTexto"
+        (input)="onCiudadInput($event)"
+      />
+      <ul class="sugerencias" *ngIf="sugerenciasCiudad.length">
+        <li *ngFor="let s of sugerenciasCiudad" (click)="seleccionarCiudad(s)">
+          {{ s.description }}
+        </li>
+      </ul>
     </div>
 
+    <!-- Zona/colonia (sugerencias propias, sesgadas por ciudad) -->
+    <div class="form-group">
+      <label for="zonaInput">Agregar zona o colonia</label>
+      <input
+        id="zonaInput"
+        type="text"
+        placeholder="Escribe una zona o colonia..."
+        class="google-input"
+        autocomplete="off"
+        [(ngModel)]="zonaTexto"
+        (input)="onZonaInput($event)"
+      />
+      <ul class="sugerencias" *ngIf="sugerenciasZona.length">
+        <li *ngFor="let s of sugerenciasZona" (click)="seleccionarZona(s)">
+          {{ s.description }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Chips de zonas -->
     <div *ngIf="zonasSeleccionadas.length > 0" class="zonas-lista">
       <ion-chip *ngFor="let zona of zonasSeleccionadas">
         {{ zona }}
@@ -82,59 +114,122 @@
     <!-- Presupuesto -->
     <ion-item>
       <ion-label position="stacked">Presupuesto</ion-label>
-      <ion-input type="text" [value]="formatearPresupuesto(nuevoRequerimiento.presupuesto)"
-                 (ionBlur)="formatearAlSalir()" (ionInput)="actualizarPresupuesto($event)">
-      </ion-input>
+      <ion-input
+        type="text"
+        [value]="formatearPresupuesto(nuevoRequerimiento.presupuesto)"
+        (ionBlur)="formatearAlSalir()"
+        (ionInput)="actualizarPresupuesto($event)"
+      ></ion-input>
     </ion-item>
 
-    <!-- Notas adicionales -->
+    <!-- Notas -->
     <ion-item>
       <ion-label position="stacked">Notas adicionales</ion-label>
       <ion-textarea [(ngModel)]="nuevoRequerimiento.notaAdicional"></ion-textarea>
     </ion-item>
 
-    <!-- Fecha estimada -->
+    <!-- Fecha -->
     <ion-item>
-      <ion-label position="stacked">Fecha estimada de operación</ion-label>
+      <ion-label position="stacked">¿Cuándo quiere comprar?</ion-label>
       <ion-input type="date" [(ngModel)]="nuevoRequerimiento.fechaOperacion"></ion-input>
     </ion-item>
 
-    <!-- Botón Guardar -->
-    <ion-button expand="block" color="success" (click)="agregarRequerimiento()">
-      Guardar 
-    </ion-button>
+    <ion-button expand="block" color="success" (click)="agregarRequerimiento()">Guardar</ion-button>
   </div>
 
+<!-- ===== Tabla de requerimientos ===== -->
+<div class="tabla-requerimientos">
+  <h3>Mis requerimientos</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Agente</th>
+        <th>Tipo</th>
+        <th>Operación</th>
+        <th>Ciudad</th>
+        <th>Zonas</th>
+        <th>Características</th>
+        <th>Presupuesto</th>
+        <th>Publicación</th>
+        <th>Fecha cierre</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let req of requerimientos">
+        <td>{{ req.nombreAgente }}</td>
+        <td>{{ req.tipoPropiedad }}</td>
+        <td>{{ req.tipoOperacion }}</td>
+        <td>{{ req.ciudad }}</td>
+        <td>{{ req.zonas.join(', ') }}</td>
+        <td>{{ req.caracteristicas || '—' }}</td>
+        <td>{{ req.presupuesto | currency:'MXN':'symbol':'1.0-2' }}</td>
+        <td>{{ req.creadoEn | date:'dd/MM/yyyy' }}</td>
+        <td>{{ req.fechaOperacion | date:'dd/MM/yyyy' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-  <!-- Tabla -->
-  <div class="tabla-requerimientos">
+  <!-- ===== Requerimientos de otros agentes ===== -->
+  <div class="tabla-requerimientos otros">
+    <h3>Requerimientos de otros agentes</h3>
     <table>
       <thead>
         <tr>
           <th>Agente</th>
           <th>Tipo</th>
-          <th>Operación</th>
-          <th>Características</th>
           <th>Ciudad</th>
           <th>Zonas</th>
+          <th>Características</th>
           <th>Presupuesto</th>
-          <th>Notas</th>
-          <th>Fecha</th>
+          <th>Fecha cierre</th>
+          <th>Acción</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let req of requerimientos">
+        <tr *ngFor="let req of requerimientosOtros">
           <td>{{ req.nombreAgente }}</td>
           <td>{{ req.tipoPropiedad }}</td>
-          <td>{{ req.tipoOperacion }}</td>
-          <td>{{ req.caracteristicas }}</td>
           <td>{{ req.ciudad }}</td>
           <td>{{ req.zonas.join(', ') }}</td>
+          <td>{{ req.caracteristicas || '—' }}</td>
           <td>{{ req.presupuesto | currency:'MXN':'symbol':'1.0-2' }}</td>
-          <td>{{ req.notaAdicional }}</td>
-          <td>{{ req.fechaOperacion }}</td>
+          <td>{{ req.fechaOperacion | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <ion-button fill="outline" color="success" (click)="contactarAgente(req)">
+              <ion-icon slot="start" name="chatbubbles-outline"></ion-icon>
+              Contactar
+            </ion-button>
+          </td>
         </tr>
       </tbody>
     </table>
+<!-- ===== MODAL ÉXITO ===== -->
+<ion-modal [isOpen]="mostrarModalExito" (didDismiss)="cerrarModalExito()">
+  <ng-template>
+    <ion-content class="ion-padding modal-exito">
+      <div class="contenido-modal">
+        <ion-icon name="checkmark-circle-outline" color="success" class="icono-exito"></ion-icon>
+        <h2>¡Mensaje enviado correctamente!</h2>
+        <p>Tu mensaje fue enviado al agente <strong>{{ agenteSeleccionado?.nombreAgente }}</strong>.</p>
+        <ion-button expand="block" color="success" (click)="cerrarModalExito()">Aceptar</ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+    <!-- ===== MODAL ERROR ===== -->
+    <ion-modal [isOpen]="mostrarModalError" (didDismiss)="cerrarModalError()">
+      <ng-template>
+        <ion-content class="ion-padding modal-error">
+          <div class="contenido-modal">
+            <ion-icon name="alert-circle-outline" color="danger" class="icono-error"></ion-icon>
+            <h2>Ocurrió un error</h2>
+            <p>No se pudo enviar el mensaje. Intenta nuevamente más tarde.</p>
+            <ion-button expand="block" color="danger" (click)="cerrarModalError()">Cerrar</ion-button>
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
   </div>
 </div>

@@ -1,44 +1,137 @@
-<ion-header>
+<ion-header translucent="true">
   <ion-toolbar>
-    <ion-title>Editor de Video Promocional</ion-title>
+    <ion-title>🏡 Editor de Video de Propiedades</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <h3>Selecciona una Plantilla</h3>
-  <div class="plantillas">
-    <div
-      *ngFor="let p of plantillas"
-      [class.selected]="p === plantillaSeleccionada"
-      (click)="seleccionarPlantilla(p)"
-    >
-      <img [src]="p.preview" />
-      <p>{{ p.nombre }}</p>
-    </div>s
-  </div>
 
-  <h3>Selecciona Imágenes de tu Propiedad</h3>
-  <input type="file" accept="image/*" multiple (change)="onImagenesSeleccionadas($event)" />
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" sizeMd="6">
+        <ion-item>
+          <ion-label position="stacked">Plantilla</ion-label>
+          <ion-select interface="popover" [(ngModel)]="plantillaId">
+            <ion-select-option *ngFor="let t of templates" [value]="t.id">
+              {{ t.label }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
 
 
-  <h3>Texto Personalizado</h3>
-  <ion-input [(ngModel)]="textoPersonalizado" placeholder="Ej. ¡Gran oportunidad en Cancún!"></ion-input>
+        <ion-item>
+          <ion-label position="stacked">Título</ion-label>
+          <ion-input [(ngModel)]="bindings.title" placeholder="Ej. Departamento en Roma Norte"></ion-input>
+        </ion-item>
 
-  <ion-button expand="block" (click)="generarVideoReal()">🎬 Generar</ion-button>
+        <ion-item>
+          <ion-label position="stacked">Descripción</ion-label>
+          <ion-textarea [(ngModel)]="bindings.tagline" placeholder="Vista increíble, 2 recámaras..."></ion-textarea>
+        </ion-item>
 
-  <div *ngIf="videoPreview" class="preview-container">
-    <img [src]="videoPreview" class="preview-video" />
-    <div class="acciones">
-      <ion-button fill="outline" (click)="compartir('facebook')">
-        <ion-icon name="logo-facebook"></ion-icon>
-      </ion-button>
-      <ion-button fill="outline" (click)="compartir('instagram')">
-        <ion-icon name="logo-instagram"></ion-icon>
-      </ion-button>
-      <ion-button fill="outline" (click)="compartir('tiktok')">
-        <ion-icon name="logo-tiktok"></ion-icon>
-      </ion-button>
-      <ion-button color="success" (click)="descargarVideo()">Descargar</ion-button>
-    </div>
-  </div>
-</ion-content>
+        <!-- 🔹 Solo se muestra si la plantilla seleccionada es 'hogar_ideal_v1' -->
+        <ng-container *ngIf="plantillaId === 'hogar_ideal_v1'">
+          <div class="contacto-card">
+            <h3>🏡 Tu Hogar Ideal — Configuración</h3>
+            <p class="desc">Personaliza los textos y tus datos de contacto.</p>
+
+            <ion-item class="campo">
+              <ion-label position="stacked">Texto inicial</ion-label>
+              <ion-input [(ngModel)]="bindings.intro" placeholder="Ej. TU HOGAR IDEAL EXISTE"></ion-input>
+            </ion-item>
+
+            <ion-item class="campo">
+              <ion-label position="stacked">Mensaje central</ion-label>
+              <ion-input [(ngModel)]="bindings.mensaje" placeholder="Ej. Y ESTOY PARA AYUDARTE A ENCONTRARLO"></ion-input>
+            </ion-item>
+
+            <ion-item class="campo">
+              <ion-label position="stacked">Teléfono</ion-label>
+              <ion-input [(ngModel)]="bindings.telefono" placeholder="Ej. 55-1234-5678"></ion-input>
+            </ion-item>
+
+            <ion-item class="campo">
+              <ion-label position="stacked">Sitio web</ion-label>
+              <ion-input [(ngModel)]="bindings.sitio" placeholder="Ej. www.mihogarideal.com"></ion-input>
+            </ion-item>
+
+            <ion-item class="campo">
+              <ion-label position="stacked">Dirección</ion-label>
+              <ion-input [(ngModel)]="bindings.direccion" placeholder="Ej. Calle Roma 123, CDMX"></ion-input>
+            </ion-item>
+
+            <ion-item class="campo">
+              <ion-label position="stacked">Mensaje de acción (CTA)</ion-label>
+              <ion-input [(ngModel)]="bindings.cta" placeholder="Ej. ¡CONTÁCTAME!"></ion-input>
+            </ion-item>
+          </div>
+        </ng-container>
+
+
+        <ion-item>
+          <ion-label position="stacked">Fuente</ion-label>
+          <ion-select
+            interface="popover"
+            [(ngModel)]="fontFamily"
+            (ionChange)="loadGoogleFontIfNeeded()"
+          >
+            <ion-select-option *ngFor="let f of fonts" [value]="f" [style.font-family]="f">
+              {{ f }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+
+        <ion-item>
+          <ion-label position="stacked">Color de texto</ion-label>
+          <input type="color" [(ngModel)]="fontColor" style="width:100%;height:40px;border:none;background:transparent;" />
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Transición</ion-label>
+            <h3>🎞 Tipo de transición</h3>
+            <ion-select [(ngModel)]="transitionName">
+              <ion-select-option value="fade">Desvanecer</ion-select-option>
+              <ion-select-option value="slideLeft">Deslizar Izquierda</ion-select-option>
+              <ion-select-option value="zoomIn">Zoom In</ion-select-option>
+              <ion-select-option value="zoomOut">Zoom Out</ion-select-option>
+              <ion-select-option value="panUp">Pan Up</ion-select-option>
+              <ion-select-option value="panRight">Pan Right</ion-select-option>
+              <ion-select-option value="dronForward">Dron Forward</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Duración por imagen (seg)</ion-label>
+          <ion-input type="number" [(ngModel)]="perImageSec"></ion-input>
+        </ion-item>
+
+        <div class="uploader">
+          <h4>Imágenes</h4>
+          <input type="file" multiple accept="image/*" (change)="onImagenesSeleccionadas($event)" />
+          <div class="thumbs">
+            <img *ngFor="let p of imagePreviews" [src]="p">
+          </div>
+        </div>
+
+        <ion-button expand="block" color="primary" (click)="generarVideo()"
+                    [disabled]="cargando || images.length===0">
+          {{ cargando ? ('Renderizando… ' + Math.round(progreso*100) + '%') : '🎬 Generar Video' }}
+        </ion-button>
+
+        <ion-note *ngIf="errorMsg" color="danger">{{ errorMsg }}</ion-note>
+      </ion-col>
+
+      <ion-col size="12" sizeMd="6">
+        <div class="stage">
+          <canvas #stageCanvas [width]="canvasW" [height]="canvasH"></canvas>
+        </div>
+
+        <div *ngIf="videoUrl" class="preview">
+          <h4>Preview</h4>
+          <video [src]="videoUrl" controls playsinline style="width:100%;border-radius:12px;"></video>
+          <ion-button expand="block" color="success" (click)="descargarVideo()">Descargar</ion-button>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+

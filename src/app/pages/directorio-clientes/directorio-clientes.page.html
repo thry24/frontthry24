@@ -1,109 +1,180 @@
-  <div class="header-bar">
-    <div class="search-wrapper">
-      <ion-icon name="search-outline"></ion-icon>
-      <input [(ngModel)]="searchTerm" (input)="onSearchChange()" placeholder="Search anything" />
-    </div>
-    <div class="actions">
-      <ion-button fill="solid" size="small" (click)="abrirFormulario()">
-        + Añadir cliente
-      </ion-button>
-    </div>
+<div class="header-bar">
+  <div class="search-wrapper">
+    <ion-icon name="search-outline"></ion-icon>
+    <input
+      [(ngModel)]="searchTerm"
+      (input)="onSearchChange()"
+      placeholder="Buscar cliente..."
+    />
   </div>
 
-  <div *ngIf="mostrarFormulario" class="formulario-cliente">
-    <h3>{{ nuevoCliente._id ? 'Editar cliente' : 'Nuevo cliente' }}</h3>
-
-    <ion-item>
-      <ion-label position="stacked">Nombre</ion-label>
-      <ion-input [(ngModel)]="nuevoCliente.nombre"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">Correo</ion-label>
-      <ion-input [(ngModel)]="nuevoCliente.email"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">Teléfono</ion-label>
-      <ion-input [(ngModel)]="nuevoCliente.telefono"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">Tipo de cliente</ion-label>
-      <ion-select [(ngModel)]="nuevoCliente.tipoCliente">
-        <ion-select-option value="comprador">Cliente Comprador</ion-select-option>
-        <ion-select-option value="propietario">Cliente Propietario</ion-select-option>
-        <ion-select-option value="arrendatario">Cliente Arrendatario</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">Tipo de operación</ion-label>
-      <ion-select [(ngModel)]="nuevoCliente.tipoOperacion">
-        <ion-select-option value="venta">Venta</ion-select-option>
-        <ion-select-option value="renta">Renta</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-button expand="block" color="success" (click)="guardarCliente()">
-      {{ nuevoCliente._id ? 'Actualizar Cliente' : 'Guardar Cliente' }}
+  <div class="actions">
+    <ion-button fill="solid" size="small" (click)="abrirFormulario()">
+      + Añadir cliente
     </ion-button>
   </div>
+</div>
 
-  <div class="filters">
-    <ion-select [(ngModel)]="tipoClienteFiltro" (ionChange)="onFiltroChange()" interface="popover">
-      <ion-select-option value="">Todos</ion-select-option>
-      <ion-select-option value="propietario">Cliente Propietario</ion-select-option>
-      <ion-select-option value="comprador">Cliente Comprador</ion-select-option>
-      <ion-select-option value="arrendatario">Cliente Arrendatario</ion-select-option>
+<!-- 🔹 Formulario para agregar/editar cliente -->
+<div *ngIf="mostrarFormulario" class="formulario-cliente">
+  <h3>{{ nuevoCliente._id ? 'Editar cliente' : 'Nuevo cliente' }}</h3>
+
+  <ion-item>
+    <ion-label position="stacked">Nombre</ion-label>
+    <ion-input [(ngModel)]="nuevoCliente.nombre"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Correo</ion-label>
+    <ion-input [(ngModel)]="nuevoCliente.email"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Teléfono</ion-label>
+    <ion-input [(ngModel)]="nuevoCliente.telefono"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Tipo de cliente</ion-label>
+    <ion-select [(ngModel)]="nuevoCliente.tipoCliente">
+      <ion-select-option value="comprador">Comprador</ion-select-option>
+      <ion-select-option value="propietario">Propietario</ion-select-option>
+      <ion-select-option value="arrendatario">Arrendatario</ion-select-option>
     </ion-select>
+  </ion-item>
 
-    <ion-select [(ngModel)]="estadoFiltro" (ionChange)="onFiltroChange()" interface="popover">
-      <ion-select-option value="">Todos</ion-select-option>
-      <ion-select-option value="activo">Activo</ion-select-option>
-      <ion-select-option value="inactivo">Inactivo</ion-select-option>
+  <ion-item>
+    <ion-label position="stacked">Tipo de operación</ion-label>
+    <ion-select [(ngModel)]="nuevoCliente.tipoOperacion">
+      <ion-select-option value="venta">Venta</ion-select-option>
+      <ion-select-option value="renta">Renta</ion-select-option>
     </ion-select>
-  </div>
+  </ion-item>
 
+  <ion-button expand="block" color="success" (click)="guardarCliente()">
+    {{ nuevoCliente._id ? 'Actualizar Cliente' : 'Guardar Cliente' }}
+  </ion-button>
+</div>
+
+<!-- 🔹 Filtros -->
+<div class="filters">
+  <ion-select
+    [(ngModel)]="tipoClienteFiltro"
+    (ionChange)="onFiltroChange()"
+    interface="popover"
+    placeholder="Filtrar por tipo"
+  >
+    <ion-select-option value="">Todos</ion-select-option>
+    <ion-select-option value="propietario">Propietario</ion-select-option>
+    <ion-select-option value="comprador">Comprador</ion-select-option>
+    <ion-select-option value="arrendatario">Arrendatario</ion-select-option>
+    <ion-select-option value="mensaje">Desde mensajes</ion-select-option>
+  </ion-select>
+
+  <ion-select
+    [(ngModel)]="estadoFiltro"
+    (ionChange)="onFiltroChange()"
+    interface="popover"
+    placeholder="Filtrar por estado"
+  >
+    <ion-select-option value="">Todos</ion-select-option>
+    <ion-select-option value="activo">Activo</ion-select-option>
+    <ion-select-option value="inactivo">Inactivo</ion-select-option>
+  </ion-select>
+</div>
+
+<!-- 🔹 Tabla de clientes -->
 <div class="tabla-scroll">
   <table class="tabla">
     <thead>
       <tr>
         <th></th>
         <th>Nombre</th>
-        <th>Tipo de cliente</th>
+        <th>Tipo cliente</th>
         <th>Teléfono</th>
         <th>Correo</th>
-        <th>ID propiedad</th>
-        <th>Fecha</th>
-        <th>Ingreso</th>
-        <th>Fecha finalizada</th>
+        <th>Tipo operación</th>
+        <th>Fecha registro</th>
+        <th>Origen</th>
         <th>Status</th>
         <th>Acciones</th>
       </tr>
     </thead>
+
     <tbody>
       <tr *ngFor="let cliente of clientesFiltrados">
         <td><ion-checkbox></ion-checkbox></td>
+
         <td class="nombre">
-          <img [src]="cliente.foto || 'https://www.svgrepo.com/show/452030/avatar-default.svg'" class="avatar" />
+          <img
+            [src]="cliente.foto || 'https://www.svgrepo.com/show/452030/avatar-default.svg'"
+            class="avatar"
+          />
           {{ cliente.nombre }}
         </td>
-        <td>{{ cliente.tipoCliente }}</td>
-        <td class="telefono">{{ cliente.telefono }}</td>
+
+        <td>
+          <ion-badge
+            [color]="
+              cliente.tipoCliente === 'comprador'
+                ? 'primary'
+                : cliente.tipoCliente === 'arrendatario'
+                ? 'warning'
+                : cliente.tipoCliente === 'propietario'
+                ? 'success'
+                : 'medium'
+            "
+          >
+            {{ cliente.tipoCliente || '—' }}
+          </ion-badge>
+        </td>
+
+        <td class="telefono">{{ cliente.telefono || '—' }}</td>
         <td>{{ cliente.email }}</td>
-        <td>{{ cliente.propiedadesInteresadas?.[0] || '—' }}</td>
-        <td>{{ cliente.fechaRegistro | date: 'dd-MMMM-yyyy' }}</td>
-        <td>{{ cliente.perfilamiento?.formaPago || '—' }}</td>
-        <td>{{ cliente.fechaFinal || '—' }}</td>
-        <td><span class="estatus">{{ cliente.status || 'Activo' }}</span></td>
+        <td>{{ cliente.tipoOperacion || '—' }}</td>
+        <td>{{ cliente.fechaRegistro | date: 'dd-MMM-yyyy' }}</td>
+        <td>
+          <ion-chip color="tertiary" *ngIf="cliente.origen === 'mensajes'">
+            <ion-icon name="chatbubble-outline"></ion-icon>
+            <ion-label>Chat</ion-label>
+          </ion-chip>
+          <ion-chip color="medium" *ngIf="cliente.origen === 'relacion'">
+            <ion-icon name="people-outline"></ion-icon>
+            <ion-label>Relación</ion-label>
+          </ion-chip>
+        </td>
+        <td>
+          <span class="estatus">{{ cliente.status || 'Activo' }}</span>
+        </td>
+
         <td class="acciones">
-          <ion-icon name="create-outline" (click)="editarCliente(cliente)"></ion-icon>
-          <ion-icon name="trash-outline" (click)="confirmarEliminacion(cliente)"></ion-icon>
+          <ion-icon
+            name="chatbubble-ellipses-outline"
+            color="primary"
+            title="Abrir chat"
+            (click)="abrirChatCon(cliente)"
+          ></ion-icon>
+
+          <ion-icon
+            name="create-outline"
+            color="success"
+            (click)="editarCliente(cliente)"
+          ></ion-icon>
+
+          <ion-icon
+            name="trash-outline"
+            color="danger"
+            (click)="confirmarEliminacion(cliente)"
+          ></ion-icon>
+        </td>
+      </tr>
+
+      <tr *ngIf="clientesFiltrados.length === 0">
+        <td colspan="10" class="sin-clientes">
+          <ion-icon name="people-outline"></ion-icon>
+          <p>No hay clientes para mostrar.</p>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
-
-

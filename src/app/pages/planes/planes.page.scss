@@ -1,0 +1,168 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+ion-page, ion-content {
+  height: 100%;
+  --background: linear-gradient(135deg, #0a2b4a, #122f52, #193b68);
+  background: linear-gradient(135deg, #0a2b4a, #122f52, #193b68);
+  color: #fff;
+}
+
+.plan-card {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.5s ease;
+}
+
+/* 🌟 Sección de bienvenida */
+.bienvenida {
+  text-align: center;
+  color: #fff;
+  margin: 3rem 1rem 2rem;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, #ed7538, #ffb84d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    strong {
+      color: #ffffff;
+    }
+  }
+}
+
+/* 💎 Contenedor de los planes */
+.planes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* 🧊 Tarjeta individual */
+.plan-card {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  transform: translateY(0);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  }
+
+  &.actual {
+    border: 2px solid #ed7538;
+    background: rgba(237, 117, 56, 0.2);
+    box-shadow: 0 0 20px rgba(237, 117, 56, 0.5);
+  }
+
+  .plan-header {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .plan-subtitle {
+    font-size: 1rem;
+    color: #d8e0eb;
+    margin-bottom: 1.5rem;
+  }
+
+  .plan-price {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ed7538, #ffb84d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+  }
+
+  .plan-description {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    min-height: 60px;
+    margin-bottom: 1.5rem;
+  }
+
+  ion-button {
+    --background: linear-gradient(90deg, #ed7538, #ffb84d);
+    --color: #fff;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      --background: linear-gradient(90deg, #ffb84d, #ed7538);
+      transform: scale(1.03);
+    }
+
+    &[disabled] {
+      opacity: 0.8;
+      --background: rgba(255, 255, 255, 0.1);
+      --color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  /* 🎆 Glow animado */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 180deg, #ed7538, #ffb84d, #ed7538);
+    filter: blur(60px);
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 0;
+  }
+
+  &:hover::before {
+    opacity: 0.15;
+  }
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .bienvenida {
+    h2 {
+      font-size: 1.6rem;
+    }
+  }
+
+  .planes-container {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .plan-card {
+    padding: 1.5rem;
+  }
+}

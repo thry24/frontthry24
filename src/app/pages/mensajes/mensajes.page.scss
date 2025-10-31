@@ -30,24 +30,83 @@ app-crm-layout {
 
 .chat-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  font-weight: bold;
-  font-size: 16px;
-  background: #fff;
+  justify-content: space-between;
+  background: #74cac0;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  .chat-info {
+    display: flex;
+    flex-direction: column;
+
+    h3 {
+      font-weight: 700;
+      font-size: 18px;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    p {
+      font-size: 13px;
+      color: #d9e2f0;
+      margin: 0;
+    }
+  }
+
+  .tipo-cliente-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    margin-right: 12px;
+
+    ion-select {
+      --background: transparent;
+      --color: #fff;
+      --placeholder-color: #ddd;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-weight: 600;
+      padding: 2px 6px;
+      transition: 0.2s;
+      min-width: 140px;
+
+      &:hover {
+        border-color: #ffd700;
+      }
+    }
+
+    ion-badge {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+  }
 
   .chat-header-icons {
     display: flex;
-    gap: 12px;
-    margin-left: auto;
+    align-items: center;
+    gap: 14px;
 
     ion-icon {
-      font-size: 20px;
+      font-size: 22px;
       cursor: pointer;
+      color: #ffd700;
+      transition: 0.2s;
+
+      &:hover {
+        transform: scale(1.2);
+        color: #fff;
+      }
     }
   }
 }
+
 
 .icono-link:hover {
   color: #d4af37;
@@ -264,6 +323,34 @@ app-crm-layout {
     font-weight: 500;
   }
 }
+.loader-container {
+  text-align: center;
+  padding: 2rem;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ion-spinner {
+    margin-bottom: 10px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.sin-contactos {
+  text-align: center;
+  padding: 2rem;
+  color: #888;
+  font-size: 14px;
+
+  ion-icon {
+    font-size: 40px;
+    color: #aaa;
+    margin-bottom: 10px;
+  }
+}
+
 
 /* =========================
    RESPONSIVE
@@ -445,4 +532,31 @@ app-crm-layout {
   .btn-cancelar {
     padding: 8px 14px;
   }
+.generar-seguimiento {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(to right, #005eff, #007bff);
+  padding: 8px;
+  z-index: 10;
+
+  .btn-seguimiento {
+    --background: white;
+    --color: #005eff;
+    font-weight: 600;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 94, 255, 0.3);
+    transition: transform 0.2s ease-in-out;
+
+    ion-icon {
+      color: #005eff;
+      font-size: 18px;
+      margin-right: 5px;
+    }
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+}
+
 }

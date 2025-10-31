@@ -1,16 +1,17 @@
 <div class="mensajes-agentes-wrapper">
   <div class="encabezado-bar">
     <div class="acciones-filtros">
-      <ion-button class="btn-redactar">+ Redactar</ion-button>
+      <!-- Botón redactar -->
+      <ion-button class="btn-redactar" (click)="abrirModalRedactar()">+ Redactar</ion-button>
+
       <ion-select class="select-filtro" placeholder="Activas">
         <ion-select-option value="activas">Activas</ion-select-option>
         <ion-select-option value="sin-atender">Sin atender</ion-select-option>
         <ion-select-option value="atendidas">Atendidas</ion-select-option>
       </ion-select>
+
       <ion-select class="select-filtro" placeholder="Asignada a">
-        <ion-select-option value="Erika Kanafany">Erika Kanafany</ion-select-option>
-        <ion-select-option value="Jessica Thompson">Jessica Thompson</ion-select-option>
-        <ion-select-option value="Carlos Méndez">Carlos Méndez</ion-select-option>
+        <ion-select-option *ngFor="let asesor of asesores" [value]="asesor">{{ asesor }}</ion-select-option>
       </ion-select>
     </div>
   </div>
@@ -20,6 +21,7 @@
   </div>
 
   <div class="conversaciones-layout" [class.expandida]="!mensajeSeleccionado">
+    <!-- LISTA -->
     <div class="conversaciones-lista" [class.completa]="!mensajeSeleccionado">
       <div *ngFor="let mensaje of mensajesAgentes" class="conversacion-item" (click)="seleccionarMensaje(mensaje)">
         <div class="avatar-msg">
@@ -27,9 +29,8 @@
         </div>
         <div class="mensaje-preview">
           <div class="top-line">
-            <span class="name">{{ mensaje.nombreAgente }}</span>
+            <span class="name">{{ obtenerNombreConversacion(mensaje) }}</span>
             <span class="hora">{{ mensaje.fecha | date: 'medium' }}</span>
-
           </div>
           <div class="texto">
             {{ mensaje.texto }}
@@ -40,18 +41,19 @@
       </div>
     </div>
 
+    <!-- DETALLE -->
     <div class="detalle-mensaje" *ngIf="mensajeSeleccionado">
       <div class="cerrar-panel" (click)="mensajeSeleccionado = null">
         <ion-icon name="close-outline"></ion-icon>
       </div>
 
       <div class="acciones-top">
-        <ion-button class="btn-responder">
+        <ion-button class="btn-responder" (click)="abrirResponder()">
           <ion-icon name="arrow-undo-outline"></ion-icon>
           Responder
         </ion-button>
 
-        <ion-button class="btn-ws">
+        <ion-button class="btn-ws" (click)="llamarWhatsApp()">
           <ion-icon name="logo-whatsapp"></ion-icon>
           Enviar WhatsApp
         </ion-button>
@@ -60,30 +62,19 @@
           <ion-icon name="document-text-outline"></ion-icon>
           Agregar nota
         </ion-button>
-
-
-        <ion-select [(ngModel)]="mensajeSeleccionado.asignadoA" placeholder="Asignada a">
-          <ion-select-option *ngFor="let asesor of asesores" [value]="asesor">{{ asesor }}</ion-select-option>
-        </ion-select>
-
-        <ion-select [(ngModel)]="mensajeSeleccionado.estado" placeholder="Estado">
-          <ion-select-option value="sin-atender">Sin atender</ion-select-option>
-          <ion-select-option value="atendida">Atendida</ion-select-option>
-          <ion-select-option value="recorrido">Recorrido programado</ion-select-option>
-        </ion-select>
       </div>
 
       <div class="mensaje-completo">
         <div class="mensaje-texto">
           <p>{{ mensajeSeleccionado.texto }}</p>
+        </div>
 
-          <div class="tarjeta-propiedad">
-            <img [src]="mensajeSeleccionado.imagenPropiedad" />
-            <div>
-              <h4>{{ mensajeSeleccionado.tituloPropiedad }}</h4>
-              <p>{{ mensajeSeleccionado.tipoOperacion }} - {{ mensajeSeleccionado.precio | currency:'USD' }}</p>
-              <small>{{ mensajeSeleccionado.ubicacion }}</small>
-            </div>
+        <!-- Responder -->
+        <div class="recuadro-respuesta" *ngIf="mostrandoResponder">
+          <ion-textarea [(ngModel)]="textoRespuesta" placeholder="Escribe tu respuesta..." rows="3"></ion-textarea>
+          <div class="acciones-respuesta">
+            <ion-button color="success" (click)="enviarRespuesta()">Enviar</ion-button>
+            <ion-button color="medium" fill="clear" (click)="cancelarRespuesta()">Cancelar</ion-button>
           </div>
         </div>
 
@@ -92,25 +83,38 @@
           <div class="etiqueta">{{ mensajeSeleccionado.tipoOperacion }}</div>
           <p>{{ mensajeSeleccionado.email }}</p>
           <p>{{ mensajeSeleccionado.telefono }}</p>
-
-          <div class="acciones-contacto">
-            <ion-icon name="logo-whatsapp" (click)="llamarWhatsApp()"></ion-icon>
-            <ion-icon name="mail-outline"></ion-icon>
-          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!-- Modal para agregar nota -->
-<div class="modal-nota" *ngIf="mostrarModalNota">
-  <div class="modal-contenido-nota">
-    <h3>Agregar Nota</h3>
-    <textarea [(ngModel)]="nuevaNota" placeholder="Escribe una nota..." rows="4"></textarea>
 
-    <div class="acciones-modal-nota">
-      <ion-button color="primary" (click)="guardarNota()">Guardar</ion-button>
-      <ion-button color="light" (click)="cerrarModalNota()">Cancelar</ion-button>
-    </div>
-  </div>
-</div>
+<!-- ===== MODAL REDACTAR ===== -->
+<ion-modal [isOpen]="mostrarModalRedactar" (didDismiss)="cerrarModalRedactar()">
+  <ng-template>
+    <ion-content class="ion-padding modal-redactar">
+      <div class="contenido-modal">
+        <h2>Redactar mensaje</h2>
+
+        <ion-item>
+          <ion-label position="stacked">Selecciona un agente</ion-label>
+          <ion-select [(ngModel)]="agenteDestino">
+            <ion-select-option *ngFor="let agente of agentesDisponibles" [value]="agente">
+              {{ agente }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Mensaje</ion-label>
+          <ion-textarea [(ngModel)]="nuevoMensajeTexto" rows="5" placeholder="Escribe tu mensaje..."></ion-textarea>
+        </ion-item>
+
+        <div class="acciones-modal">
+          <ion-button color="success" expand="block" (click)="enviarMensajeNuevo()">Enviar</ion-button>
+          <ion-button color="medium" expand="block" fill="clear" (click)="cerrarModalRedactar()">Cancelar</ion-button>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

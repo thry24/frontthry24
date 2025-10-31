@@ -66,4 +66,18 @@ export class AuthService {
   estaAutenticado(): boolean {
     return !!this.obtenerToken();
   }
+obtenerUsuarioActual() {
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
+}
+
+guardarUsuario(usuario: any) {
+  localStorage.setItem('user', JSON.stringify(usuario));
+}
+
+
+limpiarSesion() {
+  localStorage.removeItem('user');
+}
+
 }

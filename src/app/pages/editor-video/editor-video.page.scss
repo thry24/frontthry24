@@ -1,46 +1,262 @@
-.plantillas {
+// 🎨 Paleta base
+$azul: #0c2340;
+$naranja: #f47a20;
+$dorado: #ffd700;
+$gris: #f7f7f9;
+$texto: #222;
+
+// 💎 Layout general
+:host {
   display: flex;
-  gap: 1rem;
-  overflow-x: auto;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffffff 0%, #f2f5fa 100%);
+  color: $texto;
 
-  div {
-    border: 2px solid transparent;
-    padding: 0.5rem;
-    text-align: center;
-    cursor: pointer;
+ion-header {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #31b1d4 0%, #1a536d 60%, #f47a20 100%);
+  box-shadow: 0 4px 20px rgba(12, 35, 64, 0.4);
+  border-bottom: 3px solid rgba(255, 215, 0, 0.3);
 
-    &.selected {
-      border-color: #3880ff;
-    }
+  ion-toolbar {
+    --background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+  }
 
-    img {
-      width: 120px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
+  ion-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.35),
+                 0 0 12px rgba(255, 215, 0, 0.4);
+    position: center;
+    z-index: 2;
+  }
 
-    p {
-      margin-top: 0.5rem;
-      font-size: 14px;
-    }
+  // 🌟 Efecto de brillo animado detrás del título
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -30%;
+    width: 160%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+    animation: shimmer 8s infinite linear;
+    z-index: 1;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-20%) rotate(15deg); opacity: 0.6; }
+    50% { transform: translateX(20%) rotate(-15deg); opacity: 1; }
+    100% { transform: translateX(-20%) rotate(15deg); opacity: 0.6; }
+  }
+
+  // ✨ Línea decorativa dorada inferior
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #ffd700, transparent);
+    border-radius: 3px;
+    animation: glowline 4s ease-in-out infinite;
+  }
+
+  @keyframes glowline {
+    0%, 100% { opacity: 0.6; width: 40%; }
+    50% { opacity: 1; width: 70%; }
   }
 }
 
-.preview-container {
-  margin-top: 2rem;
-  text-align: center;
 
-  .preview-video {
-    width: 100%;
-    max-width: 360px;
-    border-radius: 12px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  ion-grid {
+    padding: 1.5rem 2rem;
   }
 
-  .acciones {
-    margin-top: 1rem;
+  ion-item {
+    --background: transparent;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba($azul, 0.1);
+    transition: all 0.3s ease;
+    &:hover {
+      box-shadow: 0 0 6px rgba($azul, 0.15);
+      transform: translateY(-1px);
+    }
+    ion-label {
+      font-weight: 600;
+      color: $azul;
+    }
+  }
+
+  ion-select,
+  ion-input,
+  ion-textarea {
+    font-size: 0.95rem;
+    font-family: "Inter", sans-serif;
+  }
+
+  // 🏡 Card especial de "Tu Hogar Ideal"
+  .contacto-card {
+    background: white;
+    border: 2px solid rgba($naranja, 0.2);
+    border-radius: 16px;
+    padding: 1rem 1.2rem 1.4rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 8px 20px rgba($naranja, 0.08);
+    transition: transform 0.3s ease;
+    h3 {
+      font-weight: 700;
+      color: $azul;
+      margin-bottom: 4px;
+    }
+    .desc {
+      color: #555;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba($naranja, 0.12);
+    }
+
+    .campo {
+      --background: #fafafa;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      ion-label {
+        color: $azul;
+      }
+    }
+  }
+
+  // 🖼️ Uploader de imágenes
+  .uploader {
+    margin: 1.5rem 0;
+    h4 {
+      font-weight: 700;
+      color: $azul;
+      margin-bottom: 0.6rem;
+    }
+
+    input[type="file"] {
+      background: white;
+      border: 2px dashed rgba($azul, 0.2);
+      border-radius: 12px;
+      padding: 0.8rem;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      &:hover {
+        border-color: $naranja;
+        background: rgba($naranja, 0.05);
+      }
+    }
+
+    .thumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 1rem;
+
+      img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba($azul, 0.1);
+        transition: all 0.3s ease;
+        &:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba($azul, 0.2);
+        }
+      }
+    }
+  }
+
+  // 🎞️ Lienzo y preview
+  .stage {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(180deg, #e8edf5 0%, #ffffff 100%);
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba($azul, 0.1);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+
+    canvas {
+      border-radius: 12px;
+      max-width: 90%;
+      height: auto;
+    }
+  }
+
+  .preview {
+    text-align: center;
+    h4 {
+      font-weight: 700;
+      color: $azul;
+      margin-bottom: 0.8rem;
+    }
+    video {
+      border: 2px solid rgba($azul, 0.1);
+      box-shadow: 0 6px 16px rgba($azul, 0.1);
+    }
+    ion-button {
+      margin-top: 1rem;
+      font-weight: 600;
+      --border-radius: 12px;
+    }
+  }
+
+  // 🧭 Botones principales
+  ion-button[color="primary"] {
+    --background: linear-gradient(90deg, $azul 0%, darken($azul, 5%) 100%);
+    --color: white;
+    font-weight: 600;
+    border-radius: 12px;
+    margin-top: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba($azul, 0.2);
+    }
+  }
+
+  ion-button[color="success"] {
+    --background: linear-gradient(90deg, $naranja 0%, darken($naranja, 8%) 100%);
+    font-weight: 600;
+  }
+
+  // 📱 Responsivo
+  @media (max-width: 768px) {
+    ion-grid {
+      padding: 1rem;
+    }
+
+    .stage {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      canvas {
+        max-width: 100%;
+      }
+    }
+
+    .contacto-card {
+      padding: 0.8rem 1rem;
+    }
   }
 }

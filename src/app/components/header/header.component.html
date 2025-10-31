@@ -1,9 +1,9 @@
-<div class="header-wrapper" *ngIf="!isLoginPage">
+<div class="header-wrapper" *ngIf="!isLoginPage && !isCrmRoute">
   <ion-header>
     <ion-toolbar class="Thry24-toolbar">
       <div class="Thry24-container">
         <a class="logo" href="/">
-          <img src="assets/logo-thry24.jpeg" alt="Logo Thry24" />
+          <img src="/assets/logo-thry24.jpeg" alt="Logo Thry24" />
           <span>Thry24</span>
         </a>
 
@@ -178,8 +178,8 @@
         </ng-container>
         <ng-container *ngIf="isLogged && rol === 'agente'">
           <a href="/agente/agregar">Agregar Propiedad</a>
-          <a href="/requerimientos/publicar">Publicar Requerimiento</a>
-          <a href="/agente/mis-publicaciones">Mis publicaciones</a>
+          <a href="/agente/mis-publicaciones">Mis propiedades</a>
+          <a (click)="verificarAccesoCRM()">CRM</a>
         </ng-container>
       </ng-container>
 
@@ -190,7 +190,7 @@
           <a href="/directorio/inmobiliarias">Directorio Inmobiliarias</a>
         </ng-container>
         <ng-container *ngIf="isLogged && rol === 'inmobiliaria'">
-          <a href="/requerimientos/publicar">Publicar Requerimiento</a>
+          <a href="/requerimientos/">Publicar Requerimiento</a>
         </ng-container>
       </ng-container>
     </ng-container>
@@ -202,7 +202,7 @@
     <ion-toolbar class="Thry24-toolbar">
       <div class="Thry24-container">
         <a class="logo" href="/">
-          <img src="assets/logo-thry24.jpeg" alt="Logo Thry24" />
+          <img src="/assets/logo-thry24.jpeg" alt="Logo Thry24" />
           <span>Thry24</span>
         </a>
       </div>

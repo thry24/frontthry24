@@ -1,0 +1,70 @@
+<ion-content class="citas-page">
+  <div class="filtros-container">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="4">
+          <ion-item>
+            <ion-label position="floating">Día</ion-label>
+            <ion-select [(ngModel)]="filtroDia" interface="popover">
+              <ion-select-option *ngFor="let d of dias" [value]="d">{{ d }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col size="4">
+          <ion-item>
+            <ion-label position="floating">Mes</ion-label>
+            <ion-select [(ngModel)]="filtroMes" interface="popover">
+              <ion-select-option *ngFor="let m of meses" [value]="m.value">{{ m.nombre }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col size="4">
+          <ion-item>
+            <ion-label position="floating">Año</ion-label>
+            <ion-select [(ngModel)]="filtroAnio" interface="popover">
+              <ion-select-option *ngFor="let a of anios" [value]="a">{{ a }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-button color="medium" fill="outline" (click)="limpiarFiltros()">
+          Limpiar Filtros
+        </ion-button>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div class="citas-container">
+    <table class="citas-table">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Propiedad</th>
+          <th>Tipo operación</th>
+          <th>Tipo cliente</th>
+          <th>Evento</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cita of citasFiltradas()">
+          <td>{{ cita.clienteNombre }}</td>
+          <td class="prop-col">
+            <img *ngIf="cita.propiedadImagen"
+                [src]="cita.propiedadImagen"
+                class="prop-img" />
+
+            <span class="prop-clave">{{ cita.propiedadClave }}</span>
+          </td>
+          <td>{{ cita.tipoOperacion }}</td>
+          <td>{{ cita.tipoCliente }}</td>
+          <td>{{ cita.tipoEvento }}</td>
+          <td>{{ cita.fecha | date: 'dd-MM-yyyy' }}</td>
+          <td>{{ cita.hora }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>

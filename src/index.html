@@ -24,7 +24,7 @@
     />
     <meta name="author" content="Thry24" />
 
-    <link rel="icon" type="image/png" href="assets/logo-Thry24.jpeg" />
+    <link rel="icon" type="image/png" href="/assets/logo-Thry24.jpeg" />
 
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -56,13 +56,6 @@
     />
 
     <meta name="theme-color" content="#0a2b4a" />
-
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVypu6PUsa0dSj5P4Nyw6pOgB0gM10gIY&libraries=places,marker&loading=async"
-      async
-      defer
-    ></script>
-
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -73,7 +66,20 @@
     ></script>
   </head>
 
-  <body>
-    <app-root></app-root>
-  </body>
+<body>
+  <!-- Aquí Angular renderiza toda tu app -->
+  <app-root></app-root>
+
+  <!-- ✅ Scripts de Google justo aquí, ANTES del cierre de body -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7sjX2pvU3wRWsxEruECPKkZq-IePBvxI&libraries=places,marker&loading=async"
+    defer
+  ></script>
+
+  <script
+    src="https://unpkg.com/@googlemaps/extended-component-library@0.6.17"
+    defer
+  ></script>
+</body>
 </html>
+

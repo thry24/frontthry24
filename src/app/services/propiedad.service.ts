@@ -82,7 +82,6 @@ registrarVisita(id: string) {
   );
 }
 
-// propiedad.service.ts
 registrarContacto(propId: string, payload: {
   canal: 'email' | 'whatsapp',
   citaNombre?: string,
@@ -98,6 +97,7 @@ registrarContacto(propId: string, payload: {
     { headers: this.getHeaders() }
   );
 }
+
 
 
 }

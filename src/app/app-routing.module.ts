@@ -5,6 +5,7 @@ import { AgenteGuard } from './guards/agente.guard';
 import { InmobiliariaGuard } from './guards/inmobiliaria.guard';
 import { CrmLayoutComponent } from './components/crm-layout/crm-layout.component';
 import { CrmLayoutInmobiliariaComponent } from './layouts/crm-layout-inmobiliaria/crm-layout-inmobiliaria.component';
+import { PlanesPage } from './pages/planes/planes.page';
 
 const routes: Routes = [
   {
@@ -129,6 +130,11 @@ const routes: Routes = [
     path: 'propiedades/comparar',
     loadChildren: () => import('./pages/propiedades/comparar/comparar.module').then( m => m.CompararPageModule)
   },
+{
+  path: 'comprar-plan',
+  loadChildren: () =>
+    import('./pages/planes/planes.module').then(m => m.PlanesPageModule)
+},
   {
   path: 'agente',
   component: CrmLayoutComponent,
@@ -137,6 +143,7 @@ const routes: Routes = [
     { path: 'mensajes-agentes', loadComponent: () => import('./pages/mensajes-agentes/mensajes-agentes.page').then(m => m.MensajesAgentesPage) },
     { path: 'seguimiento', loadComponent: () => import('./pages/seguimiento/seguimiento.page').then(m => m.SeguimientoPage) },
     { path: 'requerimientos', loadComponent: () => import('./pages/requerimientos/requerimientos.page').then(m => m.RequerimientosPage) },
+    { path: 'citas-programadas', loadComponent: () => import('./pages/citas-programadas/citas-programadas.page').then(m => m.CitasProgramadasPage) },
     // { path: 'directorio-propietarios', loadComponent: () => import('./pages/directorio/directorio.page').then(m => m.DirectorioPage) },
     { path: 'colaboraciones', loadComponent: () => import('./pages/colaboraciones/colaboraciones.page').then(m => m.ColaboracionesPage) },
     { path: 'editor-video', loadComponent: () => import('./pages/editor-video/editor-video.page').then(m => m.EditorVideoPage) },
@@ -148,6 +155,7 @@ const routes: Routes = [
     { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.page').then( m => m.DashboardPage) },
     { path: 'directorio-clientes', loadComponent: () => import('./pages/directorio-clientes/directorio-clientes.page').then( m => m.DirectorioClientesPage) },
     { path: 'favoritos', loadComponent: () => import('./pages/favoritos/favoritos.page').then( m => m.FavoritosPage) },
+    { path: 'favoritos-clientes', loadComponent: () => import('./pages/favoritos-clientes/favoritos-clientes.page').then( m => m.FavoritosClientesPage) },
   ]
   },
   {
@@ -181,8 +189,10 @@ const routes: Routes = [
   },
   {
     path: 'recomendaciones',
-    loadChildren: () => import('./pages/recomendaciones/recomendaciones.module').then( m => m.RecomendacionesPageModule)
-  }
+    loadChildren: () => import('./pages/recomendaciones/recomendaciones.module').then(m => m.RecomendacionesPageModule)
+  },
+
+
 ];
 
 @NgModule({

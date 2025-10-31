@@ -1,0 +1,25 @@
+  <div class="clientes-selector">
+    <ion-item>
+      <ion-label>Cliente</ion-label>
+      <ion-select [(ngModel)]="clienteSeleccionado" (ionChange)="onSelectCliente()">
+        <ion-select-option *ngFor="let c of clientes" [value]="c.email">
+          {{ c.nombre }} ({{ c.email }})
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+
+  <div *ngIf="favoritos.length > 0; else noFavs">
+    <div class="grid">
+      <div class="card" *ngFor="let p of favoritos">
+        <img [src]="p.imagenPrincipal || 'assets/img/sin-imagen.jpg'"/>
+        <h3>{{ p.tipoPropiedad }} - {{ p.clave }}</h3>
+        <p>{{ p.precio | currency:'MXN' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noFavs>
+    <p class="no-result">Sin favoritos aún 📌</p>
+  </ng-template>
+

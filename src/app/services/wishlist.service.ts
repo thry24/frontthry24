@@ -38,4 +38,12 @@ export class WishlistService {
       headers: this.obtenerHeaders(),
     });
   }
+
+obtenerFavoritosCliente(clienteEmail: string): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/cliente/${clienteEmail}`, {
+    headers: this.obtenerHeaders()
+  });
+}
+
+
 }

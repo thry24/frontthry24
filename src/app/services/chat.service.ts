@@ -11,6 +11,7 @@ export interface ChatUser {
   email: string;
   role?: string;
   fotoPerfil?: string;
+  tipoCliente?: 'comprador' | 'arrendatario' | 'propietario' | null;
 }
 
 export interface ChatMessage {
@@ -75,6 +76,20 @@ export class ChatService {
     });
   }
 
+  getRelacion(clienteEmail: string) {
+    return this.http.get(`${this.api}/relaciones/${clienteEmail}`, {
+      headers: this.authHeaders(),
+    });
+  }
+
+  actualizarTipoCliente(clienteEmail: string, tipoCliente: string) {
+    return this.http.post(
+      `${this.api}/relaciones/actualizar`,
+      { clienteEmail, tipoCliente },
+      { headers: this.authHeaders() }
+    );
+  }
+
   getThreads(): Observable<ChatThreadItem[]> {
     return this.http.get<ChatThreadItem[]>(`${this.api}/chat/threads`, {
       headers: this.authHeaders(),
@@ -87,6 +102,17 @@ export class ChatService {
       { headers: this.authHeaders() }
     );
   }
+
+  onNuevoLead(): Observable<any> {
+    if (!this.socket) this.conectarSocket();
+    return new Observable<any>((observer) => {
+      const handler = (payload: any) =>
+        this.zone.run(() => observer.next(payload));
+      this.socket?.on("nuevoLead", handler);
+      return () => this.socket?.off("nuevoLead", handler);
+    });
+  }
+
 
   marcarLeido(mensajeId: string, leido = true): Observable<any> {
     return this.http.patch(
@@ -143,6 +169,7 @@ export class ChatService {
     return this.connected$.asObservable();
   }
 
+
   onNuevoMensaje(): Observable<ChatMessage> {
     if (!this.socket) this.conectarSocket();
     return new Observable<ChatMessage>((observer) => {
@@ -162,4 +189,10 @@ export class ChatService {
     this.socket = undefined;
     this.connected$.next(false);
   }
+
+getUsuarioActual() {
+  return this.http.get(`${this.api}/auth/me`, { headers: this.authHeaders() });
+}
+
+
 }

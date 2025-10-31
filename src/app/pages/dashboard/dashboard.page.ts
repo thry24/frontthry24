@@ -1,4 +1,3 @@
-// src/app/pages/dashboard/dashboard.page.ts
 import {
   Component,
   OnInit,
@@ -39,6 +38,10 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   private chCerradas?: any;
   private chTipos?: any;
   private chIngresadas?: any;
+  // 🔹 Nuevas métricas extra
+  conversionLeads = 0;
+  leadsPorPropiedad: any[] = [];
+  leadsPorOrigen: any[] = [];
 
   // estado
   loading = true;
@@ -101,57 +104,62 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /* ------------------------------ Data loading ----------------------------- */
-  private cargar() {
-    this.loading = true;
-    this.error = null;
+private cargar() {
+  this.loading = true;
+  this.error = null;
 
-    this.crm.getDashboard().subscribe({
-      next: (d: DashboardResponse) => {
-        // objetivos (server)
-        this.objetivoComisiones = d.objetivos.mes.comisiones ?? 0;
-        this.objetivoPropiedades = d.objetivos.mes.propiedades ?? 0;
-        this.objetivoLeads = d.objetivos.mes.leads ?? 0;
-        this.objetivoAnualComisiones = d.objetivos.anual.comisiones ?? 0;
+  this.crm.getDashboard().subscribe({
+    next: (d: DashboardResponse) => {
+      // objetivos (server)
+      this.objetivoComisiones = d.objetivos.mes.comisiones ?? 0;
+      this.objetivoPropiedades = d.objetivos.mes.propiedades ?? 0;
+      this.objetivoLeads = d.objetivos.mes.leads ?? 0;
+      this.objetivoAnualComisiones = d.objetivos.anual.comisiones ?? 0;
 
-        // setea inputs editables a lo del server
-        this.inputComisionesMes = this.objetivoComisiones;
-        this.inputPropsMes = this.objetivoPropiedades;
-        this.inputLeadsMes = this.objetivoLeads;
-        this.inputComisionesAnual = this.objetivoAnualComisiones;
+      // setea inputs editables a lo del server
+      this.inputComisionesMes = this.objetivoComisiones;
+      this.inputPropsMes = this.objetivoPropiedades;
+      this.inputLeadsMes = this.objetivoLeads;
+      this.inputComisionesAnual = this.objetivoAnualComisiones;
 
-        // métricas
-        this.objetivoMesActual = d.metricas.objetivoMesActual ?? 0;
-        this.targetMes = d.metricas.targetMes ?? 0;
-        this.mesAnterior = d.metricas.mesAnterior ?? 0;
-        this.propiedadesTotal = d.metricas.propiedadesTotal ?? 0;
-        this.comisionesYTD = d.metricas.comisionesYTD ?? 0;
+      // métricas
+      this.objetivoMesActual = d.metricas.objetivoMesActual ?? 0;
+      this.targetMes = d.metricas.targetMes ?? 0;
+      this.mesAnterior = d.metricas.mesAnterior ?? 0;
+      this.propiedadesTotal = d.metricas.propiedadesTotal ?? 0;
+      this.comisionesYTD = d.metricas.comisionesYTD ?? 0;
 
-        // leads
-        this.leadsMesTotales = d.metricas.leadsMes?.totales ?? 0;
-        this.leadsMesGanados = d.metricas.leadsMes?.ganados ?? 0;
-        this.leadsMesPerdidos = d.metricas.leadsMes?.perdidos ?? 0;
+      // leads
+      this.leadsMesTotales = d.metricas.leadsMes?.totales ?? 0;
+      this.leadsMesGanados = d.metricas.leadsMes?.ganados ?? 0;
+      this.leadsMesPerdidos = d.metricas.leadsMes?.perdidos ?? 0;
 
-        // gráficas
-        this.comisionesMensuales = d.graficas.comisionesMensuales ?? [];
-        this.cerradasMensuales = d.graficas.cerradasMensuales ?? [];
-        this.tipoPropiedad = d.graficas.tipoPropiedad ?? [];
-        this.ingresadas6mEtiquetas = d.graficas.ingresadas6m?.etiquetas ?? [];
-        this.ingresadas6mValores = d.graficas.ingresadas6m?.valores ?? [];
+      // gráficas
+      this.comisionesMensuales = d.graficas.comisionesMensuales ?? [];
+      this.cerradasMensuales = d.graficas.cerradasMensuales ?? [];
+      this.tipoPropiedad = d.graficas.tipoPropiedad ?? [];
+      this.ingresadas6mEtiquetas = d.graficas.ingresadas6m?.etiquetas ?? [];
+      this.ingresadas6mValores = d.graficas.ingresadas6m?.valores ?? [];
 
-        this.loading = false;
+      // ✅ nuevas métricas
+      this.conversionLeads = d.extra.conversionLeads ?? 0;
+      this.leadsPorOrigen = d.extra.leadsPorOrigen ?? [];
+      this.leadsPorPropiedad = d.extra.leadsPorPropiedad ?? [];
 
-        // esperar a que *ngIf pinte el DOM
-        setTimeout(() => {
-          if (this.viewReady) this.renderCharts();
-        }, 0);
-      },
-      error: (err) => {
-        console.error(err);
-        this.error = 'No se pudo cargar el dashboard';
-        this.loading = false;
-      },
-    });
-  }
+      this.loading = false;
+
+      setTimeout(() => {
+        if (this.viewReady) this.renderCharts();
+      }, 0);
+    },
+    error: (err) => {
+      console.error(err);
+      this.error = 'No se pudo cargar el dashboard';
+      this.loading = false;
+    },
+  });
+}
+
 
   /* ------------------------------ Guardar metas ---------------------------- */
   setTab(tab: 'mensual' | 'anual') {
@@ -161,25 +169,18 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   guardarMensual() {
     this.saving = true;
 
-    const payload: UpsertObjetivoPayload = {
-      scope: 'mensual',
+    const payload = {
       year: this.currentYear,
       month: this.currentMonth,
-      targets: {
-        comisiones: Number(this.inputComisionesMes) || 0,
-        propiedades: Number(this.inputPropsMes) || 0,
-        leads: Number(this.inputLeadsMes) || 0,
-      },
+      objetivoComisiones: Number(this.inputComisionesMes) || 0,
+      objetivoPropiedades: Number(this.inputPropsMes) || 0,
+      objetivoLeads: Number(this.inputLeadsMes) || 0
     };
 
     this.crm.upsertObjetivo(payload).subscribe({
       next: () => {
         this.saving = false;
-        // Actualizamos estado local sin recargar todo
-        this.objetivoComisiones = this.inputComisionesMes;
-        this.objetivoPropiedades = this.inputPropsMes;
-        this.objetivoLeads = this.inputLeadsMes;
-        this.targetMes = this.inputComisionesMes;
+        this.cargar(); 
       },
       error: (err) => {
         console.error(err);
@@ -189,20 +190,29 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  colorOrigen(origen: string): string {
+    switch (origen) {
+      case 'mensajes': return 'primary';
+      case 'whatsapp': return 'success';
+      case 'web': return 'secondary';
+      case 'colaboracion': return 'warning';
+      case 'manual': return 'medium';
+      default: return 'dark';
+    }
+  }
+
   guardarAnual() {
     this.saving = true;
 
-    const payload: UpsertObjetivoPayload = {
-      scope: 'anual',
+    const payload = {
       year: this.currentYear,
-      targets: { comisiones: Number(this.inputComisionesAnual) || 0 },
+      objetivoAnualComisiones: Number(this.inputComisionesAnual) || 0
     };
 
     this.crm.upsertObjetivo(payload).subscribe({
       next: () => {
         this.saving = false;
-        // Actualizamos estado local
-        this.objetivoAnualComisiones = this.inputComisionesAnual;
+        this.cargar();
       },
       error: (err) => {
         console.error(err);

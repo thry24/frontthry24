@@ -1,0 +1,33 @@
+<ion-content>
+  <div class="planes-wrapper">
+
+    <div class="bienvenida">
+      <h2>✨ Hola, {{ user?.nombre || 'usuario' }} 👋</h2>
+      <p><strong>Para acceder a esta sessión necesitas activar un plan</strong>.</p>
+      <p>Actualmente estás en el plan: <strong>{{ planActual | titlecase }}</strong>.</p>
+    </div>
+
+    <div class="planes-container">
+      <div
+        class="plan-card"
+        *ngFor="let plan of planes"
+        [ngClass]="{ 'actual': plan.tipo === planActual }"
+      >
+        <div class="plan-header">{{ plan.nombre }}</div>
+        <div class="plan-subtitle">{{ plan.duracion }}</div>
+        <div class="plan-price">{{ plan.precio }}</div>
+        <div class="plan-description">{{ plan.descripcion }}</div>
+
+        <ion-button
+          expand="block"
+          fill="solid"
+          color="primary"
+          (click)="activarPlan(plan.tipo)"
+          [disabled]="plan.tipo === planActual"
+        >
+          {{ plan.tipo === planActual ? 'Plan actual' : 'Activar plan' }}
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

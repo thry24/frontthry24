@@ -1,37 +1,51 @@
-<div class="tabla-colaboracion">
-  <table>
-    <thead>
-      <tr>
-        <th>Agente</th>
-        <th>Nombre</th>
-        <th>Tipo de Propiedad</th>
-        <th>ID Propiedad</th>
-        <th># leads generados</th>
-        <th>Leads Ganados</th>
-        <th>Leads Perdidos</th>
-        <th>Fecha de alta</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <img src="https://tse2.mm.bing.net/th/id/OIP.5jMdqULELnw60hAcErqvIAHaEY?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Foto Agente" class="perfil" />
-          <p>Alejandra Herrera</p>
-        </td>
-        <td>
-          <img src="https://www.emprenderalia.com/wp-content/uploads/agente-de-seguros-1.jpg" alt="Perfil" class="perfil-nombre" />
-          <p>José Díaz</p>
-        </td>
-        <td>Casa</td>
-        <td>
-          <img src="https://www.laguiainmobiliaria.com.mx/wp-content/uploads/2020/10/casas-en-queretaro.jpg" alt="Propiedad" class="imagen-propiedad" />
-          <div class="id">ID. AI-232003</div>
-        </td>
-        <td>12</td>
-        <td>3</td>
-        <td>3</td>
-        <td>12/07/2025</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<ion-content>
+  <div class="tabla-colaboracion">
+    <table>
+      <thead>
+        <tr>
+          <th>Agente</th>
+          <th>Nombre</th>
+          <th>Tipo de Propiedad</th>
+          <th>ID Propiedad</th>
+          <th># Leads Generados</th>
+          <th>Leads Ganados</th>
+          <th>Leads Perdidos</th>
+          <th>Fecha de Alta</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let c of colaboraciones">
+          <!-- ✅ Agente principal -->
+          <td>
+            <img [src]="c.agentePrincipalFoto" class="perfil" />
+            <p>{{ c.agentePrincipalNombre }}</p>
+          </td>
+
+          <!-- ✅ Colaborador -->
+          <td>
+            <img [src]="c.colaboradorFoto" class="perfil-nombre" />
+            <p>{{ c.nombreColaborador }}</p>
+          </td>
+
+          <!-- ✅ Tipo propiedad -->
+          <td>{{ c.tipoPropiedad }}</td>
+
+          <!-- ✅ Foto + Clave propiedad -->
+          <td>
+            <img [src]="c.imagenPropiedad" class="imagen-propiedad" alt="Propiedad" />
+            <div class="id">ID: {{ c.nombrePropiedad }}</div>
+          </td>
+
+          <!-- ✅ Leads -->
+          <td>{{ c.leadsGenerados }}</td>
+          <td>{{ c.leadsGanados }}</td>
+          <td>{{ c.leadsPerdidos }}</td>
+
+          <!-- ✅ Fecha -->
+          <td>{{ c.fechaAlta | date:'dd/MM/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>

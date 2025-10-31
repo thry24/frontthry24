@@ -68,19 +68,25 @@ export class HomePage implements OnInit {
     this.cargarFavoritos();
     this.cargarComparadas();
   }
-  cargarComparadas() {
-    this.loading.mostrar();
-    this.comparar.obtenerComparaciones().subscribe({
-      next: (res) => {
-        this.comparadas = res.map((p: any) => p._id);
-        this.loading.ocultar();
-      },
-      error: (err) => {
-        console.error('Error al obtener comparaciones:', err);
-        this.loading.ocultar();
-      },
-    });
-  }
+cargarComparadas() {
+  this.loading.mostrar();
+
+  this.comparar.obtenerComparaciones().subscribe({
+    next: (res: any) => {
+      // Si el backend devuelve { success, data: [...] }
+      const comparaciones = Array.isArray(res.data) ? res.data : res;
+
+      this.comparadas = comparaciones.map((p: any) => p._id);
+      this.loading.ocultar();
+    },
+    error: (err) => {
+      console.error('Error al obtener comparaciones:', err);
+      this.loading.ocultar();
+    },
+  });
+}
+
+
 
   toggleComparar(event: Event, propiedadId: string, tipoPropiedad: string) {
     event.stopPropagation();

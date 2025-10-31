@@ -214,6 +214,104 @@
     }
   }
 }
+/* ===== Recuadro de respuesta ===== */
+.recuadro-respuesta {
+  margin-top: 16px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 10px;
+
+  ion-textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 8px;
+    font-size: 0.95rem;
+  }
+
+  .acciones-respuesta {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+  }
+}
+
+/* ===== Modal de redacción centrada y responsiva ===== */
+.modal-redactar {
+  ion-content {
+    --background: rgba(0, 0, 0, 0.45); /* overlay semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .contenido-modal {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    padding: 24px 22px;
+    width: 90%;
+    max-width: 400px;
+    text-align: left;
+    margin: auto;
+    animation: modalPop 0.25s ease;
+  }
+
+  h2 {
+    text-align: center;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 16px;
+  }
+
+  ion-item {
+    --background: transparent;
+    margin-bottom: 12px;
+  }
+
+  ion-select,
+  ion-textarea {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .acciones-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+}
+
+/* Animación de entrada */
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===== Responsividad ===== */
+@media (max-width: 480px) {
+  .modal-redactar {
+    ion-content {
+      align-items: flex-end; /* más natural en móvil */
+    }
+
+    .contenido-modal {
+      width: 95%;
+      max-width: none;
+      border-radius: 16px 16px 0 0;
+      padding: 20px 18px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
 
 .detalle-mensaje {
   position: relative;

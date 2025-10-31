@@ -1,4 +1,4 @@
-<!-- ========= MENÚ LATERAL (solo móvil, overlay) ========= -->
+<!-- ========= MENÚ LATERAL (solo móvil) ========= -->
 <ion-menu
   side="start"
   type="overlay"
@@ -80,12 +80,6 @@
       </ion-menu-toggle>
 
       <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/clientes" routerLinkActive="active" class="menu-item">
-          <ion-icon name="person-circle-outline"></ion-icon> Clientes
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
         <a routerLink="/agente/directorio-clientes" routerLinkActive="active" class="menu-item">
           <ion-icon name="book-outline"></ion-icon> Directorio Clientes
         </a>
@@ -152,7 +146,7 @@
       <ion-menu-button class="menu-btn hide-desktop" autoHide="false" menu="crm-menu"></ion-menu-button>
 
       <img
-        src="https://res.cloudinary.com/dr5lzorfz/image/upload/v1747938649/propiedades/zlprrx1tkvkgcasxiyeq.png"
+        src="/assets/logo-thry24.jpeg"
         class="logo-img"
         alt="Ai24"
       />
@@ -192,9 +186,10 @@
       <a routerLink="/agente/dashboard" routerLinkActive="active" class="menu-item">
         <ion-icon name="grid-outline"></ion-icon> Dashboard
       </a>
-      <a routerLink="/agente/mensajes" routerLinkActive="active" class="menu-item">
-        <ion-icon name="chatbox-outline"></ion-icon> Mensajes
+      <a
+      routerLink="/agente/mensajes" routerLinkActive="active" class="menu-item" (click)="resetLeads()"><div class="icon-wrapper"><ion-icon name="chatbox-outline"></ion-icon><span class="badge" *ngIf="nuevosLeads > 0">{{ nuevosLeads }}</span></div> Mensajes
       </a>
+
       <a routerLink="/agente/mensajes-agentes" routerLinkActive="active" class="menu-item">
         <ion-icon name="people-outline"></ion-icon> Mensajes Agentes
       </a>
@@ -204,20 +199,17 @@
       <a routerLink="/agente/requerimientos" routerLinkActive="active" class="menu-item">
         <ion-icon name="list-outline"></ion-icon> Requerimientos
       </a>
-      <a routerLink="/agente/directorio-propietarios" routerLinkActive="active" class="menu-item">
-        <ion-icon name="home-outline"></ion-icon> Directorio Propietarios
-      </a>
       <a routerLink="/agente/colaboraciones" routerLinkActive="active" class="menu-item">
         <ion-icon name="hand-left-outline"></ion-icon> Colaboraciones
       </a>
       <a routerLink="/agente/editor-video" routerLinkActive="active" class="menu-item">
         <ion-icon name="film-outline"></ion-icon> Editor Video
       </a>
+            <a routerLink="/agente/citas-programadas" routerLinkActive="active" class="menu-item">
+        <ion-icon name="calendar-outline"></ion-icon> Citas Programadas
+      </a>
       <a routerLink="/agente/redes-sociales" routerLinkActive="active" class="menu-item">
         <ion-icon name="logo-instagram"></ion-icon> Redes Sociales
-      </a>
-      <a routerLink="/agente/clientes" routerLinkActive="active" class="menu-item">
-        <ion-icon name="person-circle-outline"></ion-icon> Clientes
       </a>
       <a routerLink="/agente/directorio-clientes" routerLinkActive="active" class="menu-item">
         <ion-icon name="book-outline"></ion-icon> Directorio Clientes
@@ -228,7 +220,7 @@
       <a routerLink="/agente/propiedades-colaboracion" routerLinkActive="active" class="menu-item">
         <ion-icon name="share-outline"></ion-icon> Propiedades Colaboración
       </a>
-      <a routerLink="/agente/favoritos" routerLinkActive="active" class="menu-item">
+      <a routerLink="/agente/favoritos-clientes" routerLinkActive="active" class="menu-item">
         <ion-icon name="heart-outline"></ion-icon> Favoritos
       </a>
     </aside>

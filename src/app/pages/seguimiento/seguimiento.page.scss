@@ -15,6 +15,21 @@
 
     .col { flex: 1; text-align: center; }
   }
+.btn-cita {
+  margin-left: 8px;
+  background: #0d2b52;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background .25s;
+}
+
+.btn-cita:hover {
+  background: #081d36;
+}
 
   .seguimiento-datos {
     display: flex;
@@ -263,3 +278,198 @@ ion-content, .seguimiento-container {
   .timeline-step .info p, .timeline-step .info label { font-size: 12.5px; }
   .timeline-step .info input[type="date"] { font-size: 12.5px; max-width: 170px; }
 }
+.sin-seguimientos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  color: #555;
+  font-weight: 600;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+/* ✅ hace scroll interno */
+ion-modal::part(content) {
+  overflow: hidden !important;
+}
+
+.modal-cita-content {
+  padding: 16px;
+  --background: #fff;
+
+  p {
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+
+  ion-list {
+    max-height: 260px; /* 🔥 hace el scroll */
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+}
+
+ion-modal {
+  --height: auto;
+  --max-height: 500px; /* ✅ ajustado al contenido */
+  --width: 92%;
+  --max-width: 420px;
+  --border-radius: 18px;
+  --box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+.seguimientos-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 1rem 1.5rem;
+  padding: 0.6rem 1rem;
+  background: #f8faff;
+  border: 1px solid #d5e0f2;
+  border-radius: 10px;
+  width: fit-content;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background: #f1f6ff;
+    border-color: #bcd2f5;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #0a347a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  select {
+    background: #fff;
+    border: 1.5px solid #0a347a;
+    color: #0a347a;
+    font-weight: 500;
+    padding: 0.35rem 1.8rem 0.35rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    min-width: 180px;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%230a347a' height='14' viewBox='0 0 24 24' width='14' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.6rem center;
+
+    &:hover {
+      border-color: #ff7b00;
+    }
+
+    &:focus {
+      border-color: #ff7b00;
+      box-shadow: 0 0 0 2px rgba(255, 123, 0, 0.25);
+    }
+  }
+}
+
+/* ====== MINI SELECTOR DE SEGUIMIENTOS (compacto, lateral) ====== */
+.seguimientos-lista {
+  position: absolute;
+  top: 90px; /* ajusta según tu header */
+  left: 20px;
+  width: 220px;
+  background: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  font-family: inherit;
+  z-index: 1000;
+
+  strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #063d7a;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    background: #f7f8fb;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown-toggle {
+    background: #fff;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 16px;
+      color: #063d7a;
+      transition: transform 0.25s ease;
+    }
+
+    &.open ion-icon {
+      transform: rotate(180deg);
+    }
+  }
+
+  .dropdown-content {
+    background: #fff;
+    border-top: 1px solid #eee;
+    border-radius: 0 0 10px 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+
+    &.show {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #f2f6fc;
+      }
+
+      input[type='checkbox'] {
+        margin-right: 8px;
+        accent-color: #063d7a;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+}
+
+/* Si tu contenido se superpone, deja un poco de margen */
+@media (max-width: 768px) {
+  .seguimientos-lista {
+    left: 10px;
+    top: 80px;
+    width: 180px;
+
+    strong { font-size: 12px; }
+    .dropdown-toggle { font-size: 12.5px; }
+    .dropdown-content label { font-size: 12px; }
+  }
+}
+

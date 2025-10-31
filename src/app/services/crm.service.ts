@@ -18,11 +18,14 @@ export interface TargetsAnual {
 }
 
 export interface UpsertObjetivoPayload {
-  scope: Scope;
   year: number;
-  month?: number;           // requerido si scope = 'mensual'
-  targets: TargetsMensual | TargetsAnual;
+  month?: number | null;
+  objetivoComisiones?: number;
+  objetivoPropiedades?: number;
+  objetivoLeads?: number;
+  objetivoAnualComisiones?: number;
 }
+
 
 export interface ObjetivosResponse {
   mensual: TargetsMensual;
@@ -48,9 +51,18 @@ export interface DashboardResponse {
     comisionesMensuales: number[];
     cerradasMensuales: number[];
     tipoPropiedad: { tipo: string; total: number }[];
-    ingresadas6m: { etiquetas: string[]; valores: number[] };
+    ingresadas6m: {
+      etiquetas: string[];
+      valores: number[];
+    };
+  };
+  extra: {
+    conversionLeads: number;
+    leadsPorPropiedad: { propiedad: string; total: number }[];
+    leadsPorOrigen: { origen: string; total: number }[];
   };
 }
+
 
 @Injectable({ providedIn: 'root' })
 export class CrmService {
@@ -79,10 +91,10 @@ export class CrmService {
     });
   }
 
-  // PUT /api/crm/objetivos
   upsertObjetivo(payload: UpsertObjetivoPayload): Observable<any> {
     return this.http.put<any>(`${this.api}/crm/objetivos`, payload, {
       headers: this.headers(),
     });
   }
+
 }

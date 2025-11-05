@@ -1,11 +1,26 @@
 /* ====== BASE (sin cambiar tu diseño) ====== */
+/* ====== Ocultar barras de scroll pero mantener el desplazamiento ====== */
+::-webkit-scrollbar {
+  width: 0px;            /* Chrome, Safari, Edge */
+  height: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+* {
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge antiguo */
+}
+
 .seguimiento-container {
   width: 100%;
   padding: 20px;
 
   .seguimiento-header-azul {
     display: flex;
-    background-color: #063d7a;
+    background-color: #5cb3cd;
     color: white;
     border-radius: 10px 10px 0 0;
     padding: 12px 16px;
@@ -15,17 +30,95 @@
 
     .col { flex: 1; text-align: center; }
   }
-.btn-cita {
-  margin-left: 8px;
-  background: #0d2b52;
-  border: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  transition: background .25s;
+.fecha-linea {
+  display: flex;
+  flex-direction: column; /* 📌 los elementos van uno debajo del otro */
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  gap: 0.4rem;
+
+  label {
+    font-weight: 500;
+    color: #2f3e73;
+    font-size: 0.9rem;
+  }
+
+  input[type='date'] {
+    width: 150px; /* tamaño compacto */
+    padding: 0.35rem 0.5rem;
+    border: 1px solid #d5dcef;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  input[type='date']:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.15);
+    outline: none;
+  }
+
+  .btn-cita,
+  .btn-carta,
+  .btn-borrador {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    padding: 0.35rem 0.7rem;
+    cursor: pointer;
+    transition: 0.25s ease;
+  }
+
+  .btn-cita {
+    background: #198754;
+  }
+
+  .btn-carta {
+    background: #e67e22;
+  }
+
+  .btn-borrador {
+    background: #1ABC9C; // naranja para contrato
+  }
+
+  .btn-cita:hover,
+  .btn-carta:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  /* Agrupación botones centrados */
+  .botones-accion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 4px;
+  }
 }
+
+
+.btn-guardar {
+  --background: #93d444;
+  --background-hover: #93d444;
+  --color: #fff;
+  --border-radius: 20px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  font-weight: 400;
+}
+
 
 .btn-cita:hover {
   background: #081d36;

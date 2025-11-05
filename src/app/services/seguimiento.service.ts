@@ -56,6 +56,17 @@ export class SeguimientoService {
     return this.http.post<Seguimiento>(this.apiUrl, data);
   }
 
+obtenerTodos() {
+  return this.http.get<Seguimiento[]>(this.apiUrl);
+}
+buscarPorClienteYPropiedad(email: string, propiedadId: string) {
+  const params = `?clienteEmail=${email}&propiedadId=${propiedadId}`;
+  return this.http.get(`${environment.apiUrl}/seguimientos${params}`);
+}
+
+crearSeguimiento(data: any) {
+  return this.http.post(`${environment.apiUrl}/seguimientos`, data);
+}
 
   /**
    * Obtener seguimiento por cliente y agente

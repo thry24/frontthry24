@@ -134,7 +134,7 @@
         </ion-row>
 
         <ion-row *ngFor="let c of colaboraciones" class="contenido">
-          <ion-col>{{ c.createdAt | date:'dd/MM/yyyy' }}</ion-col>
+          <ion-col>{{ c.fechaAlta | date:'dd/MM/yyyy' }}</ion-col>
           <ion-col>{{ c.nombreColaborador || c.colaborador?.nombre }}</ion-col>
           <ion-col>{{ c.tipoColaboracion | titlecase }}</ion-col>
           <ion-col>{{ c.tipoOperacion }}</ion-col>

@@ -15,55 +15,63 @@
         </select>
       </div>
 
-      <!-- Encabezado -->
-      <div class="seguimiento-header-azul">
-        <div class="col">Nombre Cliente</div>
-        <div class="col">Tipo de Cliente</div>
-        <div class="col">Tipo de Operación</div>
-        <div class="col">Estatus de operación</div>
-        <div class="col">Detalles del proceso</div>
-        <div class="col">Fecha de Finalización</div>
+    <!-- Encabezado -->
+    <div class="seguimiento-header-azul">
+      <div class="col">Nombre Cliente</div>
+      <div class="col">Tipo de Cliente</div>
+      <div class="col">Tipo de Operación</div>
+      <div class="col">Estatus de operación</div>
+      <div class="col">Detalles del proceso</div>
+      <div class="col">Fecha de Finalización</div>
+      <div class="col">Acción</div>
+    </div>
+
+    <!-- Datos -->
+    <div class="seguimiento-datos">
+      <div class="col">{{ seguimientoCliente.clienteNombre }}</div>
+      <div class="col">{{ seguimientoCliente.tipoCliente }}</div>
+
+      <div class="col">
+        <select [(ngModel)]="tipoOperacionCliente" (change)="onCambiarTipoOperacion(tipoOperacionCliente)">
+          <option value="">Seleccionar</option>
+          <option value="VENTA">VENTA</option>
+          <option value="RENTA">RENTA</option>
+        </select>
       </div>
 
-      <!-- Datos -->
-      <div class="seguimiento-datos">
-        <div class="col">{{ seguimientoCliente.clienteNombre }}</div>
-        <div class="col">{{ seguimientoCliente.tipoCliente }}</div>
-
-        <div class="col">
-          <select [(ngModel)]="tipoOperacionCliente" (change)="onCambiarTipoOperacion(tipoOperacionCliente)">
-            <option value="">Seleccionar</option>
-            <option value="VENTA">VENTA</option>
-            <option value="RENTA">RENTA</option>
-          </select>
-        </div>
-
-        <div class="col">
-          <select [(ngModel)]="estatusSeleccionado">
-            <option value="">Seleccionar opción</option>
-            <option *ngFor="let opcion of estatusOperacionOpciones" [value]="opcion">
-              {{ opcion }}
-            </option>
-          </select>
-          <div *ngIf="mostrarCampoOtra()">
-            <input type="text" [(ngModel)]="estatusOtraMotivo" placeholder="Especifica el motivo" />
-          </div>
-        </div>
-
-        <div class="col">
-          <a class="clickable" (click)="mostrarLineaTiempo = !mostrarLineaTiempo">Ver línea</a>
-        </div>
-
-        <div class="col">
-          <input type="date" [(ngModel)]="seguimientoCliente.fechaFinalizacion" />
+      <div class="col">
+        <select [(ngModel)]="estatusSeleccionado">
+          <option value="">Seleccionar opción</option>
+          <option *ngFor="let opcion of estatusOperacionOpciones" [value]="opcion">
+            {{ opcion }}
+          </option>
+        </select>
+        <div *ngIf="mostrarCampoOtra()">
+          <input type="text" [(ngModel)]="estatusOtraMotivo" placeholder="Especifica el motivo" />
         </div>
       </div>
 
-      <div style="margin: 12px;">
-        <ion-button expand="block" color="success" (click)="guardarCambios()">
-          Guardar cambios
+      <div class="col">
+        <a class="clickable" (click)="mostrarLineaTiempo = !mostrarLineaTiempo">Ver línea</a>
+      </div>
+
+      <div class="col">
+        <input type="date" [(ngModel)]="seguimientoCliente.fechaFinalizacion" />
+      </div>
+
+      <!-- Botón Guardar -->
+      <div class="col">
+        <ion-button
+          class="btn-guardar"
+          size="small"
+          (click)="guardarCambios()"
+        >
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          Guardar
         </ion-button>
       </div>
+    </div>
+
 
       <div class="timeline-wrapper" *ngIf="mostrarLineaTiempo">
         <div class="timeline-inner">
@@ -76,25 +84,47 @@
               <h4>{{ paso.paso }}</h4>
               <ng-container [ngSwitch]="paso.tipo">
                 <!-- Si es un paso con fecha -->
-                <p *ngSwitchCase="'fecha'">
-                  Fecha:
+                <p *ngSwitchCase="'fecha'" class="fecha-linea">
+                  <label>Fecha:</label>
                   <input 
                     type="date"
                     [(ngModel)]="seguimientoCliente[paso.campo!]"
                     (change)="paso.campo === 'fechaCita' && onFechaCitaChange()"
                   />
 
+                  <!-- 📅 Botón de agendar (solo en cita concertada) -->
                   <button
-                    *ngIf="paso.campo === 'fechaCita'"
+                    *ngIf="tipoOperacionCliente === 'RENTA' && paso.campo === 'fechaCita'"
                     class="btn-cita"
                     (click)="programarCita()"
                   >
                     📅 Agendar
                   </button>
+
+                  <!-- 📝 Botón de carta oferta (solo en carta oferta y solo si tipo = RENTA) -->
+                  <button
+                    *ngIf="tipoOperacionCliente === 'RENTA' && paso.campo === 'fechaCartaOferta'"
+                    class="btn-carta"
+                    (click)="abrirCartaOfertaDesdeLineaTiempo()"
+                  >
+                    📝 Carta Oferta
+                  </button>
+                  <!-- Botón para abrir el modal del borrador -->
+                  <button
+                    *ngIf="tipoOperacionCliente === 'RENTA' && paso.paso === 'BORRADOR CONTRATO'"
+                    class="btn-borrador"
+                    (click)="abrirModalBorradorContrato()"
+                  >
+                    📄 Borrador Contrato
+                  </button>
                 </p>
                 <!-- Si es checkbox -->
                 <label *ngSwitchCase="'check'">
-                  <input type="checkbox" [(ngModel)]="seguimientoCliente[paso.campo!]" />
+                  <input 
+                    type="checkbox" 
+                    [(ngModel)]="seguimientoCliente[paso.campo!]" 
+                    (change)="onToggleDocumentosCompletos(paso.campo!)"
+                  />
                   Documentos completos
                 </label>
               </ng-container>
@@ -135,5 +165,219 @@
   </ng-template>
 </ion-modal>
 
+<!-- ============================= -->
+<!-- 🟦 MODAL: CARTA OFERTA DE RENTA -->
+<!-- ============================= -->
+<ion-modal [isOpen]="mostrarModalCarta" (didDismiss)="cerrarCartaOferta()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Carta Oferta de Renta</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarCartaOferta()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
 
+    <ion-content class="ion-padding">
+      <ion-list lines="full">
+      <div class="ion-text-center">
+        <ion-label>Logo de tu inmobiliaria (marca de agua)</ion-label>
+        <input type="file" accept="image/*" (change)="onLogoSeleccionado($event)" />
+      </div>
+        <ion-item-divider color="light">1. Datos del Arrendatario</ion-item-divider>
+        <ion-item>
+          <ion-label position="stacked">Nombre completo</ion-label>
+          <ion-input [(ngModel)]="cartaOferta.arrendatario"></ion-input>
+        </ion-item>
+
+        <ion-item-divider color="light">2. Datos del Inmueble</ion-item-divider>
+        <ion-item>
+          <ion-label position="stacked">Dirección</ion-label>
+          <ion-input [(ngModel)]="cartaOferta.direccion"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Tipo de propiedad</ion-label>
+          <ion-select [(ngModel)]="cartaOferta.tipoPropiedad">
+            <ion-select-option value="Casa">Casa</ion-select-option>
+            <ion-select-option value="Departamento">Departamento</ion-select-option>
+            <ion-select-option value="Oficina">Oficina</ion-select-option>
+            <ion-select-option value="Otro">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Clave / ID de propiedad</ion-label>
+          <ion-input [(ngModel)]="cartaOferta.clave"></ion-input>
+        </ion-item>
+
+        <ion-item-divider color="light">3. Condiciones de la Oferta</ion-item-divider>
+        <ion-item>
+          <ion-label position="stacked">Monto mensual ofrecido (MXN)</ion-label>
+          <ion-input type="number" [(ngModel)]="cartaOferta.montoMensual"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Duración del contrato</ion-label>
+          <ion-select [(ngModel)]="cartaOferta.duracion">
+            <ion-select-option value="6 meses">6 meses</ion-select-option>
+            <ion-select-option value="12 meses">12 meses</ion-select-option>
+            <ion-select-option value="Otro">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Fecha de inicio</ion-label>
+          <ion-datetime presentation="date" [(ngModel)]="cartaOferta.fechaInicio"></ion-datetime>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Depósito ofrecido (MXN)</ion-label>
+          <ion-input type="number" [(ngModel)]="cartaOferta.deposito"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Tipo de garantía</ion-label>
+          <ion-select [(ngModel)]="cartaOferta.garantia">
+            <ion-select-option value="Fiador">Fiador</ion-select-option>
+            <ion-select-option value="Póliza jurídica">Póliza jurídica</ion-select-option>
+            <ion-select-option value="Depósito adicional">Depósito adicional</ion-select-option>
+            <ion-select-option value="Otro">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Forma de pago</ion-label>
+          <ion-select [(ngModel)]="cartaOferta.formaPago">
+            <ion-select-option value="Transferencia">Transferencia</ion-select-option>
+            <ion-select-option value="Depósito">Depósito</ion-select-option>
+            <ion-select-option value="Otro">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item-divider color="light">4. Observaciones Adicionales</ion-item-divider>
+        <ion-textarea
+          placeholder="Ej. mascota, adecuaciones, salida anticipada..."
+          autoGrow="true"
+          [(ngModel)]="cartaOferta.observaciones">
+        </ion-textarea>
+
+        <ion-item-divider color="light">6. Datos del Asesor Inmobiliario</ion-item-divider>
+        <ion-item>
+          <ion-label position="stacked">Nombre del asesor</ion-label>
+          <ion-input [(ngModel)]="cartaOferta.asesor"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Agencia</ion-label>
+          <ion-input [(ngModel)]="cartaOferta.agencia"></ion-input>
+        </ion-item>
+
+      </ion-list>
+
+      <div class="ion-text-center ion-margin-top">
+        <ion-button color="success" (click)="generarCartaPDF()">
+          <ion-icon slot="start" name="document-outline"></ion-icon>
+          Generar PDF
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+<!-- ============================= -->
+<!-- 🟠 MODAL: BORRADOR DE CONTRATO -->
+<!-- ============================= -->
+<ion-modal [isOpen]="mostrarModalBorrador" (didDismiss)="cerrarModalBorradorContrato()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="warning">
+        <ion-title>Borrador de Contrato de Arrendamiento</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarModalBorradorContrato()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-list lines="full">
+        
+        <div class="ion-text-center">
+          <ion-label>Logo de tu inmobiliaria (marca de agua)</ion-label>
+          <input type="file" accept="image/*" (change)="onLogoSeleccionado($event)" />
+        </div>
+
+        <ion-item-divider color="light">1. Datos de las Partes</ion-item-divider>
+        <ion-item>
+          <ion-label position="stacked">Nombre del Arrendador</ion-label>
+          <ion-input [(ngModel)]="borradorContrato.arrendador"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Nombre del Arrendatario</ion-label>
+          <ion-input [(ngModel)]="borradorContrato.arrendatario"></ion-input>
+        </ion-item>
+
+        <ion-item-divider color="light">2. Datos del Inmueble</ion-item-divider>
+        <ion-item>
+          <ion-label position="stacked">Dirección del inmueble</ion-label>
+          <ion-input [(ngModel)]="borradorContrato.direccion"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Tipo de propiedad</ion-label>
+          <ion-input [(ngModel)]="borradorContrato.tipoPropiedad"></ion-input>
+        </ion-item>
+
+        <ion-item-divider color="light">3. Condiciones del Contrato</ion-item-divider>
+        <ion-item>
+          <ion-label position="stacked">Duración</ion-label>
+          <ion-select [(ngModel)]="borradorContrato.duracion">
+            <ion-select-option value="6 meses">6 meses</ion-select-option>
+            <ion-select-option value="12 meses">12 meses</ion-select-option>
+            <ion-select-option value="Otro">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Monto mensual (MXN)</ion-label>
+          <ion-input type="number" [(ngModel)]="borradorContrato.montoMensual"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Depósito (MXN)</ion-label>
+          <ion-input type="number" [(ngModel)]="borradorContrato.deposito"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Fecha de inicio</ion-label>
+          <ion-datetime presentation="date" [(ngModel)]="borradorContrato.fechaInicio"></ion-datetime>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Tipo de garantía</ion-label>
+          <ion-select [(ngModel)]="borradorContrato.garantia">
+            <ion-select-option value="Fiador">Fiador</ion-select-option>
+            <ion-select-option value="Póliza jurídica">Póliza jurídica</ion-select-option>
+            <ion-select-option value="Depósito adicional">Depósito adicional</ion-select-option>
+            <ion-select-option value="Otro">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item-divider color="light">4. Observaciones o condiciones adicionales</ion-item-divider>
+        <ion-textarea autoGrow="true" [(ngModel)]="borradorContrato.observaciones" placeholder="Ej. mantenimiento, mascotas, penalización, etc."></ion-textarea>
+
+        <ion-item-divider color="light">5. Datos del Asesor</ion-item-divider>
+        <ion-item>
+          <ion-label position="stacked">Asesor Inmobiliario</ion-label>
+          <ion-input [(ngModel)]="borradorContrato.asesor"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Agencia</ion-label>
+          <ion-input [(ngModel)]="borradorContrato.agencia"></ion-input>
+        </ion-item>
+
+      </ion-list>
+
+      <div class="ion-text-center ion-margin-top">
+        <ion-button color="warning" (click)="generarBorradorContratoPDF()">
+          <ion-icon slot="start" name="document-text-outline"></ion-icon>
+          Generar Borrador
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
 </ion-content>

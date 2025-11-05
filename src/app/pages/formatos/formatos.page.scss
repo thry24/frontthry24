@@ -1,0 +1,125 @@
+/* ===== Encabezado ===== */
+.barra-azul{
+  display: grid;
+  grid-template-columns: 260px 1fr 160px 220px; /* <-- MISMA REJILLA QUE LAS FILAS */
+  align-items: center;
+  gap: 16px;
+  background: #5cb3cd;
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+
+  .titulo{
+    font-weight: 800;
+    letter-spacing: .5px;
+    &.center{ text-align: center; }
+  }
+}
+
+/* ===== Contenedor lista ===== */
+.layout{
+  margin-top: 10px;
+}
+
+.lista-formatos{
+  background: #f6f8fc;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.lista-formatos ul{ list-style: none; margin: 0; padding: 0; }
+
+/* ===== Fila ===== */
+.fila{
+  display: grid;
+  grid-template-columns: 260px 1fr 160px 220px; /* <-- IGUAL AL ENCABEZADO */
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 22px rgba(10,61,145,0.06);
+  margin-bottom: 14px;
+  border: 1px solid #eef2f7;
+}
+
+/* Columna 1: Tipo de cliente */
+.tipo{
+  display: flex; align-items: center; justify-content: flex-start;
+}
+.chip{
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+  color: #0a3d91;
+  background: #e9f1ff;
+  border: 1px solid #cfe1ff;
+  text-transform: capitalize;
+}
+.chip[data-tipo="Comprador"]{ color:#0a3d91; background:#e9f1ff; border-color:#cfe1ff; }
+.chip[data-tipo="Propietario"]{ color:#0d7a52; background:#e6faef; border-color:#c4eed9; }
+.chip[data-tipo="Arrendador"]{ color:#c77400; background:#fff3e1; border-color:#ffe0b2; }
+.chip[data-tipo="Colaboración"]{ color:#7a0d6e; background:#fae6f7; border-color:#efc4e7; }
+
+/* Columna 2: Nombre del formato */
+.formato{
+  display: flex; align-items: flex-start; gap: 10px;
+  color: #0a2540;
+}
+.formato ion-icon{ font-size: 18px; color:#6e84a3; margin-top: 3px; }
+.formato .texto{
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing:.2px;
+}
+
+/* Columna 3: Generar */
+.acciones{ display:flex; justify-content:center; }
+.btn{
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid #e2e8f0; background:#fff;
+  color:#0a3d91; border-radius: 12px;
+  padding: 10px 16px; font-weight: 700;
+  transition: .2s ease; cursor:pointer;
+}
+.btn:hover{ transform: translateY(-1px); box-shadow:0 8px 22px rgba(10,61,145,.08); }
+.btn.pdf{
+  background:#ed7538 ; color:#fff; border-color:#ed7538 ;
+}
+.btn.pdf ion-icon{ color:#fff; }
+
+/* Columna 4: Otras acciones */
+.otras{ display:flex; justify-content:center; gap:12px; }
+.btn.icono{
+  background:#fff; color:#0a3d91; border-color:#e2e8f0;
+  min-width: 92px; justify-content:center; padding:10px 12px;
+}
+.btn.icono ion-icon{ font-size:18px; }
+.btn.icono small{ font-weight:700; }
+
+/* Pie de ayuda */
+.ayuda{
+  margin-top: 18px;
+  font-size: 13px;
+  color:#4a5b75;
+}
+.ayuda .resalte{ color:#0a3d91; font-weight:800; }
+
+/* ===== Responsive ===== */
+@media (max-width: 1100px){
+  .barra-azul, .fila{
+    grid-template-columns: 200px 1fr 150px 200px;
+  }
+}
+@media (max-width: 860px){
+  .barra-azul{ display:none; }
+  .fila{
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .tipo, .acciones, .otras{ justify-content:flex-start; }
+}

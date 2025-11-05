@@ -1,168 +1,25 @@
-<!-- ========= MENÚ LATERAL (solo móvil) ========= -->
-<ion-menu
-  side="start"
-  type="overlay"
-  contentId="main-content"
-  menuId="crm-menu"
-  class="mobile-menu"
-  swipeGesture="true"
->
-  <ion-header>
-    <ion-toolbar color="light">
-      <ion-title>Menú</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content>
-    <div class="menu-user">
-      <ion-avatar class="menu-avatar">
-        <img [src]="fotoPerfil" />
-      </ion-avatar>
-      <div class="menu-user-info">
-        <div class="name">{{ nombreUsuario }}</div>
-        <div class="role">{{ rolUsuario }}</div>
-      </div>
-    </div>
-
-    <ion-list lines="none" class="menu-list">
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/dashboard" routerLinkActive="active" class="menu-item">
-          <ion-icon name="grid-outline"></ion-icon> Dashboard
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/mensajes" routerLinkActive="active" class="menu-item">
-          <ion-icon name="chatbox-outline"></ion-icon> Mensajes
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/mensajes-agentes" routerLinkActive="active" class="menu-item">
-          <ion-icon name="people-outline"></ion-icon> Mensajes Agentes
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/seguimiento" routerLinkActive="active" class="menu-item">
-          <ion-icon name="trending-up-outline"></ion-icon> Seguimiento
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/requerimientos" routerLinkActive="active" class="menu-item">
-          <ion-icon name="list-outline"></ion-icon> Requerimientos
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/directorio-propietarios" routerLinkActive="active" class="menu-item">
-          <ion-icon name="home-outline"></ion-icon> Directorio Propietarios
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/colaboraciones" routerLinkActive="active" class="menu-item">
-          <ion-icon name="hand-left-outline"></ion-icon> Colaboraciones
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/editor-video" routerLinkActive="active" class="menu-item">
-          <ion-icon name="film-outline"></ion-icon> Editor Video
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/redes-sociales" routerLinkActive="active" class="menu-item">
-          <ion-icon name="logo-instagram"></ion-icon> Redes Sociales
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/directorio-clientes" routerLinkActive="active" class="menu-item">
-          <ion-icon name="book-outline"></ion-icon> Directorio Clientes
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/recorridos" routerLinkActive="active" class="menu-item">
-          <ion-icon name="walk-outline"></ion-icon> Recorridos
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/propiedades-colaboracion" routerLinkActive="active" class="menu-item">
-          <ion-icon name="share-outline"></ion-icon> Propiedades Colaboración
-        </a>
-      </ion-menu-toggle>
-
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/agente/favoritos" routerLinkActive="active" class="menu-item">
-          <ion-icon name="heart-outline"></ion-icon> Favoritos
-        </a>
-      </ion-menu-toggle>
-
-      <div class="menu-section">Secciones rápidas</div>
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/dashboard" class="menu-item">
-          <ion-icon name="ellipse-outline"></ion-icon> DASHBOARD
-        </a>
-      </ion-menu-toggle>
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/mensajes" class="menu-item">
-          <ion-icon name="ellipse-outline"></ion-icon> MENSAJES
-        </a>
-      </ion-menu-toggle>
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/seguimiento" class="menu-item">
-          <ion-icon name="ellipse-outline"></ion-icon> SEGUIMIENTO
-        </a>
-      </ion-menu-toggle>
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/clientes" class="menu-item">
-          <ion-icon name="ellipse-outline"></ion-icon> CLIENTES
-        </a>
-      </ion-menu-toggle>
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/propiedades-colaboracion" class="menu-item">
-          <ion-icon name="ellipse-outline"></ion-icon> COLABORACIÓN
-        </a>
-      </ion-menu-toggle>
-      <ion-menu-toggle auto-hide="true">
-        <a routerLink="/favoritos" class="menu-item">
-          <ion-icon name="ellipse-outline"></ion-icon> FAVORITOS
-        </a>
-      </ion-menu-toggle>
-    </ion-list>
-  </ion-content>
-</ion-menu>
-
-<!-- ========= HEADER ========= -->
 <ion-header class="custom-header">
   <ion-toolbar class="toolbar">
     <ion-buttons slot="start">
-      <!-- Hamburguesa que abre el menú por ID (solo móvil) -->
-      <ion-menu-button class="menu-btn hide-desktop" autoHide="false" menu="crm-menu"></ion-menu-button>
+      <!-- Botón hamburguesa solo en móvil -->
+      <ion-button fill="clear" class="menu-toggle" (click)="toggleSidebar()">
+        <ion-icon name="menu-outline"></ion-icon>
+      </ion-button>
 
-      <img
-        src="/assets/logo-thry24.jpeg"
-        class="logo-img"
-        alt="Ai24"
-      />
+      <img src="/assets/logo-thry24.jpeg" class="logo-img" alt="Ai24" />
     </ion-buttons>
 
-    <!-- Burbujas navegación (solo desktop) -->
-    <div class="nav-wrapper">
-      <nav class="nav-links-scroll">
-        <a [routerLink]="'/dashboard'" routerLinkActive="active" class="nav-bubble">DASHBOARD</a>
-        <a [routerLink]="'/mensajes'" routerLinkActive="active" class="nav-bubble">MENSAJES</a>
-        <a [routerLink]="'/seguimiento'" routerLinkActive="active" class="nav-bubble">SEGUIMIENTO</a>
-        <a [routerLink]="'/clientes'" routerLinkActive="active" class="nav-bubble">CLIENTES</a>
-        <a [routerLink]="'/propiedades-colaboracion'" routerLinkActive="active" class="nav-bubble">COLABORACIÓN</a>
-        <a [routerLink]="'/favoritos'" routerLinkActive="active" class="nav-bubble">FAVORITOS</a>
-      </nav>
-    </div>
+<div class="nav-wrapper desktop-nav">
+  <nav class="nav-links-scroll">
+    <a [routerLink]="'/dashboard'" routerLinkActive="active" class="nav-bubble">DASHBOARD</a>
+    <a [routerLink]="'/mensajes'" routerLinkActive="active" class="nav-bubble">MENSAJES</a>
+    <a [routerLink]="'/seguimiento'" routerLinkActive="active" class="nav-bubble">SEGUIMIENTO</a>
+    <a [routerLink]="'/clientes'" routerLinkActive="active" class="nav-bubble">CLIENTES</a>
+    <a [routerLink]="'/propiedades-colaboracion'" routerLinkActive="active" class="nav-bubble">COLABORACIÓN</a>
+    <a [routerLink]="'/favoritos'" routerLinkActive="active" class="nav-bubble">FAVORITOS</a>
+  </nav>
+</div>
+
 
     <ion-buttons slot="end">
       <ion-icon name="search-outline" class="header-icon"></ion-icon>
@@ -177,54 +34,73 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
-<!-- ========= CONTENIDO ========= -->
-<ion-content class="crm-bg" id="main-content">
-  <div class="crm-wrapper">
-    <!-- Sidebar fijo (solo desktop) -->
-    <aside class="sidebar-menu">
+   <aside class="sidebar-menu" [class.open]="sidebarOpen">
       <a routerLink="/agente/dashboard" routerLinkActive="active" class="menu-item">
         <ion-icon name="grid-outline"></ion-icon> Dashboard
       </a>
+
       <a
-      routerLink="/agente/mensajes" routerLinkActive="active" class="menu-item" (click)="resetLeads()"><div class="icon-wrapper"><ion-icon name="chatbox-outline"></ion-icon><span class="badge" *ngIf="nuevosLeads > 0">{{ nuevosLeads }}</span></div> Mensajes
+        routerLink="/agente/mensajes"
+        routerLinkActive="active"
+        class="menu-item"
+        (click)="resetLeads()"
+      >
+        <div class="icon-wrapper">
+          <ion-icon name="chatbox-outline"></ion-icon>
+          <span class="badge" *ngIf="nuevosLeads > 0">{{ nuevosLeads }}</span>
+        </div>
+        Mensajes
       </a>
 
       <a routerLink="/agente/mensajes-agentes" routerLinkActive="active" class="menu-item">
         <ion-icon name="people-outline"></ion-icon> Mensajes Agentes
       </a>
+
       <a routerLink="/agente/seguimiento" routerLinkActive="active" class="menu-item">
         <ion-icon name="trending-up-outline"></ion-icon> Seguimiento
       </a>
+
       <a routerLink="/agente/requerimientos" routerLinkActive="active" class="menu-item">
         <ion-icon name="list-outline"></ion-icon> Requerimientos
       </a>
+
       <a routerLink="/agente/colaboraciones" routerLinkActive="active" class="menu-item">
         <ion-icon name="hand-left-outline"></ion-icon> Colaboraciones
       </a>
+
       <a routerLink="/agente/editor-video" routerLinkActive="active" class="menu-item">
         <ion-icon name="film-outline"></ion-icon> Editor Video
       </a>
-            <a routerLink="/agente/citas-programadas" routerLinkActive="active" class="menu-item">
-        <ion-icon name="calendar-outline"></ion-icon> Citas Programadas
+
+      <a routerLink="/agente/formatos" routerLinkActive="active" class="menu-item">
+        <ion-icon name="folder-outline"></ion-icon> Formatos
       </a>
+
       <a routerLink="/agente/redes-sociales" routerLinkActive="active" class="menu-item">
         <ion-icon name="logo-instagram"></ion-icon> Redes Sociales
       </a>
+
       <a routerLink="/agente/directorio-clientes" routerLinkActive="active" class="menu-item">
         <ion-icon name="book-outline"></ion-icon> Directorio Clientes
       </a>
+
       <a routerLink="/agente/recorridos" routerLinkActive="active" class="menu-item">
         <ion-icon name="walk-outline"></ion-icon> Recorridos
       </a>
+
       <a routerLink="/agente/propiedades-colaboracion" routerLinkActive="active" class="menu-item">
         <ion-icon name="share-outline"></ion-icon> Propiedades Colaboración
       </a>
+
       <a routerLink="/agente/favoritos-clientes" routerLinkActive="active" class="menu-item">
         <ion-icon name="heart-outline"></ion-icon> Favoritos
       </a>
     </aside>
 
+<ion-content class="crm-bg">
+  <div class="crm-wrapper">
+    <!-- Sidebar -->
+ 
     <div class="contenido-principal">
       <router-outlet></router-outlet>
     </div>

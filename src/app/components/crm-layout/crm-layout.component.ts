@@ -49,6 +49,11 @@ export class CrmLayoutComponent implements OnInit {
     this.rolUsuario = null;
     this.fotoPerfil = null;
   }
+  sidebarOpen = false;
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
 
   // ✅ Escuchar evento desde socket.io
   private listenForLeads() {

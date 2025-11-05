@@ -27,10 +27,24 @@
 </ion-item>
 
 
-      <ion-item>
-        <ion-label position="stacked">Nombre del Cliente</ion-label>
-        <ion-input [(ngModel)]="nuevoRecorrido.nombreCliente"></ion-input>
-      </ion-item>
+<ion-item>
+  <ion-label position="stacked">Cliente</ion-label>
+  <ion-select [(ngModel)]="clienteSeleccionado" (ionChange)="onClienteChange()">
+    <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">
+      {{ cliente.clienteNombre || cliente.nombre }}
+    </ion-select-option>
+  </ion-select>
+</ion-item>
+
+<ion-item>
+  <ion-label position="stacked">Propiedad</ion-label>
+  <ion-select [(ngModel)]="propiedadSeleccionada">
+    <ion-select-option *ngFor="let propiedad of propiedades" [value]="propiedad">
+      {{ propiedad.nombre || propiedad.clave }}
+    </ion-select-option>
+  </ion-select>
+</ion-item>
+
 
       <ion-item>
         <ion-label position="stacked">Tipo</ion-label>
@@ -52,10 +66,7 @@
         <ion-input type="number" [(ngModel)]="nuevoRecorrido.comision"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">ID Propiedad</ion-label>
-        <ion-input [(ngModel)]="nuevoRecorrido.idPropiedad"></ion-input>
-      </ion-item>
+
 
       <ion-item lines="none">
         <ion-label>Confirmado</ion-label>

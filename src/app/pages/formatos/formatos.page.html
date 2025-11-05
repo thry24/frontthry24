@@ -1,0 +1,67 @@
+<ion-content class="formatos-bg">
+
+  <!-- Encabezado -->
+  <div class="barra-azul">
+    <div class="titulo">TIPO DE CLIENTE</div>
+    <div class="titulo">FORMATO</div>
+    <div class="titulo center">GENERAR</div>
+    <div class="titulo center">OTRA ACCIÓN</div>
+  </div>
+
+  <div class="layout">
+    <!-- Lista de formatos -->
+    <section class="lista-formatos">
+      <ul>
+        <li *ngFor="let f of formatos" class="fila">
+          <!-- Tipo cliente -->
+          <div class="tipo">
+            <span class="chip" [attr.data-tipo]="f.tipo">{{ f.tipo }}</span>
+          </div>
+
+          <!-- Nombre del formato -->
+          <div class="formato">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <span class="texto">{{ f.titulo }}</span>
+          </div>
+
+          <!-- Generar (PDF) -->
+          <div class="acciones center">
+            <button class="btn pdf" (click)="generarPDF(f)">
+              <ion-icon name="document-attach-outline"></ion-icon>
+              <span>PDF</span>
+            </button>
+          </div>
+
+          <!-- Otras acciones -->
+          <div class="otras center">
+            <button class="btn icono" (click)="subir(f)" title="Subir">
+              <ion-icon name="cloud-upload-outline"></ion-icon>
+              <small>Subir</small>
+            </button>
+            <button class="btn icono" (click)="compartir(f)" title="Compartir">
+              <ion-icon name="share-social-outline"></ion-icon>
+              <small>Compartir</small>
+            </button>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Pie de ayuda (acorde a maqueta) -->
+      <div class="ayuda">
+        <strong>Subir</strong>: el Director de la inmobiliaria puede subir sus
+        <span class="resalte">formatos</span> y contratos y poder
+        <span class="resalte">compartirlos</span> con sus asesores en el área de
+        <span class="resalte">formatos</span>.
+      </div>
+    </section>
+  </div>
+  <!-- Input oculto para “Subir” -->
+<input
+  #uploader
+  type="file"
+  accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf"
+  style="display:none"
+  (change)="onFilePicked($event)"
+/>
+
+</ion-content>

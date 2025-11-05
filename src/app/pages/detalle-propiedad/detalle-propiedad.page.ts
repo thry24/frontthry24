@@ -8,6 +8,7 @@ import { WishlistService } from 'src/app/services/wishlist.service';
 import { CompararService } from 'src/app/services/comparar.service';
 import { AlertController } from '@ionic/angular';
 import { PdfPropiedadService } from 'src/app/services/pdf-propiedad.service';
+import { SeguimientoService } from 'src/app/services/seguimiento.service';
 
 @Component({
   selector: 'app-detalle-propiedad',
@@ -55,7 +56,8 @@ export class DetallePropiedadPage implements OnInit, AfterViewInit {
     private wishlistService: WishlistService,
     private comparar: CompararService,
     private pdfService: PdfPropiedadService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private seguimientoSrv: SeguimientoService 
   ) {}
 
   get iconoTipoPropiedad(): string {
@@ -160,44 +162,89 @@ export class DetallePropiedadPage implements OnInit, AfterViewInit {
    * Construye el texto que se guardará en BD (y que coincide con el que envías por mail/wa).
    */
   private buildTextoInteres(canal: 'email' | 'whatsapp'): string {
-    return `
-Hola ${this.propiedad?.agente?.nombre || ''}, soy ${this.cita.nombre} y quiero agendar una cita para la propiedad "${this.propiedad?.clave}".
+        return `
+    Hola ${this.propiedad?.agente?.nombre || ''}, soy ${this.cita.nombre} y quiero agendar una cita para la propiedad "${this.propiedad?.clave}".
 
-📅 Fecha: ${this.cita.fecha}
-⏰ Hora: ${this.cita.hora}
-📧 Correo: ${this.cita.email}
-📝 Mensaje: ${this.cita.mensaje || 'Ninguno'}
-(Canal: ${canal})
-    `.trim();
-  }
+    📅 Fecha: ${this.cita.fecha}
+    ⏰ Hora: ${this.cita.hora}
+    📧 Correo: ${this.cita.email}
+    📝 Mensaje: ${this.cita.mensaje || 'Ninguno'}
+    (Canal: ${canal})
+        `.trim();
+      }
 
-  /**
-   * Envía al backend el "contacto" con canal y datos de cita.
-   * No bloquea la UI; si responde ok, muestra un toast.
-   */
-  private enviarContacto(propId: string, canal: 'email' | 'whatsapp') {
-    const payload = {
-      canal,
-      citaNombre: this.cita.nombre,
-      citaEmail: this.cita.email,
-      citaFecha: this.cita.fecha,
-      citaHora: this.cita.hora,
-      citaMensaje: this.cita.mensaje,
-      textoFinal: this.buildTextoInteres(canal),
-    };
+      /**
+       * Envía al backend el "contacto" con canal y datos de cita.
+       * No bloquea la UI; si responde ok, muestra un toast.
+       */
+private enviarContacto(propId: string, canal: 'email' | 'whatsapp') {
+  const payload = {
+    canal,
+    citaNombre: this.cita.nombre,
+    citaEmail: this.cita.email,
+    citaFecha: this.cita.fecha,
+    citaHora: this.cita.hora,
+    citaMensaje: this.cita.mensaje,
+    textoFinal: this.buildTextoInteres(canal),
+  };
 
-    this.propiedadService.registrarContacto(propId, payload as any).subscribe({
-      next: (resp: any) => {
-        if (resp?.chatAuto?.ok) {
-          this.alertaService.mostrar(
-            'Se notificó tu interés al asesor. 👌',
-            'success'
-          );
+  // 1️⃣ Registrar contacto (ya existente)
+  this.propiedadService.registrarContacto(propId, payload as any).subscribe({
+    next: (resp: any) => {
+      if (resp?.chatAuto?.ok) {
+        this.alertaService.mostrar('Se notificó tu interés al asesor. 👌', 'success');
+      }
+    },
+    error: (e) => console.warn('No se pudo registrar contacto:', e),
+  });
+
+  // 2️⃣ Datos base del seguimiento
+  const seguimiento = {
+    tipoOperacion: this.propiedad?.tipoOperacion || 'renta',
+    estatus: 'Contacto inicial',
+    agenteEmail: this.propiedad?.agente?.correo || this.propiedad?.agente?.email || '',
+    agenteNombre: this.propiedad?.agente?.nombre || '',
+    clienteNombre: this.cita.nombre,
+    clienteEmail: this.cita.email,
+    mensaje: this.cita.mensaje || '',
+    fechaPrimerContacto: new Date().toISOString(),
+    propiedadId: propId,
+    propiedadClave: this.propiedad?.clave || '',
+    propiedadDireccion:
+      this.propiedad?.direccion?.colonia
+        ? `${this.propiedad.direccion.colonia}, ${this.propiedad.direccion.municipio}, ${this.propiedad.direccion.estado}`
+        : this.propiedad?.direccion || '',
+    canalContacto: canal,
+  };
+
+  // 3️⃣ Verificar si ya existe un seguimiento con mismo cliente y propiedad
+  this.seguimientoSrv
+    .buscarPorClienteYPropiedad(this.cita.email, propId)
+    .subscribe({
+      next: (existe: any) => {
+        if (existe && existe.length > 0) {
+          console.log('⚠️ Ya existe un seguimiento para este cliente y propiedad.');
+          return;
         }
+
+        // 4️⃣ Crear nuevo seguimiento solo si no existe
+        this.seguimientoSrv.crearSeguimiento(seguimiento).subscribe({
+          next: () => console.log('✅ Seguimiento creado:', seguimiento),
+          error: (err) => console.error('❌ Error creando seguimiento:', err),
+        });
       },
-      error: (e) => console.warn('No se pudo registrar contacto:', e),
+      error: (err) => {
+        console.error('Error verificando seguimiento existente:', err);
+        // fallback: intentar crear por si el backend no respondió bien
+        this.seguimientoSrv.crearSeguimiento(seguimiento).subscribe({
+          next: () => console.log('✅ Seguimiento creado (fallback):', seguimiento),
+          error: (err) => console.error('❌ Error creando seguimiento:', err),
+        });
+      },
     });
-  }
+}
+
+
 
   // ---------------------------
   // PDF / imágenes

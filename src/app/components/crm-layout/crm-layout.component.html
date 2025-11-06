@@ -8,7 +8,11 @@
 
       <img src="/assets/logo-thry24.jpeg" class="logo-img" alt="Ai24" />
     </ion-buttons>
-
+  <div
+    class="sidebar-overlay"
+    [class.show]="sidebarOpen"
+    (click)="toggleSidebar()"
+  ></div>
 <div class="nav-wrapper desktop-nav">
   <nav class="nav-links-scroll">
     <a [routerLink]="'/dashboard'" routerLinkActive="active" class="nav-bubble">DASHBOARD</a>
@@ -34,7 +38,11 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-   <aside class="sidebar-menu" [class.open]="sidebarOpen">
+
+<ion-content class="crm-bg">
+  <div class="crm-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar-menu" [class.open]="sidebarOpen">
       <a routerLink="/agente/dashboard" routerLinkActive="active" class="menu-item">
         <ion-icon name="grid-outline"></ion-icon> Dashboard
       </a>
@@ -58,6 +66,10 @@
 
       <a routerLink="/agente/seguimiento" routerLinkActive="active" class="menu-item">
         <ion-icon name="trending-up-outline"></ion-icon> Seguimiento
+      </a>
+
+      <a routerLink="/agente/citas-programadas" routerLinkActive="active" class="menu-item">
+        <ion-icon name="calendar-outline"></ion-icon> Mis citas 
       </a>
 
       <a routerLink="/agente/requerimientos" routerLinkActive="active" class="menu-item">
@@ -97,10 +109,6 @@
       </a>
     </aside>
 
-<ion-content class="crm-bg">
-  <div class="crm-wrapper">
-    <!-- Sidebar -->
- 
     <div class="contenido-principal">
       <router-outlet></router-outlet>
     </div>

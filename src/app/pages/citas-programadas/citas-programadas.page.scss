@@ -27,7 +27,7 @@
     font-size: 14px;
 
     thead {
-      background-color: #143d81;
+      background-color: #5cb3cd;
       color: white;
 
       th {
@@ -60,31 +60,30 @@
               font-weight: 500;
             }
           }
-.prop-col {
-  display: flex;
-  flex-direction: column; /* 👈 fuerza la imagen arriba */
-  align-items: center; /* 👈 centra horizontal */
-  justify-content: center;
-  text-align: center; /* 👈 centra texto */
-}
+          .prop-col {
+            display: flex;
+            flex-direction: column; /* 👈 fuerza la imagen arriba */
+            align-items: center; /* 👈 centra horizontal */
+            justify-content: center;
+            text-align: center; /* 👈 centra texto */
+          }
 
-.prop-img {
-  width: 65px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 6px; /* 👈 agrega espacio entre imagen y texto */
-}
+          .prop-img {
+            width: 65px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 6px; /* 👈 agrega espacio entre imagen y texto */
+          }
 
-.prop-clave {
-  display: block; /* 👈 asegura que quede debajo */
-  font-size: 12px;
-  font-weight: bold;
-  color: #333;
-  max-width: 100px;
-  word-break: break-word; /* 👈 por si la clave es larga */
-}
-
+          .prop-clave {
+            display: block; /* 👈 asegura que quede debajo */
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            max-width: 100px;
+            word-break: break-word; /* 👈 por si la clave es larga */
+          }
         }
       }
     }

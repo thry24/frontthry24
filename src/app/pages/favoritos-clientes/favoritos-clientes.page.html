@@ -1,25 +1,50 @@
-  <div class="clientes-selector">
-    <ion-item>
-      <ion-label>Cliente</ion-label>
-      <ion-select [(ngModel)]="clienteSeleccionado" (ionChange)="onSelectCliente()">
-        <ion-select-option *ngFor="let c of clientes" [value]="c.email">
-          {{ c.nombre }} ({{ c.email }})
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
+<div class="clientes-selector">
+  <ion-item>
+    <ion-label>Cliente</ion-label>
+    <ion-select [(ngModel)]="clienteSeleccionado" (ionChange)="onSelectCliente()">
+      <ion-select-option *ngFor="let c of clientes" [value]="c.email">
+        {{ c.nombre }} ({{ c.email }})
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+</div>
+
+<div *ngIf="favoritos.length > 0; else noFavs" class="tabla-container animate__animated animate__fadeIn">
+  <table class="tabla-favoritos">
+    <thead>
+      <tr>
+        <th>Propiedad</th>
+        <th>Título Propiedad</th>
+        <th>Tipo de Operación</th>
+        <th>ID</th>
+        <th>Precio</th>
+        <th>Tipo de Propiedad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of favoritos">
+        <td class="img-cell">
+          <img [src]="p.propiedadImagen || p.imagenes?.[0] || 'assets/img/sin-imagen.jpg'" alt="propiedad" />
+        </td>
+        <td class="titulo-cell">
+          <h4>{{ p.tituloPropiedad || 'Sin título' }}</h4>
+          <p class="direccion">
+            {{ p.direccion?.colonia ? p.direccion.colonia + ', ' : '' }}
+            {{ p.direccion?.municipio ? p.direccion.municipio + ', ' : '' }}
+            {{ p.direccion?.estado || '' }}
+          </p>
+        </td>
+        <td>{{ p.tipoOperacion || 'N/A' }}</td>
+        <td>{{ p.clave || '-' }}</td>
+        <td class="precio">{{ p.precio | currency:'MXN':'symbol':'1.0-0' }}</td>
+        <td>{{ p.tipoPropiedad || '-' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noFavs>
+  <div class="no-result">
+    <p>Sin favoritos aún 📌</p>
   </div>
-
-  <div *ngIf="favoritos.length > 0; else noFavs">
-    <div class="grid">
-      <div class="card" *ngFor="let p of favoritos">
-        <img [src]="p.imagenPrincipal || 'assets/img/sin-imagen.jpg'"/>
-        <h3>{{ p.tipoPropiedad }} - {{ p.clave }}</h3>
-        <p>{{ p.precio | currency:'MXN' }}</p>
-      </div>
-    </div>
-  </div>
-
-  <ng-template #noFavs>
-    <p class="no-result">Sin favoritos aún 📌</p>
-  </ng-template>
-
+</ng-template>

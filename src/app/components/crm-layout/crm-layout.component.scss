@@ -1,273 +1,232 @@
-/* ==================== BASE ==================== */
-/* ========== Layout General ========== */
-.crm-bg {
-  --background: #f9fafb;
-  display: flex;
-}
-
-.crm-wrapper,
-ion-content {
-  display: flex;
-  flex: 1;
-}
-
-/* ========== Sidebar ========== */
-.sidebar-menu {
-  width: 270px;
-  height: 100vh;
-  background: #fff;
-  border-right: 1px solid #f9c39d;
-  padding: 1rem;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  position: fixed;
-  top: 56px; /* altura del header */
-  left: 0;
-  z-index: 1000;
-  overflow-y: auto;
-  transition: transform 0.3s ease-in-out;
-
-  .menu-item {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #333;
-    padding: 0.6rem 0.8rem;
-    border-radius: 0.6rem;
-    text-decoration: none;
-    transition: background 0.2s ease;
-    cursor: pointer;
-
-    ion-icon {
-      margin-right: 10px;
-      font-size: 1.2rem;
-      color: #44b2d6;
-    }
-
-    &:hover,
-    &.active {
-      background-color: #f9aa46;
-      color: #970000;
-    }
-  }
-
-  h4 {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: #a20000;
-    margin: 1rem 0 0.2rem;
-    padding-left: 0.2rem;
-  }
-
-  /* 📱 Sidebar en móvil */
-  @media (max-width: 768px) {
-    transform: translateX(-100%);
-    width: 240px;
-    top: 0; /* cubre todo en móviles */
-    &.open {
-      transform: translateX(0);
-    }
-  }
-}
-
-/* ========== Contenido principal ========== */
-.contenido-principal {
-  flex: 1;
-  margin-left: 270px;
-  padding: 1rem;
-  transition: margin 0.3s ease;
-
-  @media (max-width: 768px) {
-    margin-left: 0;
-  }
-}
-
-
-/* ==================== HEADER ==================== */
 .custom-header {
-  --background: white;
-  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  z-index: 10;
-  .logo-img {
-    height: 60px;
-    margin-right: 0.5rem;
-  }
+  --background: #ffffff;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
 
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 2px solid rgba(0,0,0,0.1); /* tono más sutil */
-}
-
-
-.nav-wrapper.desktop-nav {
-  flex: 1;
-  display: flex;
-  justify-content: center; /* Centra horizontalmente */
-}
-
-.nav-links-scroll {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-}
-
-.nav-bubble {
-  background-color: #e68a35;
-  color: #fff;
-  border-radius: 20px;
-  padding: 8px 14px;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.nav-bubble.active {
-  background-color: #ff9c40;
-}
-
-
-  .header-icon {
-    font-size: 1.3rem;
-    margin-right: 0.8rem;
-    color: #44b2d6;
-    cursor: pointer;
-
-    &:hover {
-      color: #a20000;
-    }
-  }
-
-  .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 0.5rem;
-    border: 2px solid #f28538;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .user-info {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.75rem;
-    color: #970000;
-    margin-right: 1rem;
-
-    .name {
-      font-weight: 600;
-      color: #970000;
-    }
-
-    .role {
-      font-size: 0.7rem;
-      color: #de7780;
-    }
-  }
-}
-
-/* ==================== SIDEBAR ==================== */
-.sidebar-menu {
-  width: 270px;
-  background: #fff;
-  border-right: 1px solid #f9c39d;
-  padding: 1rem;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  transition: transform 0.3s ease-in-out;
-
-  .menu-item {
+  .toolbar {
     display: flex;
     align-items: center;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #333;
-    padding: 0.6rem 0.8rem;
-    border-radius: 0.6rem;
-    text-decoration: none;
-    transition: background 0.2s ease;
-    cursor: pointer;
+    justify-content: space-between;
+    --min-height: 64px;
 
-    ion-icon {
-      margin-right: 10px;
-      font-size: 1.2rem;
-      color: #44b2d6;
+    ion-buttons {
+      display: flex;
+      align-items: center;
     }
 
-    &:hover,
-    &.active {
-      background-color: #f9aa46;
-      color: #970000;
-    }
-  }
-
-  h4 {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: #a20000;
-    margin: 1rem 0 0.2rem;
-    padding-left: 0.2rem;
-  }
-
-  /* ==================== Sidebar en móvil ==================== */
-  @media (max-width: 768px) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    z-index: 1000;
-    transform: translateX(-100%);
-    width: 240px;
-    background: white;
-
-    &.open {
-      transform: translateX(0);
-    }
-  }
-}
-
-/* ==================== BOTÓN HAMBURGUESA ==================== */
-.menu-toggle {
-  display: none;
-
-  @media (max-width: 768px) {
-    display: block;
-    margin-right: 0.5rem;
-
-    ion-icon {
+    .menu-toggle {
+      display: none; // visible solo en móvil
       font-size: 1.6rem;
       color: #ed7538;
+      cursor: pointer;
+    }
+
+    .logo-img {
+      height: 65px;
+      width: 65px;
+      margin-right: 1rem;
+    }
+
+    .nav-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+
+      .nav-links-scroll {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+
+        .nav-bubble {
+          background: #f9c39d;
+          border-radius: 20px;
+          padding: 0.4rem 1rem;
+          font-size: 0.9rem;
+          text-decoration: none;
+          color: #970000;
+          white-space: nowrap;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: #ed7538;
+            color: #fcfbfb;
+          }
+        }
+      }
+    }
+
+    .header-icon {
+      font-size: 22px;
+      margin: 0 0.5rem;
+      color: #44b2d6;
+    }
+
+    .avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-left: 1rem;
+      border: 2px solid #f28538;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      margin-left: 0.5rem;
+
+      .name {
+        font-weight: bold;
+        font-size: 0.9rem;
+        color: #970000;
+      }
+
+      .role {
+        font-size: 0.75rem;
+        color: #f28538;
+      }
     }
   }
 }
 
-/* ==================== NAV SUPERIOR DESKTOP ==================== */
-.desktop-nav {
-  @media (max-width: 768px) {
-    display: none;
-  }
+/* =================== Layout principal =================== */
+
+.crm-bg {
+  background-color: #fcfbfb;
+  height: 100%;
 }
 
-/* ==================== CONTENIDO ==================== */
-.contenido-principal {
-  flex-grow: 1;
-  padding: 1.5rem;
-  overflow-y: auto;
+.crm-wrapper {
+  display: flex;
+  height: 100%;
 
-  @media (max-width: 768px) {
+  .sidebar-menu {
+    width: 240px;
+    background-color: #fff;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      text-decoration: none;
+      color: #970000;
+      font-size: 0.9rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+
+      ion-icon {
+        font-size: 18px;
+        color: #44b2d6;
+      }
+
+      &:hover {
+        background-color: #f9aa46;
+        color: #ffffff;
+      }
+
+      &.active {
+        background-color: #ed7538;
+        color: #fcfbfb;
+      }
+    }
+
+    /* Estado oculto (para móvil) */
+    &.hidden {
+      transform: translateX(-100%);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      z-index: 1000;
+    }
+
+    &.visible {
+      transform: translateX(0);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      z-index: 1000;
+    }
+  }
+
+  .contenido-principal {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+}
+/* Fondo que aparece al abrir el menú */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 9998;
+  display: none;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.show {
+  display: block;
+  opacity: 1;
+}
+
+/* =================== Responsividad =================== */
+
+@media (max-width: 992px) {
+  .custom-header {
+    .toolbar {
+      .logo-img {
+        height: 20px;
+        width: 20px;
+      }
+
+      .nav-wrapper {
+        display: none; // Ocultar links tipo dashboard en móvil
+      }
+
+      .menu-toggle {
+        display: block; // Mostrar botón hamburguesa
+      }
+
+      .user-info {
+        display: none; // Oculta nombre y rol en móvil
+      }
+    }
+  }
+
+  .crm-wrapper {
+    .sidebar-menu {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100%;
+      z-index: 2000;
+      transform: translateX(-100%);
+      background-color: #fff;
+    }
+
+    .contenido-principal {
+      padding: 1rem;
+    }
+
+    /* Cuando el menú está activo */
+    &.menu-abierto {
+      .sidebar-menu {
+        transform: translateX(0);
+      }
+    }
   }
 }

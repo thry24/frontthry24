@@ -18,7 +18,7 @@ export class CrmLayoutComponent implements OnInit {
   nombreUsuario: string | null = null;
   rolUsuario: string | null = null;
   fotoPerfil: string | null = null;
-
+  
   public nuevosLeads = 0;
 
   constructor(

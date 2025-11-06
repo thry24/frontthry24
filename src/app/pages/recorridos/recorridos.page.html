@@ -10,7 +10,6 @@
 </ion-header>
 
 <ion-content class="recorridos-content">
-
   <!-- FORMULARIO DESPLEGABLE -->
   <div class="formulario-recorrido" *ngIf="formularioAbierto">
     <h2>Nuevo Recorrido</h2>
@@ -120,9 +119,20 @@
           <td>{{ recorrido.asesor }}</td>
           <td>{{ recorrido.direccion }}</td>
           <td>{{ recorrido.comision }}%</td>
-          <td>
-            <img *ngIf="recorrido.imagen" [src]="recorrido.imagen" alt="img" class="imagen-propiedad" />
-          </td>
+<td>
+  <div class="propiedad-info">
+    <img
+      *ngIf="recorrido.imagen"
+      [src]="recorrido.imagen"
+      alt="propiedad"
+      class="imagen-propiedad"
+    />
+    <div class="clave-propiedad">
+      {{ recorrido.clavePropiedad || 'Sin clave' }}
+    </div>
+  </div>
+</td>
+
           <td>
             <ion-icon name="checkmark-outline" *ngIf="recorrido.confirmado" class="verde"></ion-icon>
             <ion-icon name="close-outline" *ngIf="!recorrido.confirmado" class="rojo"></ion-icon>

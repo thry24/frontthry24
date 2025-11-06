@@ -42,18 +42,18 @@ export class DirectorioClientesPage implements OnInit {
       const agenteEmail = (this.usuarioActual.email || this.usuarioActual.correo || '').toLowerCase();
       const agenteId = this.usuarioActual._id;
 
-      // 1️⃣ Obtener mensajes
-const token = localStorage.getItem('token');
-const headers = { Authorization: `Bearer ${token}` };
+            // 1️⃣ Obtener mensajes
+      const token = localStorage.getItem('token');
+      const headers = { Authorization: `Bearer ${token}` };
 
-const mensajes: any[] = await this.http
-  .get<any[]>(`${environment.apiUrl}/mensajes/agente/${agenteEmail}`, { headers })
-  .toPromise() || [];
+      const mensajes: any[] = await this.http
+        .get<any[]>(`${environment.apiUrl}/mensajes/agente/${agenteEmail}`, { headers })
+        .toPromise() || [];
 
-      // 2️⃣ Obtener relaciones
-const relaciones: any[] = await this.http
-  .get<any[]>(`${environment.apiUrl}/relaciones/agente/${agenteId}`, { headers })
-  .toPromise() || [];
+            // 2️⃣ Obtener relaciones
+      const relaciones: any[] = await this.http
+        .get<any[]>(`${environment.apiUrl}/relaciones/agente/${agenteId}`, { headers })
+        .toPromise() || [];
 
       // 3️⃣ Normalizar mensajes → cliente
       const clientesMensajes = mensajes.map((m) => ({

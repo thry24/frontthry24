@@ -8,6 +8,26 @@
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
+.propiedad-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.imagen-propiedad {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.clave-propiedad {
+  font-size: 0.8rem;
+  color: #444;
+  font-weight: 600;
+}
 
   .tabla-recorridos {
     width: 100%;

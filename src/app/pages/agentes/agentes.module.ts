@@ -21,8 +21,9 @@ import { LoadingComponent } from 'src/app/components/loading/loading.component';
     HeaderComponent,
     FooterComponent,
     AlertaComponent,
-    LoadingComponent
+    LoadingComponent,
+    AgentesPage
 ],
-  declarations: [AgentesPage]
+  declarations: []
 })
 export class AgentesPageModule {}

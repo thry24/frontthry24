@@ -29,7 +29,7 @@
       <ion-icon name="search-outline" class="header-icon"></ion-icon>
       <ion-icon name="notifications-outline" class="header-icon"></ion-icon>
       <ion-avatar class="avatar">
-        <img [src]="fotoPerfil" />
+        <img [src]="fotoPerfil || 'assets/img/user.jpg'"/>
       </ion-avatar>
       <div class="user-info">
         <span class="name">{{ nombreUsuario }}</span>
@@ -82,10 +82,6 @@
 
       <a routerLink="/agente/editor-video" routerLinkActive="active" class="menu-item">
         <ion-icon name="film-outline"></ion-icon> Editor Video
-      </a>
-
-      <a routerLink="/agente/formatos" routerLinkActive="active" class="menu-item">
-        <ion-icon name="folder-outline"></ion-icon> Formatos
       </a>
 
       <a routerLink="/agente/redes-sociales" routerLinkActive="active" class="menu-item">

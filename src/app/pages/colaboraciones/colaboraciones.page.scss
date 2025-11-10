@@ -17,6 +17,55 @@
     }
   }
 }
+.alert-detalles {
+  .alert-wrapper {
+    border-radius: 16px !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  }
+
+  .alert-head {
+    text-align: center;
+    color: #333;
+    font-weight: 700;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+  }
+
+  .alert-message {
+    padding: 12px 8px !important;
+  }
+
+  .detalle-colaboracion {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+
+    .fila {
+      margin-bottom: 8px;
+      background: #f8fafc;
+      padding: 6px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      span {
+        color: #5cb3cd;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .alert-button-group {
+    justify-content: center;
+  }
+
+  .alert-button {
+    color: #5cb3cd !important;
+    font-weight: 600;
+  }
+}
 
 .tabla-scroll {
   overflow-x: auto;

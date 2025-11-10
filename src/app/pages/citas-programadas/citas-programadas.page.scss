@@ -1,19 +1,30 @@
 .citas-page {
   padding: 16px;
+  background: linear-gradient(180deg, #f8f9fb 0%, #eaf4f8 100%);
+  min-height: 100%;
 
-  .filtros {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 16px;
-    align-items: center;
+  .filtros-container {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
 
-    ion-select {
-      min-width: 100px;
+    ion-item {
+      --background: transparent;
     }
 
     ion-button {
-      height: 40px;
+      border-radius: 20px;
+      --border-color: #5cb3cd;
+      color: #5cb3cd;
+      font-weight: 500;
+
+      &:hover {
+        transform: scale(1.05);
+        transition: 0.2s ease-in-out;
+      }
     }
   }
 
@@ -24,14 +35,19 @@
   .citas-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+    font-size: 15px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.5s ease-in-out;
 
     thead {
       background-color: #5cb3cd;
       color: white;
 
       th {
-        padding: 10px;
+        padding: 12px;
         text-align: left;
         font-weight: 600;
         white-space: nowrap;
@@ -40,52 +56,93 @@
 
     tbody {
       tr {
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #eee;
+        transition: background 0.2s;
+
+        &:hover {
+          background: #f4fbfd;
+        }
 
         td {
-          padding: 10px;
+          padding: 12px;
           vertical-align: middle;
 
-          &.agente {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            ion-avatar {
-              width: 40px;
-              height: 40px;
-            }
-
-            span {
-              font-weight: 500;
-            }
-          }
           .prop-col {
             display: flex;
-            flex-direction: column; /* 👈 fuerza la imagen arriba */
-            align-items: center; /* 👈 centra horizontal */
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            text-align: center; /* 👈 centra texto */
+            text-align: center;
           }
 
           .prop-img {
             width: 65px;
             height: 50px;
             object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 6px; /* 👈 agrega espacio entre imagen y texto */
+            border-radius: 6px;
+            margin-bottom: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
           }
 
           .prop-clave {
-            display: block; /* 👈 asegura que quede debajo */
+            display: block;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 600;
             color: #333;
             max-width: 100px;
-            word-break: break-word; /* 👈 por si la clave es larga */
+            word-break: break-word;
           }
         }
       }
+    }
+  }
+
+  .no-citas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 80vh;
+    color: #5a6b7b;
+    animation: fadeIn 0.8s ease;
+
+    .icono {
+      font-size: 80px;
+      color: #5cb3cd;
+      margin-bottom: 12px;
+      animation: bounce 1.5s infinite ease-in-out;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #7a8b98;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
     }
   }
 }

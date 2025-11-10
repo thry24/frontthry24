@@ -82,6 +82,12 @@ export class ChatService {
     });
   }
 
+  getAgentes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}/auth/agentes`); // o /usuarios/agentes si ya filtras en backend
+  }
+
+
+
   actualizarTipoCliente(clienteEmail: string, tipoCliente: string) {
     return this.http.post(
       `${this.api}/relaciones/actualizar`,

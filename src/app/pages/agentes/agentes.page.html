@@ -2,11 +2,110 @@
 <app-loading></app-loading>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">agentes</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="agentes-layout">
+
+    <!-- 🔹 Sidebar -->
+    <aside class="sidebar">
+      <button (click)="vistaActiva='directorio'" [class.active]="vistaActiva==='directorio'">📒 Agentes</button>
+      <button (click)="vistaActiva='mensajes'" [class.active]="vistaActiva==='mensajes'">💬 Mensajes</button>
+      <button (click)="vistaActiva='favoritos'" [class.active]="vistaActiva==='favoritos'">⭐ Favoritos</button>
+    </aside>
+
+    <!-- 🔹 Contenido -->
+    <main class="contenido">
+
+      <!-- 🧭 Directorio de agentes -->
+      <section *ngIf="vistaActiva === 'directorio'">
+        <ion-searchbar [(ngModel)]="busqueda" placeholder="Buscar agente..."></ion-searchbar>
+
+        <div *ngIf="cargandoAgentes" class="loader">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+
+        <div *ngIf="!cargandoAgentes && agentes.length === 0" class="vacio">
+          <p>No se encontraron agentes.</p>
+        </div>
+
+        <div class="lista-agentes" *ngIf="!cargandoAgentes && agentes.length > 0">
+          <div *ngFor="let ag of agentes" class="tarjeta-agente">
+            <img [src]="ag.fotoPerfil || 'assets/img/default-user.png'" alt="agente" />
+            <h4>{{ ag.username || ag.nombre }}</h4>
+            <p>{{ ag.email || ag.correo }}</p>
+            <button (click)="iniciarChat(ag)">
+              <ion-icon name="chatbubbles-outline"></ion-icon> Contactar
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 💬 Mensajes -->
+      <section *ngIf="vistaActiva === 'mensajes'">
+        <app-mensajes></app-mensajes>
+      </section>
+
+      <!-- ⭐ Favoritos (idéntico al de tu página de favoritos) -->
+      <section *ngIf="vistaActiva === 'favoritos'" class="favoritos-section">
+        <h1 class="titulo-seccion">Mis Favoritos</h1>
+
+        <div class="propiedades-grid" *ngIf="favoritos.length > 0; else sinFavoritos">
+          <div class="card-propiedad" *ngFor="let prop of favoritos" (click)="verPropiedadesAgente(prop.agente)">
+            <div class="img-wrapper">
+              <img [src]="prop.imagenPrincipal || prop.imagen || 'assets/img/sin-imagen.jpg'" alt="propiedad" />
+              <div class="etiqueta">
+                {{ prop.estadoPropiedad | uppercase }}
+              </div>
+              <div class="iconos-superiores">
+                <ion-icon
+                  name="heart"
+                  class="icono favorito-activo"
+                  title="Quitar de favoritos"
+                  (click)="eliminarDeFavoritos(prop._id)"
+                ></ion-icon>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <div class="tipo">{{ prop.tipoPropiedad | uppercase }}</div>
+              <div class="precio">{{ prop.precio | currency: 'MXN' }}</div>
+              <div class="descripcion">
+                {{ prop.descripcion || 'Sin descripción' }}
+              </div>
+              <div class="ubicacion">
+                <ion-icon name="location-outline"></ion-icon>
+                {{ prop.direccion?.municipio }}, {{ prop.direccion?.estado }}
+              </div>
+
+              <div class="acciones">
+                <a *ngIf="prop.agente?.telefono" [href]="'tel:' + prop.agente.telefono" class="btn-contacto">
+                  <ion-icon name="call-outline"></ion-icon> Llamar
+                </a>
+                <a *ngIf="prop.agente?.correo" [href]="'mailto:' + prop.agente.correo" class="btn-contacto">
+                  <ion-icon name="mail-outline"></ion-icon> Email
+                </a>
+                <a *ngIf="prop.agente?.telefono"
+                   [href]="'https://wa.me/52' + prop.agente.telefono"
+                   target="_blank"
+                   class="btn-contacto">
+                  <ion-icon name="logo-whatsapp"></ion-icon> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #sinFavoritos>
+          <section class="mensaje-vacio-section">
+            <div class="mensaje-vacio">
+              <ion-icon name="heart-dislike-outline"></ion-icon>
+              <p>No tienes propiedades en tu lista de deseos.</p>
+              <a routerLink="/home" class="btn-ir-a-propiedades">Explorar propiedades</a>
+            </div>
+          </section>
+        </ng-template>
+      </section>
+
+    </main>
+  </div>
 
   <app-footer></app-footer>
 </ion-content>

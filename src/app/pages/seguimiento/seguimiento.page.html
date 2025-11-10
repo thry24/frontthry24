@@ -1,7 +1,10 @@
 <ion-content class="chat-crm-bg">
   <div *ngIf="!tieneSeguimiento; else vistaSeguimiento" class="sin-seguimientos">
+    <ion-icon name="trail-sign-outline" class="icono"></ion-icon>
     <h2>AÚN NO TIENES SEGUIMIENTOS</h2>
+    <p>Recuerda publicar tus propiedades!</p>
   </div>
+
 
   <ng-template #vistaSeguimiento>
     <div class="seguimiento-container" [class.estado-cerrado]="!mostrarLineaTiempo">

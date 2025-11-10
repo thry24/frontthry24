@@ -197,8 +197,17 @@ ngOnInit() {
       return;
     }
 
+    // 👇 Verifica el rol antes de consultar el backend
+    if (usuario.rol !== 'agente' && usuario.rol !== 'inmobiliaria') {
+      this.alerta.mostrar(
+        'Acceso restringido. Solo agentes o inmobiliarias pueden acceder al CRM.',
+        'error'
+      );
+      return;
+    }
+
     try {
-      // 👇 apunta al backend correcto (8080)
+      // 👇 Verificación de suscripción activa
       const res: any = await this.http
         .get(`${environment.apiUrl}/suscripciones/verificar/${usuario._id}`)
         .toPromise();
@@ -210,12 +219,11 @@ ngOnInit() {
           'No tienes una suscripción activa. Activa un plan para acceder al CRM.',
           'warning'
         );
-        setTimeout(() => this.router.navigate(['/comprar-plan']), 2000); // 👈 redirige al page de planes
+        setTimeout(() => this.router.navigate(['/comprar-plan']), 2000);
       }
     } catch (err) {
       console.error('Error al verificar plan:', err);
       this.alerta.mostrar('Error al verificar el plan. Intenta más tarde.', 'error');
     }
   }
-
 }

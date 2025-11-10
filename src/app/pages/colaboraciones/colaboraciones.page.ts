@@ -42,12 +42,31 @@ export class ColaboracionesPage implements OnInit {
   // ================== CARGAR COLABORACIONES ==================
   cargarColaboraciones() {
     const email = this.usuarioActual?.email?.toLowerCase();
+    const miId = this.usuarioActual?._id;
     if (!email) return;
+
     this.colabSrv.obtenerPorAgente(email).subscribe({
-      next: (res) => (this.colaboraciones = res || []),
+      next: (res) => {
+        this.colaboraciones = (res || []).map((c: any) => {
+          // Si soy el agente principal, muestro el colaborador
+          if (c.agentePrincipal === miId || c.agenteEmail === email) {
+            return {
+              ...c,
+              nombreVisible: c.nombreColaborador || '—',
+            };
+          }
+          else {
+            return {
+              ...c,
+              nombreVisible: c.nombreAgente || c.agenteNombre || 'Agente principal',
+            };
+          }
+        });
+      },
       error: (err) => console.error('Error al cargar colaboraciones:', err),
     });
   }
+
 
   // ================== ABRIR MODAL ==================
 abrirModal() {
@@ -90,6 +109,34 @@ async onTipoColaboracionChange() {
   this.cargarPropiedades();
 }
 
+async responderColaboracion(id: string, accion: 'aceptar' | 'rechazar') {
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  try {
+    const res: any = await this.http
+      .put(`${environment.apiUrl}/colaboraciones/${id}/responder`, { accion }, { headers })
+      .toPromise();
+
+    // ✅ Usa AlertController de Ionic
+    const alert = await this.alertCtrl.create({
+      header: 'Éxito',
+      message: res.message || 'Colaboración actualizada correctamente.',
+      buttons: ['OK'],
+    });
+    await alert.present();
+
+    this.cargarColaboraciones(); // 🔄 refresca lista
+  } catch (err) {
+    console.error(err);
+    const alert = await this.alertCtrl.create({
+      header: 'Error',
+      message: 'No se pudo actualizar la colaboración.',
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
+}
 
   // ================== AGENTES DE LA INMOBILIARIA ==================
 cargarAgentesInmobiliaria() {
@@ -316,22 +363,38 @@ async guardarNuevaColaboracion() {
   });
 }
 
-  // ================== VER DETALLES ==================
-  async verDetalles(colaboracion: any) {
-    const alert = await this.alertCtrl.create({
-      header: 'Detalles de colaboración',
-      message: `
-        <b>Colaborador:</b> ${colaboracion.nombreColaborador || colaboracion.colaborador?.nombre}<br>
-        <b>Tipo:</b> ${colaboracion.tipoColaboracion}<br>
-        <b>Operación:</b> ${colaboracion.tipoOperacion}<br>
-        <b>Comisión:</b> ${colaboracion.comision}%<br>
-        <b>Estado:</b> ${colaboracion.estado}<br>
-        <b>Seguimiento activo:</b> ${colaboracion.seguimientoActivo ? 'Sí' : 'No'}
-      `,
-      buttons: ['Cerrar'],
-    });
-    await alert.present();
-  }
+async verDetalles(colaboracion: any) {
+  const alert = await this.alertCtrl.create({
+    header: 'Detalles de colaboración',
+    message: `
+      <div class="detalle-colaboracion">
+        <div class="fila"><span>👤 <b>Colaborador:</b></span> ${colaboracion.nombreColaborador || colaboracion.colaborador?.nombre}</div>
+        <div class="fila"><span>🏢 <b>Tipo:</b></span> ${colaboracion.tipoColaboracion}</div>
+        <div class="fila"><span>💼 <b>Operación:</b></span> ${colaboracion.tipoOperacion}</div>
+        <div class="fila"><span>💰 <b>Comisión:</b></span> ${colaboracion.comision}%</div>
+        <div class="fila"><span>📄 <b>Estado:</b></span> 
+          <ion-badge color="${
+            colaboracion.estado === 'aceptada'
+              ? 'success'
+              : colaboracion.estado === 'rechazada'
+              ? 'danger'
+              : 'warning'
+          }">
+            ${colaboracion.estado.toUpperCase()}
+          </ion-badge>
+        </div>
+        <div class="fila"><span>📅 <b>Seguimiento activo:</b></span> ${colaboracion.seguimientoActivo ? 'Sí ✅' : 'No ❌'}</div>
+      </div>
+    `,
+    buttons: ['Cerrar'],
+    cssClass: 'alert-detalles',
+    mode: 'ios',
+  });
+
+  await alert.present();
+}
+
+
   async mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error' | 'warning' = 'success') {
   const colores = {
     success: '#28a745',

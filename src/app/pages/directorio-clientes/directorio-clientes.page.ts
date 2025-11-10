@@ -56,19 +56,24 @@ export class DirectorioClientesPage implements OnInit {
         .toPromise() || [];
 
       // 3️⃣ Normalizar mensajes → cliente
-      const clientesMensajes = mensajes.map((m) => ({
-        nombre: m.nombreCliente || m.emisorEmail,
-        email:
-          m.emisorEmail.toLowerCase() === agenteEmail
-            ? m.receptorEmail
-            : m.emisorEmail,
-        telefono: m.telefono || '—',
-        tipoCliente: 'mensaje',
-        tipoOperacion: m.propiedadClave?.includes('REN') ? 'renta' : 'venta',
-        fechaRegistro: m.fecha || m.createdAt,
-        status: 'activo',
-        origen: 'mensajes',
-      }));
+      const clientesMensajes = mensajes.map((m) => {
+        const soyEmisor = m.emisorEmail?.toLowerCase() === agenteEmail;
+        return {
+          nombre: soyEmisor
+            ? m.nombreReceptor || m.receptorNombre || m.receptorEmail
+            : m.nombreCliente || m.nombreEmisor || m.emisorNombre || m.emisorEmail,
+          email: soyEmisor ? m.receptorEmail : m.emisorEmail,
+          telefono: m.telefono || m.receptorTelefono || m.emisorTelefono || '—',
+          tipoCliente: 'mensaje',
+          tipoOperacion: m.propiedadClave?.toUpperCase().includes('REN')
+            ? 'renta'
+            : 'venta',
+          fechaRegistro: m.fecha || m.createdAt,
+          status: 'activo',
+          origen: 'mensajes',
+        };
+      });
+
 
       // 4️⃣ Normalizar relaciones → cliente
       const clientesRelaciones = relaciones.map((r) => ({

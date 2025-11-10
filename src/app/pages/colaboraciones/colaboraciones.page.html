@@ -63,17 +63,17 @@
               {{ p.clave || p.tipoPropiedad | titlecase }} - {{ p.tipoOperacion | titlecase }}
             </ion-select-option>
           </ion-select>
-<div *ngIf="propiedades?.length">
-  <ion-text color="medium">
-    <p>Propiedades disponibles: {{ propiedades.length }}</p>
-  </ion-text>
-</div>
+          <div *ngIf="propiedades?.length">
+            <ion-text color="medium">
+              <p>Propiedades disponibles: {{ propiedades.length }}</p>
+            </ion-text>
+          </div>
 
-<div *ngIf="!propiedades?.length">
-  <ion-text color="danger">
-    <p>No hay propiedades publicadas</p>
-  </ion-text>
-</div>
+          <div *ngIf="!propiedades?.length">
+            <ion-text color="danger">
+              <p>No hay propiedades publicadas</p>
+            </ion-text>
+          </div>
 
         </ion-item>
 
@@ -135,7 +135,7 @@
 
         <ion-row *ngFor="let c of colaboraciones" class="contenido">
           <ion-col>{{ c.fechaAlta | date:'dd/MM/yyyy' }}</ion-col>
-          <ion-col>{{ c.nombreColaborador || c.colaborador?.nombre }}</ion-col>
+          <ion-col>{{ c.nombreVisible }}</ion-col>
           <ion-col>{{ c.tipoColaboracion | titlecase }}</ion-col>
           <ion-col>{{ c.tipoOperacion }}</ion-col>
           <ion-col>{{ c.nombrePropiedad || '—' }}</ion-col>
@@ -144,13 +144,32 @@
             <ion-badge [color]="c.seguimientoActivo ? 'success' : 'medium'">
               {{ c.seguimientoActivo ? 'Sí' : 'No' }}
             </ion-badge>
-          </ion-col>
-          <ion-col>
-            <ion-badge [color]="c.estado === 'aceptada' ? 'success' : (c.estado === 'pendiente' ? 'warning' : 'danger')">
-              {{ c.estado | titlecase }}
-            </ion-badge>
-          </ion-col>
-          <ion-col>
+              </ion-col>
+                <ion-col class="acciones-col">
+                <ion-col>
+                  <ion-badge 
+                    [color]="
+                      c.estado === 'aceptada' ? 'success' :
+                      c.estado === 'rechazada' ? 'danger' :
+                      'warning'
+                    ">
+                    {{ c.estado | titlecase }}
+                  </ion-badge>
+                </ion-col>
+                <!-- ✅ Mostrar aceptar/rechazar solo si soy el colaborador y está pendiente -->
+                <ng-container *ngIf="c.estado === 'pendiente' && c.colaborador?.correo?.toLowerCase() === usuarioActual?.email?.toLowerCase()">
+                  <ion-button size="small" color="success" (click)="responderColaboracion(c._id, 'aceptar')">
+                    <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+                    Aceptar
+                  </ion-button>
+
+                  <ion-button size="small" color="danger" (click)="responderColaboracion(c._id, 'rechazar')">
+                    <ion-icon name="close-outline" slot="start"></ion-icon>
+                    Rechazar
+                  </ion-button>
+                </ng-container>
+              </ion-col>
+              <ion-col>
             <ion-button size="small" fill="outline" color="primary" (click)="verDetalles(c)">
               <ion-icon name="eye-outline"></ion-icon>
             </ion-button>

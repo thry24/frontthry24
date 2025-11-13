@@ -431,37 +431,44 @@ ion-content, .seguimiento-container {
   }
 }
 
-/* ✅ hace scroll interno */
+/* ✅ Scroll vertical interno sin ensanchar el modal */
 ion-modal::part(content) {
-  overflow: hidden !important;
+  overflow-y: auto !important; /* permite hacer scroll */
+  max-height: 85vh !important; /* ocupa hasta 85% de la pantalla */
 }
 
-.modal-cita-content {
-  padding: 16px;
-  --background: #fff;
-
-  p {
-    margin: 0 0 10px;
-    font-weight: 600;
-  }
-
-  ion-list {
-    max-height: 260px; /* 🔥 hace el scroll */
-    overflow-y: auto;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    margin-bottom: 16px;
-  }
-}
-
+/* 🎯 Mantiene el ancho "estrecho" tipo formulario */
 ion-modal {
   --height: auto;
-  --max-height: 500px; /* ✅ ajustado al contenido */
-  --width: 92%;
-  --max-width: 420px;
+  --max-height: 85vh; /* 🔥 ajusta alto dinámico */
+  --width: 92%;        /* igual que tu versión original */
+  --max-width: 420px;  /* 👈 mantiene el tamaño estrecho */
   --border-radius: 18px;
-  --box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  --background: #fff;
 }
+
+/* 💡 Contenido interno */
+.modal-cita-content,
+ion-content.ion-padding {
+  padding: 16px 20px 80px; /* espacio extra abajo para el botón */
+  --background: #fff;
+}
+
+.modal-cita-content ion-list {
+  max-height: none; /* 🔓 deja que crezca libremente */
+  overflow-y: visible; /* evita scroll doble dentro de la lista */
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+/* Tipografía y espaciado */
+.modal-cita-content p {
+  margin: 0 0 10px;
+  font-weight: 600;
+}
+
 .seguimientos-selector {
   display: flex;
   align-items: center;

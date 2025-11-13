@@ -1,8 +1,17 @@
+app-header {
+  display: block;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(9, 34, 64, 0.08);
+  z-index: 1000;
+}
+
+/* Espacio debajo del header */
 .agregar-propiedad-content {
   --background: #ffffff;
   font-family: 'Segoe UI', sans-serif;
   color: #0a2b4a;
   padding: 2rem;
+  padding-top: 90px; 
 
   .container {
     max-width: 1400px;
@@ -274,4 +283,23 @@ ion-item {
   font-size: 14px;
   line-height: 16px;
   vertical-align: middle;
+}
+/* 🔥 Fuerza el header a quedarse fijo encima del ion-content */
+app-header.header-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000; /* 👈 más alto que cualquier ion-content */
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(9, 34, 64, 0.08);
+}
+
+/* 🔥 Empuja el contenido hacia abajo para no tapar el header */
+.agregar-propiedad-content {
+  --background: #ffffff;
+  padding: 2rem;
+  margin-top: 80px; /* 👈 Ajusta según la altura real del header */
+  font-family: 'Segoe UI', sans-serif;
+  color: #0a2b4a;
 }

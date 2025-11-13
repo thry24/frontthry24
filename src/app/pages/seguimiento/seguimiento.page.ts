@@ -535,11 +535,21 @@ export class SeguimientoPage implements OnInit {
         { text: `Fecha de inicio contrato arrendamiento: ${p.fechaInicio || '____ /____ /______'}` },
         { text: `Depósito ofrecido: $${p.deposito || '__________'}` },
         { text: `Tipo de garantía: [${p.garantia === 'Fiador' ? 'X' : ' '}] Fiador  [${p.garantia === 'Póliza jurídica' ? 'X' : ' '}] Póliza jurídica  [${p.garantia === 'Depósito adicional' ? 'X' : ' '}] Depósito adicional  [${!['Fiador','Póliza jurídica','Depósito adicional'].includes(p.garantia) ? 'X' : ' '}] Otro: ${!['Fiador','Póliza jurídica','Depósito adicional'].includes(p.garantia) ? p.garantia : ''}` },
-        { text: `Forma de pago: [${p.formaPago === 'Transferencia' ? 'X' : ' '}] Transferencia  [${p.formaPago === 'Depósito' ? 'X' : ' '}] Depósito  [${!['Transferencia','Depósito'].includes(p.formaPago) ? 'X' : ' '}] Otro: ${!['Transferencia','Depósito'].includes(p.formaPago) ? p.formaPago : ''}` },
+        { text: `Forma de pago: [${p.formaPago === 'Transferencia' ? 'X' : ' '}] Transferencia  [${p.formaPago === 'Depósito' ? 'X' : ' '}] Depósito  [${p.formaPago === 'Efectivo' ? 'X' : ' '}] Efectivo  [${!['Transferencia', 'Depósito', 'Efectivo'].includes(p.formaPago) ? 'X' : ' '}] Otro: ${!['Transferencia', 'Depósito', 'Efectivo'].includes(p.formaPago) ? p.formaPago : ''}`},
 
         { text: '\n4. OBSERVACIONES ADICIONALES', style: 'subtitulo' },
         { text: `${p.observaciones || '__________________________________________'}` },
-
+                { text: '\n4. CONDICIONES DE RENTA', style: 'subtitulo' },
+        {
+          ul: [
+            `El arrendatario deberá realizar el pago de la renta de $${p.montoMensual || '__________'} MXN dentro de los primeros 5 días de cada mes.`,
+            `El depósito de garantía será equivalente a $${p.deposito || '__________'} MXN y se devolverá conforme al contrato.`,
+            `La duración propuesta del contrato es de ${p.duracion || '12 meses'}.`,
+            `El arrendatario no podrá subarrendar ni ceder derechos sin autorización escrita.`,
+            `El arrendatario acepta mantener el inmueble en óptimas condiciones y cumplir con las políticas establecidas.`,
+          ],
+          margin: [10, 0, 0, 10]
+        },
         { text: '\n5. COMPROMISOS', style: 'subtitulo' },
         { text: 'El arrendatario expresa formalmente su interés en rentar la propiedad descrita bajo los términos señalados. Esta carta no constituye un contrato definitivo, pero sí una intención de renta sujeta a la aceptación del propietario y validación de la documentación correspondiente.', margin: [0, 0, 0, 10] },
 
@@ -606,6 +616,7 @@ export class SeguimientoPage implements OnInit {
     }
       pdfMake.createPdf(docDefinition).open();
     }
+
     generarBorradorContratoPDF() {
     const p = this.cartaOferta; // reutilizamos los datos de cartaOferta para el contrato
 
@@ -621,25 +632,37 @@ export class SeguimientoPage implements OnInit {
         { text: `\nFecha de elaboración: ${fechaGeneracion}`, style: 'nota' },
 
         { text: '\n1. PARTES DEL CONTRATO', style: 'subtitulo' },
-        { text: `ARRENDADOR: ____________________________________________` },
-        { text: `ARRENDATARIO: ${p.arrendatario || '________________________________________'}` },
+        { text: `ARRENDADOR: ____________________________________________`, style: 'campo' },
+        { text: `ARRENDATARIO: ${p.arrendatario || '________________________________________'}`, style: 'campo' },
 
         { text: '\n2. OBJETO DEL CONTRATO', style: 'subtitulo' },
-        { text: `El ARRENDADOR da en arrendamiento al ARRENDATARIO el inmueble ubicado en:\n${p.direccion || '________________________________________'}.\n` },
-        { text: `Tipo de propiedad: ${p.tipoPropiedad || '________________'}` },
+        { text: `El ARRENDADOR da en arrendamiento al ARRENDATARIO el inmueble ubicado en:\n${p.direccion || '________________________________________'}.\n` , style: 'campo'},
+        { text: `Tipo de propiedad: ${p.tipoPropiedad || '________________'}`, style: 'campo' },
 
         { text: '\n3. DURACIÓN', style: 'subtitulo' },
-        { text: `El presente contrato tendrá una duración de ${p.duracion || '__________'}, iniciando el día ${p.fechaInicio || '____/____/______'} y concluyendo conforme al plazo pactado.` },
+        { text: `El presente contrato tendrá una duración de ${p.duracion || '__________'}, iniciando el día ${p.fechaInicio || '____/____/______'} y concluyendo conforme al plazo pactado.`, style: 'campo' },
+        
+        { text: '\n4. CONDICIONES DE RENTA', style: 'subtitulo' },
+        {
+          ul: [
+            `El arrendatario deberá realizar el pago de la renta de $${p.montoMensual || '__________'} MXN dentro de los primeros 5 días de cada mes.`,
+            `El depósito de garantía será equivalente a $${p.deposito || '__________'} MXN y se devolverá conforme al contrato.`,
+            `La duración propuesta del contrato es de ${p.duracion || '12 meses'}.`,
+            `El arrendatario no podrá subarrendar ni ceder derechos sin autorización escrita.`,
+            `El arrendatario acepta mantener el inmueble en óptimas condiciones y cumplir con las políticas establecidas.`,
+          ],
+          margin: [10, 0, 0, 10]
+        },
 
-        { text: '\n4. RENTA Y DEPÓSITO', style: 'subtitulo' },
-        { text: `El ARRENDATARIO pagará al ARRENDADOR la cantidad de $${p.montoMensual || '__________'} MXN mensuales.` },
-        { text: `El depósito en garantía será de $${p.deposito || '__________'} MXN, que será devuelto al término del contrato si no existen adeudos ni daños al inmueble.` },
+        { text: '\n5. RENTA Y DEPÓSITO', style: 'subtitulo' },
+        { text: `El ARRENDATARIO pagará al ARRENDADOR la cantidad de $${p.montoMensual || '__________'} MXN mensuales.`, style: 'campo' },
+        { text: `El depósito en garantía será de $${p.deposito || '__________'} MXN, que será devuelto al término del contrato si no existen adeudos ni daños al inmueble.` , style: 'campo'},
 
-        { text: '\n5. GARANTÍA Y FORMA DE PAGO', style: 'subtitulo' },
-        { text: `Tipo de garantía: ${p.garantia || '__________________'}` },
-        { text: `Forma de pago: ${p.formaPago || '__________________'}` },
+        { text: '\n6. GARANTÍA Y FORMA DE PAGO', style: 'subtitulo' },
+        { text: `Tipo de garantía: ${p.garantia || '__________________'}`, style: 'campo' },
+        { text: `Forma de pago: ${p.formaPago || '__________________'}` , style: 'campo'},
 
-        { text: '\n6. OBLIGACIONES DEL ARRENDATARIO', style: 'subtitulo' },
+        { text: '\n7. OBLIGACIONES DEL ARRENDATARIO', style: 'subtitulo' },
         {
           ul: [
             'Pagar puntualmente la renta en la forma y tiempo convenidos.',
@@ -649,7 +672,7 @@ export class SeguimientoPage implements OnInit {
           ]
         },
 
-        { text: '\n7. OBLIGACIONES DEL ARRENDADOR', style: 'subtitulo' },
+        { text: '\n8. OBLIGACIONES DEL ARRENDADOR', style: 'subtitulo' },
         {
           ul: [
             'Entregar el inmueble en condiciones adecuadas para su uso.',
@@ -658,16 +681,16 @@ export class SeguimientoPage implements OnInit {
           ]
         },
 
-        { text: '\n8. TERMINACIÓN ANTICIPADA', style: 'subtitulo' },
-        { text: 'El contrato podrá darse por terminado anticipadamente por incumplimiento de cualquiera de las partes o de común acuerdo, notificando con al menos 30 días de anticipación.' },
+        { text: '\n9. TERMINACIÓN ANTICIPADA', style: 'subtitulo' },
+        { text: 'El contrato podrá darse por terminado anticipadamente por incumplimiento de cualquiera de las partes o de común acuerdo, notificando con al menos 30 días de anticipación.' , style: 'campo'},
 
-        { text: '\n9. JURISDICCIÓN Y DOMICILIO', style: 'subtitulo' },
-        { text: 'Para la interpretación y cumplimiento del presente contrato, las partes se someten expresamente a las leyes y tribunales competentes de la ciudad donde se encuentra el inmueble, renunciando a cualquier otro fuero que pudiera corresponderles.' },
+        { text: '\n10. JURISDICCIÓN Y DOMICILIO', style: 'subtitulo' },
+        { text: 'Para la interpretación y cumplimiento del presente contrato, las partes se someten expresamente a las leyes y tribunales competentes de la ciudad donde se encuentra el inmueble, renunciando a cualquier otro fuero que pudiera corresponderles.', style: 'campo' },
 
-        { text: '\n10. FIRMAS', style: 'subtitulo' },
-        { text: '\nFirma del Arrendador: ___________________________  Fecha: ____/____/______' },
-        { text: 'Firma del Arrendatario: __________________________  Fecha: ____/____/______' },
-        { text: 'Firma del Asesor Inmobiliario: ____________________  Fecha: ____/____/______' },
+        { text: '\n11. FIRMAS', style: 'subtitulo' },
+        { text: '\nFirma del Arrendador: ___________________________  Fecha: ____/____/______' , style: 'campo'},
+        { text: 'Firma del Arrendatario: __________________________  Fecha: ____/____/______', style: 'campo' },
+        { text: 'Firma del Asesor Inmobiliario: ____________________  Fecha: ____/____/______', style: 'campo' },
 
         { text: '\nNOTA: Este documento es un borrador y no constituye un contrato definitivo. Su contenido puede modificarse previo acuerdo entre las partes.', style: 'nota' }
       ],
@@ -694,6 +717,12 @@ export class SeguimientoPage implements OnInit {
           italics: true,
           color: 'gray',
           margin: [0, 5, 0, 10]
+        },
+        campo: {
+          fontSize: 11,
+          color: '#000',
+          margin: [0, 0, 0, 6], // 👈 separa cada línea de texto
+          lineHeight: 1.4
         }
       },
 

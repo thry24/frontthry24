@@ -1,12 +1,13 @@
 .header-wrapper {
   position: relative;
+  z-index: 999999 !important;
 }
 app-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000; /* 👈 asegúrate de que quede encima de todo */
+  z-index: 999999 !important;
 }
 
 .Thry24-toolbar {

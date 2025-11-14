@@ -62,7 +62,8 @@ ngOnInit() {
 
       // 👉 Detectar si estás dentro del CRM (para ocultar header)
       this.isCrmRoute =
-        url.startsWith('/agente') || url.startsWith('/inmobiliaria');
+          (url.startsWith('/agente') && !url.includes('/agente/agregar')) ||
+           url.startsWith('/inmobiliaria');
     }
   });
 

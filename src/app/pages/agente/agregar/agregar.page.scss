@@ -23,8 +23,16 @@ app-header {
     font-weight: 700;
     margin-bottom: 2rem;
     text-align: center;
-    color: #0a2b4a;
+    color: #f8f8f8;
   }
+
+  .header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  flex-grow: 1;
+  text-align: center;
+  margin: 0;
+}
 
   form {
     display: flex;
@@ -303,3 +311,141 @@ app-header.header-fixed {
   font-family: 'Segoe UI', sans-serif;
   color: #0a2b4a;
 }
+
+///////////////////
+/// /* Contenedor general */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  background-color: #f0a65c;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  border-bottom: 3px solid #e66900;
+}
+
+/* Logo del header */
+.header-logo {
+  height: 55px;             /* Ajusta según tu logo */
+  width: auto;
+  border-radius: 6px;
+}
+
+/* Contenedor del formulario */
+.form-wrapper {
+  position: relative;
+  padding: 2rem;
+  background-color: rgba(216, 224, 227, 0.95);
+}
+
+/* Marca de agua (logo) */
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px; /* ajusta el tamaño del logo */
+  opacity: 0.07; /* nivel de transparencia */
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Estilo del formulario */
+.form-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Campos del formulario */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+//input, select, textarea {
+  //border: 1px solid #ccc;
+  //border-radius: 8px;
+  //padding: 10px 14px;
+  //font-size: 15px;
+  //transition: 0.2s;
+  //background-color: #fff;
+//}
+
+input, select, textarea {
+  height: 38px !important;
+  border: 1px solid #ccc;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  font-size: 14px !important;
+  transition: 0.2s;
+  background-color: #fff;
+}
+
+
+
+input:focus, select:focus, textarea:focus {
+  border-color: #ff7b00;
+  box-shadow: 0 0 4px rgba(255,123,0,0.3);
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.page-background {
+  background-image: url("../../../../assets/img/fondoCondominio.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  position: relative;
+}
+
+.overlay {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(3px);
+  min-height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 20px;
+}
+
+/* Hace que ion-content no tape el overlay */
+ion-content {
+  --background: transparent !important;
+  --padding-top: 80px; /* altura del header */
+  z-index: 1 !important;
+}
+
+/* Asegura que el formulario quede visible */
+.agregar-propiedad-content {
+  position: relative;
+  z-index: 20;
+}
+
+

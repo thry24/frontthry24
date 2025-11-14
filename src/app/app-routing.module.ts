@@ -157,6 +157,7 @@ const routes: Routes = [
     { path: 'favoritos', loadComponent: () => import('./pages/favoritos/favoritos.page').then( m => m.FavoritosPage) },
     { path: 'favoritos-clientes', loadComponent: () => import('./pages/favoritos-clientes/favoritos-clientes.page').then( m => m.FavoritosClientesPage) },
     { path: 'formatos', loadComponent: () => import('./pages/formatos/formatos.page').then( m => m.FormatosPage) },
+    { path: 'agregar', loadComponent: () => import('./pages/agente/agregar/agregar.page').then(m => m.AgregarPage) },
   ]
   },
   {
